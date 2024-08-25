@@ -12,6 +12,9 @@ java {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
+jar{
+    enabled = false
+}
 
 configurations {
     compileOnly {
