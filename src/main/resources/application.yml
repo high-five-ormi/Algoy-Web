@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: crane
+    name: algoy
 
   thymeleaf:
     cache: false
@@ -18,7 +18,7 @@ spring:
         enabled: true
 
   datasource:
-    url: jdbc:mysql://mymysql.cjee2s48u8zx.ap-northeast-2.rds.amazonaws.com/crane?serverTimezone=UTC
+    url: jdbc:mysql://mymysql.cjee2s48u8zx.ap-northeast-2.rds.amazonaws.com/algoy?serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: admin
     password: manbochuchu
