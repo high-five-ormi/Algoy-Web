@@ -1,4 +1,4 @@
-package com.example.algoyweb.service;
+package com.example.algoyweb.service.user;
 
 import org.springframework.stereotype.Service;
 
