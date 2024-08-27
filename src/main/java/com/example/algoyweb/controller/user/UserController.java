@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.user.User;
@@ -21,6 +22,7 @@ public class UserController {
   public UserController(UserService userService) {
     this.userService = userService;
   }
+
   @GetMapping("/login")
   public String showLoginForm(Model model) {
     // 새로운 UserDto 객체를 생성 후, "userDto"라는 이름으로 Model에 추가
@@ -52,23 +54,34 @@ public class UserController {
    * @return 회원가입 성공 후 리다이렉트할 URL
    */
   @PostMapping("/sign")
-  public String signUp(@ModelAttribute("user") UserDto userDto, Model model) {
-    User user = userService.findByNickname(userDto.getNickname());
+  public String signUp(
+      @ModelAttribute("user") UserDto userDto,
+      @RequestParam("confirmPassword") String confirmPassword,
+      Model model) {
+    if (!userDto.getPassword().equals(confirmPassword)) { // 비밀번호 확인 시 다른 비밀번호가 입력되면
+      model.addAttribute("passwordMismatch", true);
 
-    if (user != null) { // 닉네임 중복 시
-      model.addAttribute("nicknameExist", user);
       return "signup/signup";
     }
 
-    User emailuser = userService.findByEmail(userDto.getEmail());
+    User user = userService.findByNickname(userDto.getNickname());
 
-    if (emailuser != null) { // 이메일 중복 시
-      model.addAttribute("emailExist", emailuser);
+    if (user != null) { // 닉네임 중복 시
+      model.addAttribute("nicknameExist", true);
+
+      return "signup/signup";
+    }
+
+    User emailUser = userService.findByEmail(userDto.getEmail());
+
+    if (emailUser != null) { // 이메일 중복 시
+      model.addAttribute("emailExist", true);
+
       return "signup/signup";
     }
 
     userService.signUpUser(userDto);
 
-    return "redirect:/login"; // 회원가입 성공시 로그인 화면으로
+    return "redirect:/login"; // 회원가입 성공시 로그인 화면으로 리다이렉트
   }
 }

@@ -4,27 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link th:href="@{/css/signup/signup.css}" rel="stylesheet">
     <title>회원가입</title>
 </head>
 <body>
     <h1>회원가입</h1>
     <form th:action="@{/algoy/sign}" th:object="${user}" method="post">
-        <label for="email">이메일:</label>
-        <input type="text" id="email" th:field="*{email}" required/>
+        <label for="email">E-amil</label>
+        <div class="input-group">
+            <input type="email" id="email" th:field="*{email}" placeholder="이메일을 입력하세요." required/>
+            <button type="button" class="check-button">중복 확인</button>
+        </div>
+        <!-- th:if로 이메일 중복 시 메시지 표시 -->
+        <p th:if="${emailExist}" class="view-message">이미 사용 중인 이메일입니다!</p>
 
-        <label for="password">비밀번호:</label>
-        <input type="password" id="password" th:field="*{password}" required/>
+        <label for="password">Password</label>
+        <input type="password" id="password" th:field="*{password}" placeholder="비밀번호를 입력하세요." required/>
 
-        <label for="confirm-password">비밀번호 확인:</label>
-        <input type="password" id="confirm-password" name="confirmPassword" required/>
+        <label for="confirm-password">Re-enter Password</label>
+        <input type="password" id="confirm-password" name="confirmPassword" placeholder="비밀번호를 입력하세요." required/>
+        <p th:if="${passwordMismatch}" class="view-message">비밀번호가 일치하지 않습니다!</p>
 
-        <label for="username">이름:</label>
-        <input type="text" id="username" th:field="*{username}" required/>
+        <label for="username">이름</label>
+        <input type="text" id="username" th:field="*{username}" placeholder="이름을 입력하세요." required/>
 
-        <label for="nickname">닉네임:</label>
-        <input type="text" id="nickname" th:field="*{nickname}" required/>
+        <label for="nickname">닉네임</label>
+        <div class="input-group">
+            <input type="text" id="nickname" th:field="*{nickname}" placeholder="닉네임을 입력하세요." required/>
+            <button type="button" class="check-button">중복 확인</button>
+        </div>
+        <p th:if="${nicknameExist}" class="view-message">이미 사용 중인 닉네임입니다!</p>
 
-        <button type="submit">회원가입</button>
+        <div class="btn-wrap">
+            <button type="submit" class="submit-button">회원 가입</button>
+            <button type="button" class="back-button">뒤로 가기</button>
+        </div>
     </form>
 </body>
 </html>
