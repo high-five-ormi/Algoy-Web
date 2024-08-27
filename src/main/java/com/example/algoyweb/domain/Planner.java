@@ -42,8 +42,8 @@ public class Planner {
 
     private LocalDateTime updateAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    /*@ManyToOne(fetch = FetchType.LAZY)
+    private User user;*/
 
     public enum Status {
         TODO,

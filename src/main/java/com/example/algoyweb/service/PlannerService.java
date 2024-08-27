@@ -48,18 +48,18 @@ public class PlannerService {
 
     public PlannerDto updatePlan(PlannerDto plannerDto, Long id, String username) {
         Planner findPlanner = plannerRepository.findById(id).orElseThrow(() -> new CustomException(PlannerErrorCode.PLAN_NOT_FOUND));
-        if(findPlanner.getUser().getEmail != username) {
+        /*if(findPlanner.getUser().getEmail != username) {
             throw new CustomException(PlannerErrorCode.PLAN_NOT_EQUAL_ID);
-        }
+        }*/
         findPlanner.updatePlan(plannerDto);
         return ConvertUtils.convertPlannerToDto(findPlanner);
     }
 
     public void deletePlan(Long id, String username) {
         Planner findPlanner = plannerRepository.findById(id).orElseThrow(() -> new CustomException(PlannerErrorCode.PLAN_NOT_FOUND));
-        if(findPlanner.getUser().getEmail != username) {
+        /*if(findPlanner.getUser().getEmail != username) {
             throw new CustomException(PlannerErrorCode.PLAN_NOT_EQUAL_ID);
-        }
+        }*/
         plannerRepository.delete(findPlanner);
     }
 }

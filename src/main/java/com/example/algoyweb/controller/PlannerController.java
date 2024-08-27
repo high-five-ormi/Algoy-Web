@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -33,6 +34,18 @@ public class PlannerController {
         PlannerDto plannerDto = plannerService.getPlan(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(plannerDto);
+    }
+
+    @GetMapping("/save-form")
+    @PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    public ModelAndView saveForm() {
+        return new ModelAndView("planner/SaveForm");
+    }
+
+    @GetMapping("/calender")
+    //@PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    public ModelAndView viewCalender() {
+        return new ModelAndView("planner/PlannerMain");
     }
 
     @PostMapping("/save")
