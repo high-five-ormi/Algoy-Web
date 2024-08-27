@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/planner")
+@RequestMapping("/web/planner")
 public class PlannerController {
 
     private final PlannerService plannerService;

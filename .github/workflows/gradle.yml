@@ -83,17 +83,18 @@ jobs:
           EC2_USER: ${{ secrets.EC2_USER }}
           EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
-          # PID 파일이 존재하는지 확인
-          if ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST '[ -f /home/ubuntu/pid ]'; then
-            echo "PID 파일이 존재합니다. 이전 프로세스를 종료합니다."
-            # PID 파일에서 프로세스 ID 읽고 종료
-            ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'kill -9 $(< /home/ubuntu/pid)'
+          # Algoy-Web 애플리케이션 관리
+          if ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST '[ -f /home/ubuntu/web-pid ]'; then
+            echo "Algoy-Web PID 파일이 존재합니다. 이전 프로세스를 종료합니다."
+            # 프로세스 ID 읽고 종료
+            ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'kill -9 $(< /home/ubuntu/web-pid)'
           else
-            echo "PID 파일이 존재하지 않습니다. 새로운 프로세스를 시작합니다."
+            echo "Algoy-Web PID 파일이 존재하지 않습니다. 새로운 프로세스를 시작합니다."
           fi
           
           # 새로운 Java 프로세스 시작
-          ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'nohup java -jar /home/ubuntu/*.jar >/dev/null 2>&1 & echo $! > /home/ubuntu/pid'
+          ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'nohup java -jar /home/ubuntu/Algoy-Web-0.0.1-SNAPSHOT.jar >/dev/null 2>&1 & echo $! > /home/ubuntu/web-pid'
           
           # 프로세스가 잘 시작되었는지 확인
-          ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'ps -p $(< /home/ubuntu/pid) && echo "프로세스 시작됨" || echo "프로세스 시작 실패"'
+          ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'ps -p $(< /home/ubuntu/web-pid) && echo "Algoy-Web 프로세스 시작됨" || echo "Algoy-Web 프로세스 시작 실패"'
+          
