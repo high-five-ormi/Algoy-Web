@@ -1,23 +1,26 @@
 package com.example.algoyweb.service.user;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+// import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.algoyweb.model.dto.user.UserDto;
+import com.example.algoyweb.model.entity.user.Role;
 import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.repository.user.UserRepository;
 
 @Service
 public class UserService {
   private final UserRepository userRepository;
-  private final PasswordEncoder passwordEncoder; // Spring Security의 PasswordEncoder 사용
 
-  public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+  // private final PasswordEncoder passwordEncoder; // Spring Security의 PasswordEncoder 사용
+
+  public UserService(UserRepository userRepository /*, PasswordEncoder passwordEncoder*/) {
     this.userRepository = userRepository;
-    this.passwordEncoder = passwordEncoder;
+    // this.passwordEncoder = passwordEncoder;
   }
 
   /**
@@ -29,18 +32,8 @@ public class UserService {
    */
   @Transactional
   public UserDto signUpUser(UserDto userDto) {
-    // 닉네임 중복 체크
-    if (checkNicknameDuplicate(userDto.getNickname())) {
-      throw new IllegalArgumentException("사용 중인 닉네임입니다. 다시 입력하세요.");
-    }
-
-    // 이메일 중복 체크
-    if (checkEmailDuplicate(userDto.getEmail())) {
-      throw new IllegalArgumentException("사용 중인 이메일입니다. 다시 입력하세요.");
-    }
-
     // 비밀번호 암호화
-    String encodedPassword = passwordEncoder.encode(userDto.getPassword());
+    // String encodedPassword = passwordEncoder.encode(userDto.getPassword());
 
     // User 엔티티 생성
     User user =
@@ -48,8 +41,9 @@ public class UserService {
             .username(userDto.getUsername())
             .nickname(userDto.getNickname())
             .email(userDto.getEmail())
-            .password(encodedPassword)
-            .role(userDto.getRole())
+            .password(userDto.getPassword())
+            // .password(passwordEncoder.encode(userDto.getPassword()))
+            .role(Role.NORMAL)
             .isDeleted(false)
             .createdAt(LocalDateTime.now())
             .build();
@@ -62,12 +56,14 @@ public class UserService {
   }
 
   // 닉네임 중복 체크
-  public boolean checkNicknameDuplicate(String nickname) {
-    return userRepository.existsByNickname(nickname);
+  @Transactional
+  public User findByNickname(String nickname) {
+    return userRepository.findByNickname(nickname);
   }
 
   // 이메일 중복 체크
-  public boolean checkEmailDuplicate(String email) {
-    return userRepository.existsByEmail(email);
+  @Transactional
+  public User findByEmail(String email) {
+    return userRepository.findByEmail(email);
   }
 }

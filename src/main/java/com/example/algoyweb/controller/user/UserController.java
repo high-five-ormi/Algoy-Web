@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.algoyweb.model.dto.user.UserDto;
+import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.service.user.UserService;
 
 @Controller
@@ -19,6 +20,13 @@ public class UserController {
   @Autowired
   public UserController(UserService userService) {
     this.userService = userService;
+  }
+  @GetMapping("/login")
+  public String showLoginForm(Model model) {
+    // 새로운 UserDto 객체를 생성 후, "userDto"라는 이름으로 Model에 추가
+    model.addAttribute("user", new User());
+
+    return "login";
   }
 
   /**
@@ -31,7 +39,7 @@ public class UserController {
   @GetMapping("/sign")
   public String showSignUpForm(Model model) {
     // 새로운 UserDto 객체를 생성 후, "userDto"라는 이름으로 Model에 추가
-    model.addAttribute("userDto", new UserDto());
+    model.addAttribute("user", new User());
 
     return "signup/signup";
   }
@@ -44,10 +52,22 @@ public class UserController {
    * @return 회원가입 성공 후 리다이렉트할 URL
    */
   @PostMapping("/sign")
-  public String signUp(@ModelAttribute("userDto") UserDto userDto, Model model) {
-    UserDto signedUpUserDto = userService.signUpUser(userDto);
+  public String signUp(@ModelAttribute("user") UserDto userDto, Model model) {
+    User user = userService.findByNickname(userDto.getNickname());
 
-    model.addAttribute("signedUpUserDto", signedUpUserDto);
+    if (user != null) { // 닉네임 중복 시
+      model.addAttribute("nicknameExist", user);
+      return "signup/signup";
+    }
+
+    User emailuser = userService.findByEmail(userDto.getEmail());
+
+    if (emailuser != null) { // 이메일 중복 시
+      model.addAttribute("emailExist", emailuser);
+      return "signup/signup";
+    }
+
+    userService.signUpUser(userDto);
 
     return "redirect:/login"; // 회원가입 성공시 로그인 화면으로
   }

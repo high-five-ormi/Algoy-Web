@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "user")
 public class User {
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "user_id", nullable = false)
   private Long userId;
 
@@ -44,7 +44,7 @@ public class User {
   private Role role;
 
   @Column(name = "is_deleted", nullable = false)
-  private boolean isDeleted;
+  private Boolean isDeleted;
 
   @Column(name = "created_at", nullable = false)
   private LocalDateTime createdAt;

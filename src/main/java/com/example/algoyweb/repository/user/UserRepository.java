@@ -7,9 +7,9 @@ import com.example.algoyweb.model.entity.user.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-  // 닉네임 중복 체크 쿼리 메서드
-  boolean existsByNickname(String nickname);
+  // 이메일로 사용자를 조회하는 쿼리 메서드
+  User findByEmail(String email);
 
-  // 이메일 중복 체크 쿼리 메서드
-  boolean existsByEmail(String email);
+  // 닉네임으로 사용자를 조회하는 쿼리 메서드
+  User findByNickname(String nickname);
 }

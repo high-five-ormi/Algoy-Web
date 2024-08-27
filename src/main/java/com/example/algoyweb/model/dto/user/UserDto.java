@@ -8,12 +8,10 @@ import com.example.algoyweb.model.entity.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 public class UserDto {
   private Long userId;
   private String username;
@@ -21,7 +19,7 @@ public class UserDto {
   private String email;
   private String password;
   private Role role;
-  private boolean isDeleted;
+  private Boolean isDeleted;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private LocalDateTime deletedAt;
@@ -35,7 +33,7 @@ public class UserDto {
             .email(user.getEmail())
             .password(user.getPassword())
             .role(user.getRole())
-            .isDeleted(user.isDeleted())
+            .isDeleted(user.getIsDeleted())
             .createdAt(user.getCreatedAt())
             .updatedAt(user.getUpdatedAt())
             .deletedAt(user.getDeletedAt())
@@ -44,19 +42,19 @@ public class UserDto {
     return userDto;
   }
 
-  public static User toEntity(UserDto userDto) {
+  public User toEntity() {
     User user =
         User.builder()
-            .userId(userDto.getUserId())
-            .username(userDto.getUsername())
-            .nickname(userDto.getNickname())
-            .email(userDto.getEmail())
-            .password(userDto.getPassword())
-            .role(userDto.getRole())
-            .isDeleted(userDto.isDeleted())
-            .createdAt(userDto.getCreatedAt())
-            .updatedAt(userDto.getUpdatedAt())
-            .deletedAt(userDto.getDeletedAt())
+            .userId(this.getUserId())
+            .username(this.getUsername())
+            .nickname(this.getNickname())
+            .email(this.getEmail())
+            .password(this.getPassword())
+            .role(this.getRole())
+            .isDeleted(this.getIsDeleted())
+            .createdAt(this.getCreatedAt())
+            .updatedAt(this.getUpdatedAt())
+            .deletedAt(this.getDeletedAt())
             .build();
 
     return user;
