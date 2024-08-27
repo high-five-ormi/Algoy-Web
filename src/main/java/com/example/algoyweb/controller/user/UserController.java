@@ -82,6 +82,6 @@ public class UserController {
 
     userService.signUpUser(userDto);
 
-    return "redirect:/login"; // 회원가입 성공시 로그인 화면으로 리다이렉트
+    return "redirect:/algoy/login"; // 회원가입 성공시 로그인 화면으로 리다이렉트
   }
 }

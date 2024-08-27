@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 // import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +17,11 @@ import com.example.algoyweb.repository.user.UserRepository;
 public class UserService {
   private final UserRepository userRepository;
 
-  // private final PasswordEncoder passwordEncoder; // Spring Security의 PasswordEncoder 사용
+  private final PasswordEncoder passwordEncoder; // Spring Security의 PasswordEncoder 사용
 
-  public UserService(UserRepository userRepository /*, PasswordEncoder passwordEncoder*/) {
+  public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
     this.userRepository = userRepository;
-    // this.passwordEncoder = passwordEncoder;
+    this.passwordEncoder = passwordEncoder;
   }
 
   /**
@@ -32,17 +33,13 @@ public class UserService {
    */
   @Transactional
   public UserDto signUpUser(UserDto userDto) {
-    // 비밀번호 암호화
-    // String encodedPassword = passwordEncoder.encode(userDto.getPassword());
-
     // User 엔티티 생성
     User user =
         User.builder()
             .username(userDto.getUsername())
             .nickname(userDto.getNickname())
             .email(userDto.getEmail())
-            .password(userDto.getPassword())
-            // .password(passwordEncoder.encode(userDto.getPassword()))
+            .password(passwordEncoder.encode(userDto.getPassword())) // 비밀번호 암호화
             .role(Role.NORMAL)
             .isDeleted(false)
             .createdAt(LocalDateTime.now())
