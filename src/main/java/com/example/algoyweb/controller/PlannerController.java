@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,16 +45,16 @@ public class PlannerController {
 
     @PostMapping("/edit/{id}")
     @PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<PlannerDto> editPlan(@RequestBody PlannerDto plannerDto, @PathVariable Long id) {
-        PlannerDto updatedDto = plannerService.updatePlan(plannerDto, id);
+    public ResponseEntity<PlannerDto> editPlan(@RequestBody PlannerDto plannerDto, @PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        PlannerDto updatedDto = plannerService.updatePlan(plannerDto, id, userDetails.getUsername());
 
         return ResponseEntity.status(HttpStatus.OK).body(updatedDto);
     }
 
     @PostMapping("/delete/{id}")
     @PostAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-    public ResponseEntity<String> deletePlan(@PathVariable Long id) {
-        plannerService.deletePlan(id);
+    public ResponseEntity<String> deletePlan(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        plannerService.deletePlan(id, userDetails.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
     }
 }
