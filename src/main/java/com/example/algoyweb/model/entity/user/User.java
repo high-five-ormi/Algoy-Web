@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,8 +39,9 @@ public class User {
   @Column(name = "password", nullable = false)
   private String password;
 
+  @Enumerated(EnumType.STRING) // Enum 값을 문자열로 저장
   @Column(name = "role", nullable = false)
-  private Enum role;
+  private Role role;
 
   @Column(name = "is_deleted", nullable = false)
   private boolean isDeleted;

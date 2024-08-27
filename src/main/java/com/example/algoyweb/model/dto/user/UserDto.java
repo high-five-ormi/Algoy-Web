@@ -3,6 +3,7 @@ package com.example.algoyweb.model.dto.user;
 import java.time.LocalDateTime;
 
 import com.example.algoyweb.model.entity.user.User;
+import com.example.algoyweb.model.entity.user.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,7 @@ public class UserDto {
   private String nickname;
   private String email;
   private String password;
-  private Enum role;
+  private Role role;
   private boolean isDeleted;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
