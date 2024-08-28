@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.algoyweb.config.user.UserConfig;
 import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.user.Role;
 import com.example.algoyweb.model.entity.user.User;
@@ -16,7 +17,6 @@ import com.example.algoyweb.repository.user.UserRepository;
 @Service
 public class UserService {
   private final UserRepository userRepository;
-
   private final PasswordEncoder passwordEncoder; // Spring Security의 PasswordEncoder 사용
 
   public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -52,15 +52,15 @@ public class UserService {
     return UserDto.toDto(user);
   }
 
-  // 닉네임 중복 체크
-  @Transactional
-  public User findByNickname(String nickname) {
-    return userRepository.findByNickname(nickname);
-  }
-
   // 이메일 중복 체크
   @Transactional
   public User findByEmail(String email) {
     return userRepository.findByEmail(email);
+  }
+
+  // 닉네임 중복 체크
+  @Transactional
+  public User findByNickname(String nickname) {
+    return userRepository.findByNickname(nickname);
   }
 }

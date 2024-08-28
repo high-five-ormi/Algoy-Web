@@ -1,6 +1,10 @@
 package com.example.algoyweb.controller.user;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,15 +12,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.service.user.UserService;
 
+import ch.qos.logback.classic.Logger;
+
 @Controller
 @RequestMapping("/algoy")
 public class UserController {
   UserService userService;
+  private Logger logger;
 
   @Autowired
   public UserController(UserService userService) {
@@ -64,24 +72,30 @@ public class UserController {
       return "signup/signup";
     }
 
-    User user = userService.findByNickname(userDto.getNickname());
-
-    if (user != null) { // 닉네임 중복 시
-      model.addAttribute("nicknameExist", true);
-
-      return "signup/signup";
-    }
-
-    User emailUser = userService.findByEmail(userDto.getEmail());
-
-    if (emailUser != null) { // 이메일 중복 시
-      model.addAttribute("emailExist", true);
-
-      return "signup/signup";
-    }
-
     userService.signUpUser(userDto);
 
     return "redirect:/algoy/login"; // 회원가입 성공시 로그인 화면으로 리다이렉트
+  }
+
+  @GetMapping("/check-email-duplicate")
+  public ResponseEntity<Map<String, Boolean>> checkEmailDuplicate(@RequestParam("email") String email) {
+    boolean exists = userService.findByEmail(email) != null;
+
+    Map<String, Boolean> response = new HashMap<>();
+
+    response.put("exists", exists);
+
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("/check-nickname-duplicate")
+  public ResponseEntity<Map<String, Boolean>> checkNicknameDuplicate(@RequestParam("nickname") String nickname) {
+    boolean exists = userService.findByNickname(nickname) != null;
+
+    Map<String, Boolean> response = new HashMap<>();
+
+    response.put("exists", exists);
+
+    return ResponseEntity.ok(response);
   }
 }

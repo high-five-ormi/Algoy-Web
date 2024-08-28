@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link th:href="@{/css/signup/signup.css}" rel="stylesheet">
     <title>회원가입</title>
@@ -13,10 +14,9 @@
         <label for="email">E-amil</label>
         <div class="input-group">
             <input type="email" id="email" th:field="*{email}" placeholder="이메일을 입력하세요." required/>
-            <button type="button" class="check-button">중복 확인</button>
+            <button type="button" class="check-button" onclick="checkDuplicateEmail(event)">중복 확인</button>
         </div>
-        <!-- th:if로 이메일 중복 시 메시지 표시 -->
-        <p th:if="${emailExist}" class="view-message">이미 사용 중인 이메일입니다!</p>
+        <p id="emailMessage" class="view-message"></p>
 
         <label for="password">Password</label>
         <input type="password" id="password" th:field="*{password}" placeholder="비밀번호를 입력하세요." required/>
@@ -33,12 +33,52 @@
             <input type="text" id="nickname" th:field="*{nickname}" placeholder="닉네임을 입력하세요." required/>
             <button type="button" class="check-button">중복 확인</button>
         </div>
-        <p th:if="${nicknameExist}" class="view-message">이미 사용 중인 닉네임입니다!</p>
+        <p id="nicknameMessage" class="view-message"></p>
 
         <div class="btn-wrap">
             <button type="submit" class="submit-button">회원 가입</button>
             <button type="button" class="back-button">뒤로 가기</button>
         </div>
     </form>
+    <script>
+        function checkDuplicateEmail(event) {
+            event.preventDefault(); // 폼의 기본 제출 동작 막기
+
+            const email = document.getElementById("email").value; // 이메일 입력란
+            const emailMessage = document.getElementById("emailMessage"); // 사용자가 입력한 값
+
+            // 이메일 입력란에 값이 있는지 확인
+            if (email) { // 이메일 입력란에 값이 있으면
+                // fetch API를 사용하여 서버에 GET 요청 보내기
+                fetch(`/algoy/check-email-duplicate?email=${encodeURIComponent(email)}`)
+                    .then(response => {
+                        // 서버 응답이 성공적인지 확인 (HTTP 상태 코드가 200번대인지 확인)
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok");
+                        }
+                        return response.json(); // 응답 본문을 JSON으로 파싱하여 반환
+                    })
+                    .then(data => {
+                        // 서버에서 반환된 데이터에 'exists' 필드가 있는지 확인하여 이메일 중복 여부 판단
+                        if (data.exists) { // 입력한 이메일이 이미 존재하는 경우
+                            emailMessage.textContent = "이미 사용 중인 이메일입니다!";
+                            emailMessage.style.color = "red";
+                        } else { // 입력한 이메일이 이미 존재하지 않는(사용 가능한) 경우
+                            emailMessage.textContent = "사용 가능한 이메일입니다!";
+                            emailMessage.style.color = "green";
+                        }
+                    })
+                    .catch(error => { // fetch 요청 또는 JSON 파싱 중 오류가 발생한 경우
+                        console.error("Error checking email:", error);
+                        emailMessage.textContent = "이메일 확인 중 오류가 발생했습니다.";
+                        emailMessage.style.color = "red";
+                    });
+            } else { // 이메일 입력란이 비어있으면
+                emailMessage.textContent = "이메일을 입력하세요.";
+                emailMessage.style.color = "red";
+            }
+        }
+    </script>
+    <script th:src="@{/js/main.js}"></script>
 </body>
 </html>
