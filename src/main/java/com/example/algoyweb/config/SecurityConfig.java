@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .requestMatchers("/algoy/check-email-duplicate").permitAll()
                 .requestMatchers("/algoy/check-nickname-duplicate").permitAll()
                 .requestMatchers("/css/**").permitAll()
+                .requestMatchers("/js/**").permitAll()
                 .anyRequest().authenticated()
         )
         .formLogin(form -> form
