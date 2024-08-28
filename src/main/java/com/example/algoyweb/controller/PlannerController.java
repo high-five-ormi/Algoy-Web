@@ -20,7 +20,7 @@ public class PlannerController {
 
     private final PlannerService plannerService;
 
-    //nginx 8081 test 메소드
+    //nginx 8081 test 메소드 수정 X
     @GetMapping("/test")
     public String test(){
         return "8081 접속 됨";
