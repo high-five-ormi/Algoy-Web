@@ -1,15 +1,11 @@
 package com.example.algoyweb.model.entity.user;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.example.algoyweb.model.entity.planner.Planner;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -54,4 +50,13 @@ public class User {
 
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
+
+  @OneToMany(mappedBy = "user")
+  private List<Planner> plannerList;
+
+  public void connectPlanner(Planner planner) {
+    if(this.plannerList == null)
+      this.plannerList = new ArrayList<>();
+    this.getPlannerList().add(planner);
+  }
 }

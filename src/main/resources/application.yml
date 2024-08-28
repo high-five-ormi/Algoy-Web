@@ -18,14 +18,14 @@ spring:
         enabled: true
 
   datasource:
-    url: jdbc:mysql://mymysql.cjee2s48u8zx.ap-northeast-2.rds.amazonaws.com/algoy?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/testdb?serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: admin
-    password: manbochuchu
+    username: root
+    password: tmdhkzh77!
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:

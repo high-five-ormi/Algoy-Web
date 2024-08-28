@@ -1,6 +1,6 @@
-package com.example.algoyweb.dto;
+package com.example.algoyweb.model.dto.planner;
 
-import com.example.algoyweb.domain.Planner;
+import com.example.algoyweb.model.entity.planner.Planner;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +24,7 @@ public class PlannerDto {
 
     private LocalDateTime endAt;
 
-    private String quizType;
+    private String link;
 
     private Planner.Status status;
 

@@ -1,7 +1,7 @@
-package com.example.algoyweb.utils;
+package com.example.algoyweb.util;
 
-import com.example.algoyweb.domain.Planner;
-import com.example.algoyweb.dto.PlannerDto;
+import com.example.algoyweb.model.entity.planner.Planner;
+import com.example.algoyweb.model.dto.planner.PlannerDto;
 
 import java.time.LocalDateTime;
 
@@ -15,14 +15,13 @@ public class ConvertUtils {
                 .startAt(planner.getStartAt())
                 .content(planner.getContent())
                 .createAt(planner.getCreateAt())
-                .quizType(planner.getQuizType())
                 .status(planner.getStatus())
                 .updateAt(planner.getUpdateAt())
+                .link(planner.getLink())
                 .build();
     }
 
     public static Planner convertDtoToPlanner(PlannerDto plannerDto) {
-
         return Planner.builder()
                 .content(plannerDto.getContent())
                 .createAt(LocalDateTime.now())
@@ -31,7 +30,7 @@ public class ConvertUtils {
                 .endAt(plannerDto.getEndAt())
                 .title(plannerDto.getTitle())
                 .startAt(plannerDto.getStartAt())
-                .quizType(plannerDto.getQuizType())
+                .link(plannerDto.getLink())
                 .build();
     }
 }

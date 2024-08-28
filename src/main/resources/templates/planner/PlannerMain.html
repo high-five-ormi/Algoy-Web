@@ -1,20 +1,172 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>플래너</title>
+    <link rel="stylesheet" href="/css/planner/PlannerMainCss.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+<body>
 <header>
     <div id="header-container">
-        <img src="/img/algoy-1.png" width="197" height="197" alt="알고이 로고입니다." id="header-logo">
+        <img src="/img/algoy-1.png" width="190" height="190" alt="알고이 로고입니다." id="header-logo">
         <nav id="header-nav-1">
             <span>오답 노트</span>
             <span>플래너</span>
             <span>스터디 모집</span>
         </nav>
+        <nav id="header-nav-2">
+            <div id="search-container">
+                <input type="text" placeholder="search" class="search-input">
+                <button class="search-button">
+                    <img src="/img/search-glasses.png" width="29" height="29" alt="검색 창의 돋보기 입니다.">
+                </button>
+            </div>
+            <div class="header-user-area">
+                <button id="header-logout">
+                    <span>Logout</span>
+                </button>
+                <button id="header-my-page">
+                    <img src="/img/user-icon.png" width="20" height="20" alt="마이 페이지 버튼입니다">
+                </button>
+            </div>
+        </nav>
     </div>
 </header>
-<body>
+<div id="calendar-header" class="calendar-nav">
+    <div class="calendar-nav" style="width: 100px; height: 23px">
+        <img src="/img/planner-icon.png" width="16" height="16" alt="플래너 아이콘입니다.">
+        <span style="line-height: 23px">Planner</span>
+    </div>
+    <button id="btn-calendar">New</button>
+</div>
+<div class="planner-container">
+    <h2>코테 level up을 위한 오늘의 PLANNER</h2>
+    <p>Planner를 작성하시면서 플래너가 변경됩니다</p>
 
+    <div class="loader">
+        <p>Loading...</p>
+    </div>
+
+    <div class="scrollable-table">
+        <table id="planner-table">
+            <thead>
+            <tr>
+                <th style="width: 50px">No.</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Link</th>
+                <th style="width: 120px">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="planner-modal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <h2 id="modal-title">제목</h2>
+        <p><strong>내용:</strong> <span id="modal-content">Loading...</span></p>
+        <p><strong>만들어진 시간:</strong> <span id="modal-createdAt">Loading...</span></p>
+        <p><strong>업데이트된 시간:</strong> <span id="modal-updatedAt">Loading...</span></p>
+        <p><strong>시작 날짜:</strong> <span id="modal-startAt">Loading...</span></p>
+        <p><strong>끝난 날짜:</strong> <span id="modal-endAt">Loading...</span></p>
+        <p><strong>문제 링크:</strong> <a href="#" id="modal-link" target="_blank">Loading...</a></p>
+    </div>
+</div>
 </body>
+<script>
+    $(document).ready(function() {
+        $('.loader').show();
+
+        $.ajax({
+            url: '/algoy/planner/get/plans',
+            type: 'GET',
+            success: function(data) {
+                $('.loader').hide();
+
+                let tableBody = $('#planner-table tbody');
+                $.each(data, function(index, item) {
+                    let statusClass = '';
+                    if (item.status === 'TODO') {
+                        statusClass = 'status-not-started';
+                    } else if (item.status === 'IN_PROGRESS') {
+                        statusClass = 'status-in-progress';
+                    } else if (item.status === 'DONE') {
+                        statusClass = 'status-done';
+                    }
+
+                    let row = '<tr>' +
+                        '<td>' + item.id + '</td>' +
+                        '<td>' + item.title + '</td>' +
+                        '<td><a href="#" class="table-content" data-id="' + item.id + '">Content</a></td>' +
+                        '<td><a href="' + item.url + '">Link</a></td>' +
+                        '<td class="planner-table-status-container"><div class="' + statusClass + '">' + item.status + '</div></td>' +
+                        '</tr>';
+
+                    tableBody.append(row);
+                });
+
+                $('.table-content').on('click', function(event) {
+                    event.preventDefault();
+                    let plannerId = $(this).data('id');
+                    loadPlannerDetail(plannerId);
+                });
+            },
+            error: function(error) {
+                $('.loader').hide();
+                alert('에러 로딩 데이터 : ' + error.statusText);
+            }
+        });
+
+        $('#btn-calendar').on('click', function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: '/algoy/planner/save-form',
+                type: 'GET',
+                success: function (data) {
+                    location.href = '/algoy/planner/save-form';
+                },
+                error: function (error) {
+                    alert('플래너 로딩 에러 : ' + error.statusText);
+                }
+            });
+        })
+
+        function loadPlannerDetail(plannerId) {
+            $.ajax({
+                url: '/algoy/planner/' + plannerId,
+                type: 'GET',
+                success: function(data) {
+                    $('#modal-title').text(data.title);
+                    $('#modal-content').text(data.content);
+                    $('#modal-createdAt').text(data.createAt);
+                    $('#modal-updatedAt').text(data.updateAt);
+                    $('#modal-startAt').text(data.startAt);
+                    $('#modal-endAt').text(data.endAt);
+                    $('#modal-link').attr('href', data.link);
+                    $('#modal-link').text(data.link);
+                    $('#planner-modal').show();
+                },
+                error: function(error) {
+                    alert('플래너 로딩 에러 : ' + error.statusText);
+                }
+            });
+        }
+
+        // Event handler for closing the modal
+        $('.modal-close').on('click', function() {
+            $('#planner-modal').hide();
+        });
+
+        // Close the modal if the user clicks outside of the modal content
+        $(window).on('click', function(event) {
+            if ($(event.target).is('#planner-modal')) {
+                $('#planner-modal').hide();
+            }
+        });
+    });
+</script>
 </html>
