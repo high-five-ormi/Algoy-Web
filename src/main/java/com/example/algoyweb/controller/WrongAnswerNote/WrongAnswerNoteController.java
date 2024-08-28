@@ -37,7 +37,7 @@ public class WrongAnswerNoteController {
 
     @GetMapping("/create")
     public String createWrongAnswerNoteForm(Model model) {
-        model.addAttribute("note", new WrongAnswerNoteDTO()); // 'note' 객체를 모델에 추가
+        model.addAttribute("note", new WrongAnswerNoteDTO());
         return "create-wrong-answer-note";
     }
 
@@ -54,7 +54,7 @@ public class WrongAnswerNoteController {
             model.addAttribute("note", note.get());
             return "edit-wrong-answer-note";
         } else {
-            return "error"; // or another appropriate error page
+            return "error";
         }
     }
 
@@ -63,12 +63,12 @@ public class WrongAnswerNoteController {
         @ModelAttribute WrongAnswerNoteDTO dto) {
         dto.setId(id);
         service.save(dto);
-        return "redirect:/algoy/commit"; // 수정된 리다이렉션 경로
+        return "redirect:/algoy/commit";
     }
 
     @GetMapping("/{id}/delete")
     public String deleteWrongAnswerNoteById(@PathVariable Long id) {
         service.deleteById(id);
-        return "redirect:/algoy/commit"; // 수정된 리다이렉션 경로
+        return "redirect:/algoy/commit";
     }
 }
