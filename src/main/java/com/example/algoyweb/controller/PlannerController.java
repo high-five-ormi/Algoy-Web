@@ -15,18 +15,18 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/algoy")
+//@RequestMapping("/algoy")
 public class PlannerController {
 
     private final PlannerService plannerService;
 
     //nginx 8081 test 메소드 수정 X
-    @GetMapping("/test")
+    @RequestMapping(method = RequestMethod.GET, path = "/algoy")
     public String test(){
         return "8081 접속 됨";
     }
 
-    @GetMapping
+    @GetMapping("/planner")
     //@PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<List<PlannerDto>> getCalender(@RequestParam int year, @RequestParam int month) {
         List<PlannerDto> plannerDtoList = plannerService.getPlansMonth(year, month);
