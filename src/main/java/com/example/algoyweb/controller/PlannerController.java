@@ -21,15 +21,23 @@ public class PlannerController {
     private final PlannerService plannerService;
 
     @GetMapping
-    @PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    //@PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<List<PlannerDto>> getCalender(@RequestParam int year, @RequestParam int month) {
         List<PlannerDto> plannerDtoList = plannerService.getPlansMonth(year, month);
 
         return ResponseEntity.status(HttpStatus.OK).body(plannerDtoList);
     }
 
+   // @GetMapping
+    //@PostAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    //public ResponseEntity<List<PlannerDto>> getPlanner(/*@AuthenticationPrincipal UserDetails user*/) {
+      //  List<PlannerDto> plannerDtoList = plannerService.getPlans(/*user.getUsername()*/ "1234");
+//
+  //      return ResponseEntity.status(HttpStatus.OK).body(plannerDtoList);
+    //}
+
     @GetMapping("/{id}")
-    @PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    //@PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<PlannerDto> getPlan(@PathVariable Long id) {
         PlannerDto plannerDto = plannerService.getPlan(id);
 
@@ -37,7 +45,7 @@ public class PlannerController {
     }
 
     @GetMapping("/save-form")
-    @PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    //@PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public ModelAndView saveForm() {
         return new ModelAndView("planner/SaveForm");
     }
@@ -49,7 +57,7 @@ public class PlannerController {
     }
 
     @PostMapping("/save")
-    @PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    //@PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<PlannerDto> savePlan(@RequestBody PlannerDto plannerDto) {
         PlannerDto savedDto = plannerService.savePlan(plannerDto);
 
@@ -57,17 +65,17 @@ public class PlannerController {
     }
 
     @PostMapping("/edit/{id}")
-    @PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<PlannerDto> editPlan(@RequestBody PlannerDto plannerDto, @PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
-        PlannerDto updatedDto = plannerService.updatePlan(plannerDto, id, userDetails.getUsername());
+    //@PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    public ResponseEntity<PlannerDto> editPlan(@RequestBody PlannerDto plannerDto, @PathVariable Long id/*@AuthenticationPrincipal UserDetails userDetails*/) {
+        PlannerDto updatedDto = plannerService.updatePlan(plannerDto, id, /*userDetails.getUsername()*/ "1234");
 
         return ResponseEntity.status(HttpStatus.OK).body(updatedDto);
     }
 
     @PostMapping("/delete/{id}")
-    @PostAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
-    public ResponseEntity<String> deletePlan(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
-        plannerService.deletePlan(id, userDetails.getUsername());
+    //@PostAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    public ResponseEntity<String> deletePlan(@PathVariable Long id/*@AuthenticationPrincipal UserDetails userDetails*/) {
+        plannerService.deletePlan(id, /*userDetails.getUsername()*/ "1234");
         return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
     }
 }
