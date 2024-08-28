@@ -1,6 +1,7 @@
-package com.example.algoyweb.domain;
+package com.example.algoyweb.model.entity.planner;
 
-import com.example.algoyweb.dto.PlannerDto;
+import com.example.algoyweb.model.dto.planner.PlannerDto;
+import com.example.algoyweb.model.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,7 +34,7 @@ public class Planner {
     private LocalDateTime endAt;
 
     @Column(nullable = false)
-    private String quizType;
+    private String link;
 
     @Column(nullable = false)
     private Status status;
@@ -42,8 +43,8 @@ public class Planner {
 
     private LocalDateTime updateAt;
 
-    /*@ManyToOne(fetch = FetchType.LAZY)
-    private User user;*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     public enum Status {
         TODO,
@@ -56,8 +57,13 @@ public class Planner {
         this.content = plannerDto.getContent();
         this.startAt = plannerDto.getStartAt();
         this.endAt = plannerDto.getEndAt();
-        this.quizType = plannerDto.getQuizType();
+        this.link = plannerDto.getLink();
         this.status = plannerDto.getStatus();
         this.updateAt = LocalDateTime.now();
+    }
+
+    public void connectUser(User user) {
+        this.user = user;
+        user.connectPlanner(this);
     }
 }

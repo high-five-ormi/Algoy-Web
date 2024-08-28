@@ -1,11 +1,12 @@
-package com.example.algoyweb.service;
+package com.example.algoyweb.service.planner;
 
-import com.example.algoyweb.domain.Planner;
-import com.example.algoyweb.dto.PlannerDto;
+import com.example.algoyweb.model.entity.planner.Planner;
+import com.example.algoyweb.model.dto.planner.PlannerDto;
 import com.example.algoyweb.exception.CustomException;
 import com.example.algoyweb.exception.PlannerErrorCode;
-import com.example.algoyweb.repository.PlannerRepository;
-import com.example.algoyweb.utils.ConvertUtils;
+import com.example.algoyweb.repository.planner.PlannerRepository;
+import com.example.algoyweb.repository.user.UserRepository;
+import com.example.algoyweb.util.ConvertUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import java.util.Optional;
 public class PlannerService {
 
     private final PlannerRepository plannerRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public List<PlannerDto> getPlansMonth(int year, int month) {
@@ -42,8 +44,10 @@ public class PlannerService {
                 plannerRepository.findById(id).orElseThrow(() -> new CustomException(PlannerErrorCode.PLAN_NOT_FOUND)));
     }
 
-    public PlannerDto savePlan(PlannerDto plannerDto) {
-        return ConvertUtils.convertPlannerToDto(plannerRepository.save(ConvertUtils.convertDtoToPlanner(plannerDto)));
+    public PlannerDto savePlan(PlannerDto plannerDto, String username) {
+        Planner planner = ConvertUtils.convertDtoToPlanner(plannerDto);
+        planner.connectUser(userRepository.findByEmail(username));
+        return ConvertUtils.convertPlannerToDto(plannerRepository.save(planner));
     }
 
     public PlannerDto updatePlan(PlannerDto plannerDto, Long id, String username) {
@@ -61,5 +65,10 @@ public class PlannerService {
             throw new CustomException(PlannerErrorCode.PLAN_NOT_EQUAL_ID);
         }*/
         plannerRepository.delete(findPlanner);
+    }
+
+    public List<PlannerDto> getPlans(String username) {
+        return plannerRepository.findByUserEmail(username).stream()
+                .map(ConvertUtils::convertPlannerToDto).toList();
     }
 }

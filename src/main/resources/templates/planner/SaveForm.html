@@ -1,10 +1,44 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>플래너</title>
+    <link rel="stylesheet" href="/css/planner/PlannerSaveForm.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+<header>
+    <div id="header-container">
+        <img src="/img/algoy-1.png" width="190" height="190" alt="알고이 로고입니다." id="header-logo">
+        <nav id="header-nav-1">
+            <span>오답 노트</span>
+            <span>플래너</span>
+            <span>스터디 모집</span>
+        </nav>
+        <nav id="header-nav-2">
+            <div id="search-container">
+                <input type="text" placeholder="search" class="search-input">
+                <button class="search-button">
+                    <img src="/img/search-glasses.png" width="29" height="29" alt="검색 창의 돋보기 입니다.">
+                </button>
+            </div>
+            <div class="header-user-area">
+                <button id="header-logout">
+                    <span>Logout</span>
+                </button>
+                <button id="header-my-page">
+                    <img src="/img/user-icon.png" width="20" height="20" alt="마이 페이지 버튼입니다">
+                </button>
+            </div>
+        </nav>
+    </div>
+</header>
+<div id="calendar-header" class="calendar-nav">
+    <div class="calendar-nav" style="width: 100px; height: 23px">
+        <img src="/img/planner-icon.png" width="16" height="16" alt="플래너 아이콘입니다.">
+        <span style="line-height: 23px">Planner</span>
+    </div>
+</div>
 
 </body>
 </html>
