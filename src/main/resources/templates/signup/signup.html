@@ -13,10 +13,9 @@
         <label for="email">E-amil</label>
         <div class="input-group">
             <input type="email" id="email" th:field="*{email}" placeholder="이메일을 입력하세요." required/>
-            <button type="button" class="check-button">중복 확인</button>
+            <button type="button" class="check-button" onclick="checkDuplicateEmail(event)">중복 확인</button>
         </div>
-        <!-- th:if로 이메일 중복 시 메시지 표시 -->
-        <p th:if="${emailExist}" class="view-message">이미 사용 중인 이메일입니다!</p>
+        <p id="email-message" class="view-message"></p>
 
         <label for="password">Password</label>
         <input type="password" id="password" th:field="*{password}" placeholder="비밀번호를 입력하세요." required/>
@@ -31,14 +30,16 @@
         <label for="nickname">닉네임</label>
         <div class="input-group">
             <input type="text" id="nickname" th:field="*{nickname}" placeholder="닉네임을 입력하세요." required/>
-            <button type="button" class="check-button">중복 확인</button>
+            <button type="button" class="check-button" onclick="checkDuplicateNickname(event)">중복 확인</button>
         </div>
-        <p th:if="${nicknameExist}" class="view-message">이미 사용 중인 닉네임입니다!</p>
+        <p id="nickname-message" class="view-message"></p>
 
         <div class="btn-wrap">
             <button type="submit" class="submit-button">회원 가입</button>
             <button type="button" class="back-button">뒤로 가기</button>
         </div>
     </form>
+
+    <script th:src="@{/js/signup/signup.js}"></script>
 </body>
 </html>
