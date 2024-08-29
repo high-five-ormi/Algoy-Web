@@ -3,7 +3,6 @@ package com.example.algoyweb.controller.user;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.algoyweb.model.dto.auth.SessionUser;
 import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.service.user.UserService;
@@ -25,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/algoy")
 public class UserController {
-  UserService userService;
+  private final UserService userService;
   private final HttpSession httpSession;
 
   @GetMapping("/login")
@@ -34,23 +32,6 @@ public class UserController {
     model.addAttribute("user", new User());
 
     return "user/login";
-  }
-
- /* @GetMapping("/logout")
-  public String LoadLogout() {
-    return "user/login";
-  }*/
-
-  @GetMapping("/login-google")
-  public String googleLogin(Model model) {
-    // 세션에서 사용자 정보 꺼내기
-    SessionUser sessionUser = (SessionUser) httpSession.getAttribute("user");
-
-    if (sessionUser != null) { // 로그인된 유저가 있으면
-      model.addAttribute("userName", sessionUser.getUsername());
-    }
-
-    return "google-login/google-login";
   }
 
   /**
@@ -80,6 +61,7 @@ public class UserController {
       @ModelAttribute("user") UserDto userDto,
       @RequestParam("confirmPassword") String confirmPassword,
       Model model) {
+    // 나중에 .js로 변경해 보기
     if (!userDto.getPassword().equals(confirmPassword)) { // 비밀번호 확인 시 다른 비밀번호가 입력되면
       model.addAttribute("passwordMismatch", true);
 
