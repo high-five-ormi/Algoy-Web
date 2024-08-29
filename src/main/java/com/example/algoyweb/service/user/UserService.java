@@ -1,14 +1,12 @@
 package com.example.algoyweb.service.user;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 // import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.algoyweb.config.user.UserConfig;
 import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.user.Role;
 import com.example.algoyweb.model.entity.user.User;

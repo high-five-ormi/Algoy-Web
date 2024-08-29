@@ -59,4 +59,20 @@ public class User {
       this.plannerList = new ArrayList<>();
     this.getPlannerList().add(planner);
   }
+
+  public User update(String username, String nickname, String email, String password, Role role, Boolean isDeleted) {
+    this.username = username;
+    this.nickname = nickname;
+    this.email = email;
+    this.password = password;
+    this.role = role;
+    this.isDeleted = isDeleted;
+    this.updatedAt = LocalDateTime.now();
+
+    return this;
+  }
+
+  public String getRoleKey() {
+    return this.role.getKey();
+  }
 }

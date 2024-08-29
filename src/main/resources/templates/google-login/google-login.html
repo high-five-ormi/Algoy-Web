@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko" >
+<head>
+    <meta charset="UTF-8">
+    <title>Google OAuth Login</title>
+</head>
+<body>
+    <!-- 구글 로그인 되었으면 -->
+    <div th:if="${userName}">
+        <p>로그인되었습니다!</p>
+    </div>
+    <!-- 구글 로그인 안 되었으면 -->
+    <div th:if="!${userName}">
+        <a th:href="@{/oauth2/authorization/google}" class="btn btn-primary me-2 active" role="button">Google Login</a>
+    </div>
+</body>
+</html>
