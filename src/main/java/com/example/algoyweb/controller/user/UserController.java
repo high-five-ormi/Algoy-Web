@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.user.User;
@@ -36,8 +35,13 @@ public class UserController {
     // 새로운 UserDto 객체를 생성 후, "userDto"라는 이름으로 Model에 추가
     model.addAttribute("user", new User());
 
-    return "login";
+    return "user/login";
   }
+
+ /* @GetMapping("/logout")
+  public String LoadLogout() {
+    return "user/login";
+  }*/
 
   /**
    * 회원가입 폼 보여주기
