@@ -24,7 +24,7 @@ public class User {
   private Long userId;
 
   @Column(name = "user_name", nullable = false)
-  private String firstname;
+  private String username;
 
   @Column(name = "nick_name", nullable = false)
   private String nickname;
@@ -58,5 +58,21 @@ public class User {
     if(this.plannerList == null)
       this.plannerList = new ArrayList<>();
     this.getPlannerList().add(planner);
+  }
+
+  public User update(String username, String nickname, String email, String password, Role role, Boolean isDeleted) {
+    this.username = username;
+    this.nickname = nickname;
+    this.email = email;
+    this.password = password;
+    this.role = role;
+    this.isDeleted = isDeleted;
+    this.updatedAt = LocalDateTime.now();
+
+    return this;
+  }
+
+  public String getRoleKey() {
+    return this.role.getKey();
   }
 }

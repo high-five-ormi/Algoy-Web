@@ -166,6 +166,10 @@ main {
     margin: 20px 0;
 }
 
+.google-signin-btn{
+    text-decoration-line: none;
+}
+
 .btn-google {
     display: flex;
     align-items: center;
