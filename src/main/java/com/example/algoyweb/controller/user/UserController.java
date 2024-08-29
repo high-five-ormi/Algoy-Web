@@ -3,6 +3,7 @@ package com.example.algoyweb.controller.user;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,8 +33,13 @@ public class UserController {
     // 새로운 UserDto 객체를 생성 후, "userDto"라는 이름으로 Model에 추가
     model.addAttribute("user", new User());
 
-    return "login";
+    return "user/login";
   }
+
+ /* @GetMapping("/logout")
+  public String LoadLogout() {
+    return "user/login";
+  }*/
 
   @GetMapping("/login-google")
   public String googleLogin(Model model) {

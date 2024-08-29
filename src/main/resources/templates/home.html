@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>홈</title>
+    <link rel="stylesheet" th:href="@{/css/homeCss.css}">
+</head>
+<body>
+<header>
+    <div id="header-container">
+        <a th:href="@{/algoy/home}">
+            <img src="/img/algoy-1.png" width="190" height="190" alt="알고이 로고입니다." id="header-logo">
+        </a>
+        <nav id="header-nav-1">
+            <span>오답 노트</span>
+            <span>플래너</span>
+            <span>스터디 모집</span>
+        </nav>
+        <nav id="header-nav-2">
+            <div id="search-container">
+                <input type="text" placeholder="search" class="search-input">
+                <button class="search-button">
+                    <img src="/img/search-glasses.png" width="29" height="29" alt="검색 창의 돋보기 입니다.">
+                </button>
+            </div>
+            <div id="header-user-area">
+                <button id="header-my-page">
+                    <img src="/img/user-icon.png" width="20" height="20" alt="마이 페이지 버튼입니다">
+                </button>
+                <div th:if="${isAuthenticated}">
+                    <form action="/algoy/logout" method="post">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                        <button type="submit" name="logout" id="header-logout">
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </div>
+                <div th:unless="${isAuthenticated}">
+                    <a href="/algoy/login">
+                        <button id="header-login">
+                            <span>Login</span>
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<h1>
+    홈화면 입니당!
+</h1>
+</body>
+</html>

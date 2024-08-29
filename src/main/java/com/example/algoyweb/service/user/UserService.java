@@ -3,17 +3,20 @@ package com.example.algoyweb.service.user;
 import java.time.LocalDateTime;
 
 // import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.algoyweb.model.entity.user.Role;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.algoyweb.model.dto.user.UserDto;
-import com.example.algoyweb.model.entity.user.Role;
 import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.repository.user.UserRepository;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder; // Spring Security의 PasswordEncoder 사용
 
@@ -34,7 +37,7 @@ public class UserService {
     // User 엔티티 생성
     User user =
         User.builder()
-            .username(userDto.getUsername())
+            .firstname(userDto.getFirstname())
             .nickname(userDto.getNickname())
             .email(userDto.getEmail())
             .password(passwordEncoder.encode(userDto.getPassword())) // 비밀번호 암호화
@@ -61,4 +64,24 @@ public class UserService {
   public User findByNickname(String nickname) {
     return userRepository.findByNickname(nickname);
   }
+
+
+
+
+  @Override
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    User user = userRepository.findByEmail(email);
+    if (user == null) {
+      throw new UsernameNotFoundException("User not found with email: " + email);
+    }
+    System.out.println(user);
+
+    return org.springframework.security.core.userdetails.User
+            .withUsername(user.getEmail())
+            .password(user.getPassword())  // Assuming this is already hashed
+            .build();
+  }
+
 }
+
+
