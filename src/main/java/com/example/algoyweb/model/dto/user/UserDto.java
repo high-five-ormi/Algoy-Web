@@ -2,8 +2,8 @@ package com.example.algoyweb.model.dto.user;
 
 import java.time.LocalDateTime;
 
-import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.model.entity.user.Role;
+import com.example.algoyweb.model.entity.user.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class UserDto {
   private Long userId;
-  private String username;
+  private String firstname;
   private String nickname;
   private String email;
   private String password;
@@ -28,7 +28,7 @@ public class UserDto {
     UserDto userDto =
         UserDto.builder()
             .userId(user.getUserId())
-            .username(user.getUsername())
+            .firstname(user.getFirstname())
             .nickname(user.getNickname())
             .email(user.getEmail())
             .password(user.getPassword())
@@ -46,7 +46,7 @@ public class UserDto {
     User user =
         User.builder()
             .userId(this.getUserId())
-            .username(this.getUsername())
+            .firstname(this.getFirstname())
             .nickname(this.getNickname())
             .email(this.getEmail())
             .password(this.getPassword())

@@ -1,0 +1,207 @@
+/* Container */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+
+}
+
+header {
+    width: 100%;
+}
+
+#header-container {
+    width: 100%;
+    height: 190px;
+    background-color: #E4EDF3;
+    box-sizing: border-box;
+    padding: 0 36px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+#header-logo {
+    float: left;
+    margin-right: 5%;
+}
+
+/*!* Header *!
+header {
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+    background-color: #f0f4f8;
+}
+
+header .logo{
+    max-width: 40px;
+    height: 50%;
+}*/
+
+/* Main Content */
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/*!* Image Container *!
+.image-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+    !*border-radius: 10px;*!
+}*/
+
+/* Login Container */
+.login-container {
+    flex: 1;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin-left: 40px;
+}
+
+/* Login Header */
+.login-header h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.login-header p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Login Form */
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-group input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Form Options */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-options label {
+    font-size: 14px;
+    color: #555;
+}
+
+.forgot-password {
+    font-size: 14px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* Buttons */
+.btn-signin {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-signin:hover {
+    background-color: #0056b3;
+}
+
+.google-signin {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #555;
+    background-color: #f0f4f8;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-google img {
+    width: 20px;
+    margin-right: 10px;
+}
+
+.btn-google:hover {
+    background-color: #e0e6ed;
+}
+
+/* Signup Link */
+.signup-link {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.signup-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
