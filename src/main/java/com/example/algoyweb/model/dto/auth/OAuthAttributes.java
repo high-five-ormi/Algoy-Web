@@ -48,10 +48,12 @@ public class OAuthAttributes {
     this.password = password;
   }
 
+  // OAuth2User에서 반환하는 사용자 정보는 Map이기에 값 하나하나를 변환해야 한다.
   public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
     return ofGoogle(userNameAttributeName, attributes); // 구글 사용자 속성 생성 메서드 호출
   }
 
+  // 구글 생성자
   private static OAuthAttributes ofGoogle(String usernameAttributeName, Map<String, Object> attributes) {
     // 닉네임과 패스워드는 직접 입력해야 함: Null Point Exception 방지
     String email = (String) attributes.get("email");
@@ -81,6 +83,7 @@ public class OAuthAttributes {
     return new BCryptPasswordEncoder().encode(rawPassword); // 비밀번호 안전하게 인코딩
   }
 
+  // User 엔티티 생성
   public User toEntity() {
     return User.builder()
         .username(username)

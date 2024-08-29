@@ -45,15 +45,21 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     OAuth2User oAuth2User = delegate.loadUser(userRequest); // 사용자 정보 로드
 
-    String registrationId = userRequest.getClientRegistration().getRegistrationId(); // 등록 ID 가져오기
+    // 로그인 진행 중인 서비스를 구분
+    // 네이버로 로그인 진행 중인지, 구글로 로그인 진행 중인지, ... 등을 구분
+    String registrationId = userRequest.getClientRegistration().getRegistrationId(); // 등록 ID 가져오기;
 
-    // 사용자 이름 속성 이름 가져오기
+    // 사용자 이름 속성 이름 가져오기;
+    // OAuth2 로그인 진행 시 키가 되는 필드 값(Primary Key와 같은 의미)
+    // 구글의 경우 기본적으로 코드를 지원
+    // 하지만 네이버, 카카오 등은 기본적으로 지원 X
     String userNameAttributeName = userRequest.getClientRegistration()
         .getProviderDetails()
         .getUserInfoEndpoint()
         .getUserNameAttributeName();
 
     // OAuth 속성 생성
+    // OAuth2UserService를 통해 가져온 OAuth2User의 attribute 등을 담을 클래스
     OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
     User user = saveOrUpdate(attributes); // 사용자 정보 저장 또는 업데이트
