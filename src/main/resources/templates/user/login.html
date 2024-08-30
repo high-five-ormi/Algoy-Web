@@ -7,51 +7,48 @@
     <link rel="stylesheet" th:href="@{/css/user/login.css}">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <a th:href="@{/algoy/home}">
-                <div id="header-container">
-                    <img src="/img/algoy-1.png" width="190" height="190" alt="알고이 로고입니다." id="header-logo">
-                </div>
-            </a>
-        </header>
-        <main>
-            <!--<div class="image-container">
-                <img th:src="@{/image/background-image.jpg}" alt="Background Image">
-            </div>-->
-            <div class="login-container">
-                <div class="login-header">
-                    <h1>로그인</h1>
-                    <p>어서오세요!</p>
-                </div>
-                <form class="login-form" th:action="@{/algoy/login}" method="post">
-                    <!--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">-->
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="username" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" placeholder="Enter password">
-                        <p th:if="${param.error}" style="color: red;">Invalid email or password.</p>
-                    </div>
-                    <div class="form-options">
-                        <label><input type="checkbox" name="remember"> Remember me</label>
-                        <a href="#" class="forgot-password">Forgot password?</a>
-                    </div>
-                    <button type="submit" class="btn-signin">Sign in</button>
-                </form>
-                <div class="google-signin">
-                    <a th:href="@{/oauth2/authorization/google}" class="google-signin-btn" role="button">
-                        <button class="btn-google"><!--<img src="google-icon.png" alt="Google Icon">--> Or sign in with
-                            Google
-                        </button>
-                    </a>
-                </div>
-                <p class="signup-link">Don't have an account? <a th:href="@{/algoy/sign}">Sign up now</a></p>
+<div class="container">
+    <header>
+        <a th:href="@{/algoy/home}">
+            <div id="header-container">
+                <img src="/img/algoy-1.png" width="190" height="190" alt="알고이 로고입니다." id="header-logo">
             </div>
-        </main>
-    </div>
+        </a>
+    </header>
+    <main>
+        <!--<div class="image-container">
+            <img th:src="@{/image/background-image.jpg}" alt="Background Image">
+        </div>-->
+        <div class="login-container">
+            <div class="login-header">
+                <h1>로그인</h1>
+                <p>어서오세요!</p>
+            </div>
+            <form class="login-form" th:action="@{/algoy/login}" method="post">
+                <!--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">-->
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="username" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter password">
+                    <p th:if="${param.error}" id="param-error">Invalid email or password.</p>
+                </div>
+                <div class="form-options">
+                    <label><input type="checkbox" name="remember-me" checked> Remember me</label>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn-signin">Sign in</button>
+            </form>
+            <div class="google-signin">
+                <button class="btn-google"><!--<img src="google-icon.png" alt="Google Icon">--> Or sign in with Google
+                </button>
+            </div>
+            <p class="signup-link">Don't have an account? <a th:href="@{/algoy/sign}">Sign up now</a></p>
+        </div>
+    </main>
+</div>
 
 </body>
 

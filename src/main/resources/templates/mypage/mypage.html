@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>홈</title>
-    <link rel="stylesheet" th:href="@{/css/homeCss.css}">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/mypage/mypageCss.css}">
 </head>
 <body>
 <header>
@@ -46,8 +46,11 @@
         </nav>
     </div>
 </header>
-<h1>
-    홈화면 입니당!
-</h1>
+<main>
+    <a id="edit-user-btn" th:href="@{/algoy/edituser}" >
+        <span>회원 정보 수정</span>
+    </a>
+</main>
+
 </body>
 </html>

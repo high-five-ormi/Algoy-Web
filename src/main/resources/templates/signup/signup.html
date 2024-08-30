@@ -2,44 +2,47 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link th:href="@{/css/signup/signup.css}" rel="stylesheet">
     <title>회원가입</title>
 </head>
 <body>
-    <h1>회원가입</h1>
-    <form th:action="@{/algoy/sign}" th:object="${user}" method="post">
-        <label for="email">E-amil</label>
-        <div class="input-group">
-            <input type="email" id="email" th:field="*{email}" placeholder="이메일을 입력하세요." required/>
-            <button type="button" class="check-button" onclick="checkDuplicateEmail(event)">중복 확인</button>
-        </div>
-        <p id="email-message" class="view-message"></p>
+<h1>회원가입</h1>
+<form th:action="@{/algoy/sign}" th:object="${user}" method="post">
+    <label for="email">E-amil</label>
+    <div class="input-group">
+        <input type="email" id="email" th:field="*{email}" placeholder="이메일을 입력하세요." required/>
+        <button type="button" class="check-button" onclick="checkDuplicateEmail(event)">중복 확인</button>
+    </div>
+    <p id="email-message" class="view-message"></p>
 
-        <label for="password">Password</label>
-        <input type="password" id="password" th:field="*{password}" placeholder="비밀번호를 입력하세요." required/>
+    <label for="password">Password</label>
+    <input type="password" id="password" th:field="*{password}" placeholder="비밀번호를 입력하세요." required/>
 
-        <label for="confirm-password">Re-enter Password</label>
-        <input type="password" id="confirm-password" name="confirmPassword" placeholder="비밀번호를 입력하세요." required/>
-        <p th:if="${passwordMismatch}" class="view-message">비밀번호가 일치하지 않습니다!</p>
+    <label for="confirm-password">Re-enter Password</label>
+    <input type="password" id="confirm-password" name="confirmPassword" placeholder="비밀번호를 입력하세요." required/>
+    <p th:if="${passwordMismatch}" class="view-message">비밀번호가 일치하지 않습니다!</p>
 
-        <label for="username">이름</label>
-        <input type="text" id="username" th:field="*{username}" placeholder="이름을 입력하세요." required/>
+    <label for="username">이름</label>
+    <input type="text" id="username" th:field="*{username}" placeholder="이름을 입력하세요." required/>
 
-        <label for="nickname">닉네임</label>
-        <div class="input-group">
-            <input type="text" id="nickname" th:field="*{nickname}" placeholder="닉네임을 입력하세요." required/>
-            <button type="button" class="check-button" onclick="checkDuplicateNickname(event)">중복 확인</button>
-        </div>
-        <p id="nickname-message" class="view-message"></p>
+    <label for="nickname">닉네임</label>
+    <div class="input-group">
+        <input type="text" id="nickname" th:field="*{nickname}" placeholder="닉네임을 입력하세요." required/>
+        <button type="button" class="check-button" onclick="checkDuplicateNickname(event)">중복 확인</button>
+    </div>
+    <p id="nickname-message" class="view-message"></p>
 
-        <div class="btn-wrap">
-            <button type="submit" class="submit-button">회원 가입</button>
-            <button type="button" class="back-button">뒤로 가기</button>
-        </div>
-    </form>
+    <div class="btn-wrap">
+        <button type="submit" class="submit-button">회원 가입</button>
+        <a th:href="@{/algoy/home}">
+            <button type="button" class="back-button">메인으로</button>
+        </a>
+    </div>
+</form>
 
-    <script th:src="@{/js/signup/signup.js}"></script>
+<script th:src="@{/js/signup/signup.js}"></script>
 </body>
 </html>
