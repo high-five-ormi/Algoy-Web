@@ -18,6 +18,7 @@ public class HomeController {
 
     @GetMapping("/algoy/home")
     public String home(Model model) {
+        //로그인 여부 확인 -> 로그인 / 로그아웃 구분을 위해 사용합니다.
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAuthenticated = authentication != null && authentication.isAuthenticated()
                 && !(authentication instanceof AnonymousAuthenticationToken);
