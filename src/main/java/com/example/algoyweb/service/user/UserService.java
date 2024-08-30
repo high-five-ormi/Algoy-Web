@@ -3,7 +3,6 @@ package com.example.algoyweb.service.user;
 import java.time.LocalDateTime;
 import java.util.List;
 
-// import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.algoyweb.exception.CustomException;
 import com.example.algoyweb.exception.UserErrorCode;
 import com.example.algoyweb.model.entity.user.Role;
@@ -51,9 +50,6 @@ public class UserService implements UserDetailsService {
 
     // 저장
     userRepository.save(user);
-
-    // 저장된 엔티티를 DTO로 반환
-    UserDto.toDto(user);
   }
 
   // 이메일 중복 체크
@@ -88,7 +84,6 @@ public class UserService implements UserDetailsService {
             .password(user.getPassword())  // Assuming this is already hashed
             .build();
   }
-
 
   @Transactional
   public UserDto update(UserDto userDto, String email) {
