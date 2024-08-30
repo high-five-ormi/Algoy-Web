@@ -20,7 +20,7 @@ import com.example.algoyweb.service.user.UserService;
 @Controller
 @RequestMapping("/algoy")
 public class UserController {
-  UserService userService;
+  private final UserService userService;
 
   @Autowired
   public UserController(UserService userService) {
@@ -71,9 +71,15 @@ public class UserController {
     return "redirect:/algoy/login"; // 회원가입 성공시 로그인 화면으로 리다이렉트
   }
 
+  /**
+   * 이메일 중복 확인
+   *
+   * @author yuseok
+   * @param email 중복 확인할 이메일 주소
+   * @return 이메일 중복 여부를 나타내는 ResponseEntity
+   */
   @GetMapping("/check-email-duplicate")
-  public ResponseEntity<Map<String, Boolean>> checkEmailDuplicate(
-      @RequestParam("email") String email) {
+  public ResponseEntity<Map<String, Boolean>> checkEmailDuplicate(@RequestParam("email") String email) {
     boolean exists = userService.findByEmail(email) != null;
 
     Map<String, Boolean> response = new HashMap<>();
@@ -83,9 +89,15 @@ public class UserController {
     return ResponseEntity.ok(response);
   }
 
+  /**
+   * 닉네임 중복 확인
+   *
+   * @author yuseok
+   * @param nickname 중복 확인할 닉네임
+   * @return 닉네임 중복 여부를 나타내는 ResponseEntity
+   */
   @GetMapping("/check-nickname-duplicate")
-  public ResponseEntity<Map<String, Boolean>> checkNicknameDuplicate(
-      @RequestParam("nickname") String nickname) {
+  public ResponseEntity<Map<String, Boolean>> checkNicknameDuplicate(@RequestParam("nickname") String nickname) {
     boolean exists = userService.findByNickname(nickname) != null;
 
     Map<String, Boolean> response = new HashMap<>();
