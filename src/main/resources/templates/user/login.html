@@ -33,10 +33,10 @@
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" placeholder="Enter password">
-                    <p th:if="${param.error}" style="color: red;">Invalid email or password.</p>
+                    <p th:if="${param.error}" id="param-error">Invalid email or password.</p>
                 </div>
                 <div class="form-options">
-                    <label><input type="checkbox" name="remember"> Remember me</label>
+                    <label><input type="checkbox" name="remember-me" checked> Remember me</label>
                     <a href="#" class="forgot-password">Forgot password?</a>
                 </div>
                 <button type="submit" class="btn-signin">Sign in</button>

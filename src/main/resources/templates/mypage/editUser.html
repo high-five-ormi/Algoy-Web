@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>개인정보 수정</title>
+    <link rel="stylesheet" th:href="@{/css/mypage/editUserCss.css}">
+</head>
+<body>
+<header>
+    <div id="header-container">
+        <a th:href="@{/algoy/home}">
+            <img src="/img/algoy-1.png" width="190" height="190" alt="알고이 로고입니다." id="header-logo">
+        </a>
+        <nav id="header-nav-1">
+            <span>오답 노트</span>
+            <span>플래너</span>
+            <span>스터디 모집</span>
+        </nav>
+        <nav id="header-nav-2">
+            <div id="search-container">
+                <input type="text" placeholder="search" class="search-input">
+                <button class="search-button">
+                    <img src="/img/search-glasses.png" width="29" height="29" alt="검색 창의 돋보기 입니다.">
+                </button>
+            </div>
+            <div id="header-user-area">
+                <a id="header-my-page" th:href="@{/algoy/mypage}">
+                    <img src="/img/user-icon.png" width="20" height="20" alt="마이 페이지 버튼입니다">
+                </a>
+                <div th:if="${isAuthenticated}">
+                    <form action="/algoy/logout" method="post">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                        <button type="submit" name="logout" id="header-logout">
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </div>
+                <div th:unless="${isAuthenticated}">
+                    <a href="/algoy/login">
+                        <button id="header-login">
+                            <span>Login</span>
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<main>
+    <form th:action="@{/algoy/sign}" th:object="${user}" method="post">
+        <label for="email">E-amil</label>
+        <div class="input-group">
+            <input type="email" id="email" th:field="*{email}" placeholder="이메일을 입력하세요." required/>
+            <button type="button" class="check-button" onclick="checkDuplicateEmail(event)">중복 확인</button>
+        </div>
+        <p id="email-message" class="view-message"></p>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" th:field="*{password}" placeholder="비밀번호를 입력하세요." required/>
+
+        <label for="confirm-password">Re-enter Password</label>
+        <input type="password" id="confirm-password" name="confirmPassword" placeholder="비밀번호를 입력하세요." required/>
+        <p th:if="${passwordMismatch}" class="view-message">비밀번호가 일치하지 않습니다!</p>
+
+        <label for="username">이름</label>
+        <input type="text" id="username" th:field="*{username}" placeholder="이름을 입력하세요." required/>
+
+        <label for="nickname">닉네임</label>
+        <div class="input-group">
+            <input type="text" id="nickname" th:field="*{nickname}" placeholder="닉네임을 입력하세요." required/>
+            <button type="button" class="check-button" onclick="checkDuplicateNickname(event)">중복 확인</button>
+        </div>
+        <p id="nickname-message" class="view-message"></p>
+
+        <div class="btn-wrap">
+            <button type="submit" class="submit-button">회원 가입</button>
+            <a th:href="@{/algoy/home}">
+                <button type="button" class="back-button">메인으로</button>
+            </a>
+        </div>
+    </form>
+</main>
+</body>
+</html>
