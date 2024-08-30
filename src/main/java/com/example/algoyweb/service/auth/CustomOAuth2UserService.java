@@ -1,4 +1,4 @@
-package com.example.algoyweb.config.auth;
+package com.example.algoyweb.service.auth;
 
 import java.util.Collections;
 
@@ -12,7 +12,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import com.example.algoyweb.model.dto.auth.OAuthAttributes;
-import com.example.algoyweb.model.dto.auth.SessionUser;
+import com.example.algoyweb.model.entity.auth.SessionUser;
 import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.repository.user.UserRepository;
 
@@ -53,20 +53,22 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     // OAuth2 로그인 진행 시 키가 되는 필드 값(Primary Key와 같은 의미)
     // 구글의 경우 기본적으로 코드를 지원
     // 하지만 네이버, 카카오 등은 기본적으로 지원 X
-    String userNameAttributeName = userRequest.getClientRegistration()
-        .getProviderDetails()
-        .getUserInfoEndpoint()
-        .getUserNameAttributeName();
+    String userNameAttributeName =
+        userRequest
+            .getClientRegistration()
+            .getProviderDetails()
+            .getUserInfoEndpoint()
+            .getUserNameAttributeName();
 
     // OAuth 속성 생성
     // OAuth2UserService를 통해 가져온 OAuth2User의 attribute 등을 담을 클래스
-    OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+    OAuthAttributes attributes =
+        OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
     User user = saveOrUpdate(attributes); // 사용자 정보 저장 또는 업데이트
     httpSession.setAttribute("user", new SessionUser(user)); // 세션에 사용자 정보 저장
 
-    return new DefaultOAuth2User(
-        Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())), // 권한 설정
+    return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())), // 권한 설정
         attributes.getAttributes(), // 사용자 속성
         attributes.getNameAttributeKey()); // 이름 속성 키
   }
@@ -82,10 +84,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
           attributes.getNickname(),
           attributes.getEmail(),
           attributes.getPassword(),
-          // 기존의 상태 유지
+          // 아래는 기존의 상태 유지
           user.getRole(),
-          user.getIsDeleted()
-      );
+          user.getIsDeleted());
     } else {
       // OAuth2 속성으로 새로운 사용자 엔티티 생성
       user = attributes.toEntity();

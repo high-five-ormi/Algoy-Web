@@ -22,8 +22,9 @@
     <input type="password" id="password" th:field="*{password}" placeholder="비밀번호를 입력하세요." required/>
 
     <label for="confirm-password">Re-enter Password</label>
-    <input type="password" id="confirm-password" name="confirmPassword" placeholder="비밀번호를 입력하세요." required/>
-    <p th:if="${passwordMismatch}" class="view-message">비밀번호가 일치하지 않습니다!</p>
+    <input type="password" id="confirm-password" name="confirmPassword" placeholder="비밀번호를 입력하세요." required
+           onblur="checkPasswordMatch()"/><!-- onblur: 포커스 해지 시 이벤트 설정 -->
+    <p id="password-message" class="view-message"></p>
 
     <label for="username">이름</label>
     <input type="text" id="username" th:field="*{username}" placeholder="이름을 입력하세요." required/>
