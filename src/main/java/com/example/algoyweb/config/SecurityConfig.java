@@ -9,7 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.example.algoyweb.config.auth.CustomOAuth2UserService;
+import com.example.algoyweb.service.auth.CustomOAuth2UserService;
 import com.example.algoyweb.model.entity.user.Role;
 
 import lombok.RequiredArgsConstructor;
