@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>홈</title>
-    <link rel="stylesheet" th:href="@{/css/homeCss.css}">
+    <link rel="stylesheet" th:href="@{/css/home/home.css}">
+    <script th:src="@{/js/calendar/calendar.global.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/home/calendar.css}">
 </head>
 <body>
 <header>
@@ -47,7 +49,11 @@
     </div>
 </header>
 <h1>
-    홈화면 입니당!
+    <div id ='calendar-container'>
+        <div id='calendar'></div>
+    </div>
 </h1>
+
+<script th:src="@{/js/calendar/add-event.js}"></script>
 </body>
 </html>
