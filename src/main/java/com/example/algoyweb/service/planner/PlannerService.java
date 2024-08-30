@@ -4,6 +4,7 @@ import com.example.algoyweb.model.entity.planner.Planner;
 import com.example.algoyweb.model.dto.planner.PlannerDto;
 import com.example.algoyweb.exception.CustomException;
 import com.example.algoyweb.exception.PlannerErrorCode;
+import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.repository.planner.PlannerRepository;
 import com.example.algoyweb.repository.user.UserRepository;
 import com.example.algoyweb.util.ConvertUtils;
@@ -68,7 +69,12 @@ public class PlannerService {
     }
 
     public List<PlannerDto> getPlans(String username) {
-        return plannerRepository.findByUserEmail(username).stream()
+        List<PlannerDto> plans = plannerRepository.findByUserEmail(username).stream()
                 .map(ConvertUtils::convertPlannerToDto).toList();
+        for(PlannerDto plan : plans){
+            System.out.println(plan.getContent());
+        }
+
+        return plans;
     }
 }

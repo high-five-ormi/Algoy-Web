@@ -11,9 +11,9 @@
     <div id="header-container">
         <img src="/img/algoy-1.png" width="190" height="190" alt="알고이 로고입니다." id="header-logo">
         <nav id="header-nav-1">
-            <span>오답 노트</span>
-            <span>플래너</span>
-            <span>스터디 모집</span>
+            <span><a href="">오답 노트</a></span>
+            <span><a href="/algoy/planner/calender">플래너</a></span>
+            <span><a href="">스터디 모집</a></span>
         </nav>
         <nav id="header-nav-2">
             <div id="search-container">
@@ -74,99 +74,9 @@
         <p><strong>시작 날짜:</strong> <span id="modal-startAt">Loading...</span></p>
         <p><strong>끝난 날짜:</strong> <span id="modal-endAt">Loading...</span></p>
         <p><strong>문제 링크:</strong> <a href="#" id="modal-link" target="_blank">Loading...</a></p>
+        <button id="btn-edit">Edit</button>
     </div>
 </div>
 </body>
-<script>
-    $(document).ready(function() {
-        $('.loader').show();
-
-        $.ajax({
-            url: '/algoy/planner/get/plans',
-            type: 'GET',
-            success: function(data) {
-                $('.loader').hide();
-
-                let tableBody = $('#planner-table tbody');
-                $.each(data, function(index, item) {
-                    let statusClass = '';
-                    if (item.status === 'TODO') {
-                        statusClass = 'status-not-started';
-                    } else if (item.status === 'IN_PROGRESS') {
-                        statusClass = 'status-in-progress';
-                    } else if (item.status === 'DONE') {
-                        statusClass = 'status-done';
-                    }
-
-                    let row = '<tr>' +
-                        '<td>' + item.id + '</td>' +
-                        '<td>' + item.title + '</td>' +
-                        '<td><a href="#" class="table-content" data-id="' + item.id + '">Content</a></td>' +
-                        '<td><a href="' + item.url + '">Link</a></td>' +
-                        '<td class="planner-table-status-container"><div class="' + statusClass + '">' + item.status + '</div></td>' +
-                        '</tr>';
-
-                    tableBody.append(row);
-                });
-
-                $('.table-content').on('click', function(event) {
-                    event.preventDefault();
-                    let plannerId = $(this).data('id');
-                    loadPlannerDetail(plannerId);
-                });
-            },
-            error: function(error) {
-                $('.loader').hide();
-                alert('에러 로딩 데이터 : ' + error.statusText);
-            }
-        });
-
-        $('#btn-calendar').on('click', function(event) {
-            event.preventDefault();
-            $.ajax({
-                url: '/algoy/planner/save-form',
-                type: 'GET',
-                success: function (data) {
-                    location.href = '/algoy/planner/save-form';
-                },
-                error: function (error) {
-                    alert('플래너 로딩 에러 : ' + error.statusText);
-                }
-            });
-        })
-
-        function loadPlannerDetail(plannerId) {
-            $.ajax({
-                url: '/algoy/planner/' + plannerId,
-                type: 'GET',
-                success: function(data) {
-                    $('#modal-title').text(data.title);
-                    $('#modal-content').text(data.content);
-                    $('#modal-createdAt').text(data.createAt);
-                    $('#modal-updatedAt').text(data.updateAt);
-                    $('#modal-startAt').text(data.startAt);
-                    $('#modal-endAt').text(data.endAt);
-                    $('#modal-link').attr('href', data.link);
-                    $('#modal-link').text(data.link);
-                    $('#planner-modal').show();
-                },
-                error: function(error) {
-                    alert('플래너 로딩 에러 : ' + error.statusText);
-                }
-            });
-        }
-
-        // Event handler for closing the modal
-        $('.modal-close').on('click', function() {
-            $('#planner-modal').hide();
-        });
-
-        // Close the modal if the user clicks outside of the modal content
-        $(window).on('click', function(event) {
-            if ($(event.target).is('#planner-modal')) {
-                $('#planner-modal').hide();
-            }
-        });
-    });
-</script>
+<script src="/js/planner/PlannerMainJs.js"></script>
 </html>
