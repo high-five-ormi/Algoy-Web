@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -20,9 +21,9 @@ public class PlannerDto {
 
     private String content;
 
-    private LocalDateTime startAt;
+    private LocalDate startAt;
 
-    private LocalDateTime endAt;
+    private LocalDate endAt;
 
     private String link;
 

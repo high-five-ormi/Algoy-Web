@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,10 +29,10 @@ public class Planner {
     private String content;
 
     @Column(nullable = false)
-    private LocalDateTime startAt;
+    private LocalDate startAt;
 
     @Column(nullable = false)
-    private LocalDateTime endAt;
+    private LocalDate endAt;
 
     @Column(nullable = false)
     private String link;

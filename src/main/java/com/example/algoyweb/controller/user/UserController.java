@@ -3,7 +3,6 @@ package com.example.algoyweb.controller.user;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,18 +16,16 @@ import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.service.user.UserService;
 
-import ch.qos.logback.classic.Logger;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/algoy")
 public class UserController {
-  UserService userService;
-  private Logger logger;
-
-  @Autowired
-  public UserController(UserService userService) {
-    this.userService = userService;
-  }
+  private final UserService userService;
+  private final HttpSession httpSession;
+  // algoy
 
   @GetMapping("/login")
   public String showLoginForm(Model model) {
@@ -37,11 +34,6 @@ public class UserController {
 
     return "user/login";
   }
-
- /* @GetMapping("/logout")
-  public String LoadLogout() {
-    return "user/login";
-  }*/
 
   /**
    * 회원가입 폼 보여주기
@@ -70,6 +62,7 @@ public class UserController {
       @ModelAttribute("user") UserDto userDto,
       @RequestParam("confirmPassword") String confirmPassword,
       Model model) {
+    // 나중에 .js로 변경해 보기
     if (!userDto.getPassword().equals(confirmPassword)) { // 비밀번호 확인 시 다른 비밀번호가 입력되면
       model.addAttribute("passwordMismatch", true);
 
@@ -82,7 +75,8 @@ public class UserController {
   }
 
   @GetMapping("/check-email-duplicate")
-  public ResponseEntity<Map<String, Boolean>> checkEmailDuplicate(@RequestParam("email") String email) {
+  public ResponseEntity<Map<String, Boolean>> checkEmailDuplicate(
+      @RequestParam("email") String email) {
     boolean exists = userService.findByEmail(email) != null;
 
     Map<String, Boolean> response = new HashMap<>();
@@ -93,7 +87,8 @@ public class UserController {
   }
 
   @GetMapping("/check-nickname-duplicate")
-  public ResponseEntity<Map<String, Boolean>> checkNicknameDuplicate(@RequestParam("nickname") String nickname) {
+  public ResponseEntity<Map<String, Boolean>> checkNicknameDuplicate(
+      @RequestParam("nickname") String nickname) {
     boolean exists = userService.findByNickname(nickname) != null;
 
     Map<String, Boolean> response = new HashMap<>();

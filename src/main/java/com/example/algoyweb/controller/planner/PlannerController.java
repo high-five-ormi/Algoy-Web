@@ -20,14 +20,8 @@ public class PlannerController {
 
     private final PlannerService plannerService;
 
-    //nginx 8081 test 메소드 수정 X
-    @GetMapping("/test")
-    public String test(){
-        return "8081 접속 됨";
-    }
-
     @GetMapping
-    //@PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
     public ResponseEntity<List<PlannerDto>> getCalender(@RequestParam int year, @RequestParam int month) {
         List<PlannerDto> plannerDtoList = plannerService.getPlansMonth(year, month);
 
@@ -35,7 +29,7 @@ public class PlannerController {
     }
 
     @GetMapping("/get/plans")
-    @PostAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL','ROLE_ADMIN')")
     public ResponseEntity<List<PlannerDto>> getPlanner(@AuthenticationPrincipal UserDetails user) {
        List<PlannerDto> plannerDtoList = plannerService.getPlans(user.getUsername());
 
@@ -43,7 +37,7 @@ public class PlannerController {
     }
 
     @GetMapping("/{id}")
-    //@PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
     public ResponseEntity<PlannerDto> getPlan(@PathVariable Long id) {
         PlannerDto plannerDto = plannerService.getPlan(id);
 
@@ -51,19 +45,25 @@ public class PlannerController {
     }
 
     @GetMapping("/save-form")
-    //@PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
     public ModelAndView saveForm() {
         return new ModelAndView("planner/SaveForm");
     }
 
+    @GetMapping("/edit-form")
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
+    public ModelAndView editForm(@RequestParam Long id) {
+        return new ModelAndView("planner/EditForm");
+    }
+
     @GetMapping("/calender")
-    //@PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
     public ModelAndView viewCalender() {
         return new ModelAndView("planner/PlannerMain");
     }
 
     @PostMapping("/save")
-    //@PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
     public ResponseEntity<PlannerDto> savePlan(@RequestBody PlannerDto plannerDto, @AuthenticationPrincipal UserDetails userDetails) {
         PlannerDto savedDto = plannerService.savePlan(plannerDto, userDetails.getUsername());
 
@@ -71,7 +71,7 @@ public class PlannerController {
     }
 
     @PostMapping("/edit/{id}")
-    //@PostAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
     public ResponseEntity<PlannerDto> editPlan(@RequestBody PlannerDto plannerDto, @PathVariable Long id/*@AuthenticationPrincipal UserDetails userDetails*/) {
         PlannerDto updatedDto = plannerService.updatePlan(plannerDto, id, /*userDetails.getUsername()*/ "1234");
 
@@ -79,7 +79,7 @@ public class PlannerController {
     }
 
     @PostMapping("/delete/{id}")
-    //@PostAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL','ROLE_ADMIN')")
     public ResponseEntity<String> deletePlan(@PathVariable Long id/*@AuthenticationPrincipal UserDetails userDetails*/) {
         plannerService.deletePlan(id, /*userDetails.getUsername()*/ "1234");
         return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
