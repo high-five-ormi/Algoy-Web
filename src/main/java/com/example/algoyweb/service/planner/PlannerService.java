@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -53,18 +54,18 @@ public class PlannerService {
 
     public PlannerDto updatePlan(PlannerDto plannerDto, Long id, String username) {
         Planner findPlanner = plannerRepository.findById(id).orElseThrow(() -> new CustomException(PlannerErrorCode.PLAN_NOT_FOUND));
-        /*if(findPlanner.getUser().getEmail != username) {
+        if(!Objects.equals(findPlanner.getUser().getEmail(), username)) {
             throw new CustomException(PlannerErrorCode.PLAN_NOT_EQUAL_ID);
-        }*/
+        }
         findPlanner.updatePlan(plannerDto);
         return ConvertUtils.convertPlannerToDto(findPlanner);
     }
 
     public void deletePlan(Long id, String username) {
         Planner findPlanner = plannerRepository.findById(id).orElseThrow(() -> new CustomException(PlannerErrorCode.PLAN_NOT_FOUND));
-        /*if(findPlanner.getUser().getEmail != username) {
+        if(!Objects.equals(findPlanner.getUser().getEmail(), username)) {
             throw new CustomException(PlannerErrorCode.PLAN_NOT_EQUAL_ID);
-        }*/
+        }
         plannerRepository.delete(findPlanner);
     }
 
