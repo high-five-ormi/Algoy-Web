@@ -2,10 +2,9 @@ body {
     margin :0;
 }
 
-a{
+a {
     text-decoration-line: none;
 }
-
 
 #header-container {
     width: 100%;
