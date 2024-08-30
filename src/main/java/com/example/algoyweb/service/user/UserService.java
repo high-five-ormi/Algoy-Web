@@ -2,7 +2,6 @@ package com.example.algoyweb.service.user;
 
 import java.time.LocalDateTime;
 
-// import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.algoyweb.model.entity.user.Role;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,10 +29,9 @@ public class UserService implements UserDetailsService {
    *
    * @author yuseok
    * @param userDto 회원가입 정보를 담고 있는 DTO
-   * @return 저장된 사용자 정보를 담은 UserDto
    */
   @Transactional
-  public UserDto signUpUser(UserDto userDto) {
+  public void signUpUser(UserDto userDto) {
     // User 엔티티 생성
     User user =
         User.builder()
@@ -50,7 +48,7 @@ public class UserService implements UserDetailsService {
     userRepository.save(user);
 
     // 저장된 엔티티를 DTO로 반환
-    return UserDto.toDto(user);
+    UserDto.toDto(user);
   }
 
   // 이메일 중복 체크
@@ -65,7 +63,6 @@ public class UserService implements UserDetailsService {
     return userRepository.findByNickname(nickname);
   }
 
-
   /**
    * 로그인
    *
@@ -73,7 +70,6 @@ public class UserService implements UserDetailsService {
    * @param email 로그인시 email로 로그인
    * @return 저장된 사용자 정보를 담은 UserDto
    */
-
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     User user = userRepository.findByEmail(email);
@@ -87,7 +83,4 @@ public class UserService implements UserDetailsService {
             .password(user.getPassword())  // Assuming this is already hashed
             .build();
   }
-
 }
-
-
