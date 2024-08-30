@@ -1,7 +1,9 @@
 package com.example.algoyweb.util;
 
+import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.planner.Planner;
 import com.example.algoyweb.model.dto.planner.PlannerDto;
+import com.example.algoyweb.model.entity.user.User;
 
 import java.time.LocalDateTime;
 
@@ -32,5 +34,19 @@ public class ConvertUtils {
                 .startAt(plannerDto.getStartAt())
                 .link(plannerDto.getLink())
                 .build();
+    }
+
+    public static UserDto convertUserToDto(User findUser) {
+        return UserDto.builder()
+            .role(findUser.getRole())
+            .username(findUser.getUsername())
+            .email(findUser.getEmail())
+            .nickname(findUser.getNickname())
+            .userId(findUser.getUserId())
+            .isDeleted(findUser.getIsDeleted())
+            .createdAt(findUser.getCreatedAt())
+            .updatedAt(findUser.getUpdatedAt())
+            .deletedAt(findUser.getDeletedAt())
+            .build();
     }
 }
