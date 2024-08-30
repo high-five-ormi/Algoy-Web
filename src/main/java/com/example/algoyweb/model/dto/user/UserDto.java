@@ -25,38 +25,32 @@ public class UserDto {
   private LocalDateTime deletedAt;
 
   public static UserDto toDto(User user) {
-    UserDto userDto =
-        UserDto.builder()
-            .userId(user.getUserId())
-            .username(user.getUsername())
-            .nickname(user.getNickname())
-            .email(user.getEmail())
-            .password(user.getPassword())
-            .role(user.getRole())
-            .isDeleted(user.getIsDeleted())
-            .createdAt(user.getCreatedAt())
-            .updatedAt(user.getUpdatedAt())
-            .deletedAt(user.getDeletedAt())
-            .build();
-
-    return userDto;
+	  return UserDto.builder()
+		  .userId(user.getUserId())
+		  .username(user.getUsername())
+		  .nickname(user.getNickname())
+		  .email(user.getEmail())
+		  .password(user.getPassword())
+		  .role(user.getRole())
+		  .isDeleted(user.getIsDeleted())
+		  .createdAt(user.getCreatedAt())
+		  .updatedAt(user.getUpdatedAt())
+		  .deletedAt(user.getDeletedAt())
+		  .build();
   }
 
   public User toEntity() {
-    User user =
-        User.builder()
-            .userId(this.getUserId())
-            .username(this.getUsername())
-            .nickname(this.getNickname())
-            .email(this.getEmail())
-            .password(this.getPassword())
-            .role(this.getRole())
-            .isDeleted(this.getIsDeleted())
-            .createdAt(this.getCreatedAt())
-            .updatedAt(this.getUpdatedAt())
-            .deletedAt(this.getDeletedAt())
-            .build();
-
-    return user;
+	  return User.builder()
+		  .userId(this.getUserId())
+		  .username(this.getUsername())
+		  .nickname(this.getNickname())
+		  .email(this.getEmail())
+		  .password(this.getPassword())
+		  .role(this.getRole())
+		  .isDeleted(this.getIsDeleted())
+		  .createdAt(this.getCreatedAt())
+		  .updatedAt(this.getUpdatedAt())
+		  .deletedAt(this.getDeletedAt())
+		  .build();
   }
 }

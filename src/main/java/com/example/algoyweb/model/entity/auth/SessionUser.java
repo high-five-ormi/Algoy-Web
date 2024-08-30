@@ -1,4 +1,4 @@
-package com.example.algoyweb.model.dto.auth;
+package com.example.algoyweb.model.entity.auth;
 
 import java.io.Serializable;
 

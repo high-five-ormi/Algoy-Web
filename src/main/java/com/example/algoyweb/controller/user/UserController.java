@@ -18,29 +18,23 @@ import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.service.user.UserService;
 
-import ch.qos.logback.classic.Logger;
-
 @Controller
 @RequestMapping("/algoy")
 public class UserController {
-  UserService userService;
-  private Logger logger;
+  private final UserService userService;
 
   @Autowired
   public UserController(UserService userService) {
     this.userService = userService;
   }
 
-
   /**
    * 로그인 폼 보여주기
    *
    * @author jooyoung
-   * @param model 뷰에 데이터를 전달하기 위한 Model 객체
-   *              (근데 여기서 model이 꼭 필요한지 모르겠어요)
+   * @param model 뷰에 데이터를 전달하기 위한 Model 객체 (근데 여기서 model이 꼭 필요한지 모르겠어요)
    * @return 로그인 폼 뷰의 이름 (html)
    */
-
   @GetMapping("/login")
   public String showLoginForm(Model model) {
     // 새로운 UserDto 객체를 생성 후, "userDto"라는 이름으로 Model에 추가
@@ -48,7 +42,6 @@ public class UserController {
 
     return "user/login";
   }
-
 
   /**
    * 회원가입 폼 보여주기
@@ -69,25 +62,23 @@ public class UserController {
    * 회원가입 요청 처리
    *
    * @author yuseok
-   * @param userDto 회원가입을 위해 사용자가 입력한 정보 DTO, model 뷰에 데이터를 전달하기 위한 Model 객체
+   * @param userDto 회원가입을 위해 사용자가 입력한 정보 DTO
    * @return 회원가입 성공 후 리다이렉트할 URL
    */
   @PostMapping("/sign")
-  public String signUp(
-      @ModelAttribute("user") UserDto userDto,
-      @RequestParam("confirmPassword") String confirmPassword,
-      Model model) {
-    if (!userDto.getPassword().equals(confirmPassword)) { // 비밀번호 확인 시 다른 비밀번호가 입력되면
-      model.addAttribute("passwordMismatch", true);
-
-      return "signup/signup";
-    }
-
+  public String signUp(@ModelAttribute("user") UserDto userDto) {
     userService.signUpUser(userDto);
 
     return "redirect:/algoy/login"; // 회원가입 성공시 로그인 화면으로 리다이렉트
   }
 
+  /**
+   * 이메일 중복 확인
+   *
+   * @author yuseok
+   * @param email 중복 확인할 이메일 주소
+   * @return 이메일 중복 여부를 나타내는 ResponseEntity
+   */
   @GetMapping("/check-email-duplicate")
   public ResponseEntity<Map<String, Boolean>> checkEmailDuplicate(@RequestParam("email") String email) {
     boolean exists = userService.findByEmail(email) != null;
@@ -99,6 +90,13 @@ public class UserController {
     return ResponseEntity.ok(response);
   }
 
+  /**
+   * 닉네임 중복 확인
+   *
+   * @author yuseok
+   * @param nickname 중복 확인할 닉네임
+   * @return 닉네임 중복 여부를 나타내는 ResponseEntity
+   */
   @GetMapping("/check-nickname-duplicate")
   public ResponseEntity<Map<String, Boolean>> checkNicknameDuplicate(@RequestParam("nickname") String nickname) {
     boolean exists = userService.findByNickname(nickname) != null;

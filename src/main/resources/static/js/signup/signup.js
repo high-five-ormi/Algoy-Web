@@ -1,4 +1,5 @@
 /* --------------- e-mail check --------------- */
+
 function checkDuplicateEmail(event) {
     event.preventDefault(); // 폼의 기본 제출 동작 막기
 
@@ -43,6 +44,7 @@ function checkDuplicateEmail(event) {
 }
 
 /* --------------- nickname check --------------- */
+
 function checkDuplicateNickname(event) {
     event.preventDefault(); // 폼의 기본 제출 동작 막기
 
@@ -80,3 +82,31 @@ function checkDuplicateNickname(event) {
         nicknameMessage.style.color = "red";
     }
 }
+
+/* --------------- password check --------------- */
+
+let isMatch = false; // 비밀번호 확인 결과 일치 여부
+
+// 비밀번호 확인 시 일치 여부를 판단하는 함수
+function checkPasswordMatch() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+    const messageElement = document.getElementById('password-message');
+
+    if (password === confirmPassword) {
+        messageElement.textContent = '비밀번호가 일치합니다.';
+        messageElement.style.color = 'green';
+        isMatch = true;
+    } else {
+        messageElement.textContent = '비밀번호가 일치하지 않습니다!';
+        messageElement.style.color = 'red';
+    }
+}
+
+// 폼 제출(회원 가입 버튼 클릭) 시 비밀번호 일치 여부 확인
+document.querySelector('form').addEventListener('submit', function (event) {
+    if (!isMatch) { // 재입력한 비밀번호가 일치하지 않으면
+        event.preventDefault(); // 폼 제출 중지
+        alert('비밀번호가 일치하지 않습니다. 다시 확인해주세요.'); // 메시지 출력
+    }
+});
