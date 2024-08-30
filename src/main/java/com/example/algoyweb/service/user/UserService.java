@@ -1,8 +1,13 @@
 package com.example.algoyweb.service.user;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+// import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.algoyweb.exception.CustomException;
+import com.example.algoyweb.exception.UserErrorCode;
 import com.example.algoyweb.model.entity.user.Role;
+import com.example.algoyweb.util.ConvertUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -82,5 +87,35 @@ public class UserService implements UserDetailsService {
             .withUsername(user.getEmail())
             .password(user.getPassword())  // Assuming this is already hashed
             .build();
+  }
+
+
+  @Transactional
+  public UserDto update(UserDto userDto, String email) {
+    if(!userDto.getEmail().equals(email)) {
+      throw new CustomException(UserErrorCode.USER_NOT_EQUAL_EMAIL);
+    }
+    User findUser = userRepository.findByEmail(email);
+    findUser.updateUserDto(userDto);
+    return ConvertUtils.convertUserToDto(findUser);
+  }
+
+  @Transactional
+  public void setDeleted(String email) {
+    User findUser = userRepository.findByEmail(email);
+    findUser.setDeleted();
+  }
+
+  public List<User> findAll() {
+    return userRepository.findAll();
+  }
+
+  @Transactional
+  public void delete(String username) {
+    User findUser = userRepository.findByEmail(username);
+    if(!findUser.getIsDeleted()){
+      throw new CustomException(UserErrorCode.USER_NOT_EQUAL_EMAIL);
+    }
+    userRepository.delete(findUser);
   }
 }

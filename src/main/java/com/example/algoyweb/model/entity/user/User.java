@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.planner.Planner;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -51,7 +52,7 @@ public class User {
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user",  orphanRemoval = true)
   private List<Planner> plannerList;
 
   public void connectPlanner(Planner planner) {
@@ -68,6 +69,19 @@ public class User {
     this.role = role;
     this.isDeleted = isDeleted;
     this.updatedAt = LocalDateTime.now();
+  }
+
+  public void updateUserDto(UserDto userDto) {
+    this.username = userDto.getUsername();
+    this.nickname = userDto.getNickname();
+    this.password = userDto.getPassword();
+    this.isDeleted = userDto.getIsDeleted();
+    this.updatedAt = LocalDateTime.now();
+  }
+
+  public void setDeleted() {
+    this.isDeleted = true;
+    this.deletedAt = LocalDateTime.now().plusMonths(1);
   }
 
   public String getRoleKey() {
