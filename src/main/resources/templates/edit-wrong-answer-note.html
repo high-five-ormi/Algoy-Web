@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오답노트 수정</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/WrongAnswerNote/create-wrong-answer-note.css">
+</head>
+<body>
+<header>
+  <div class="logo">
+    <img src="/img/algoy-1.png" alt="ALGoy Logo">
+  </div>
+  <nav>
+    <a href="#">오답 노트</a>
+    <a href="#">플래너</a>
+  </nav>
+  <div class="user-actions">
+    <div class="search-bar">
+      <input type="text" placeholder="Search">
+      <img src="/img/search-glasses.png" alt="Search Icon" class="search-icon">
+    </div>
+    <button class="logout">Logout</button>
+    <div class="logout-container" style="margin-left: 8px;"> <!-- 간격 수정 -->
+      <div class="logout-icon-wrapper"> <!-- 새로운 감싸는 div 추가 -->
+        <img src="/img/user-icon.png" alt="User Icon" class="logout-icon">
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- note-header 섹션 -->
+<div class="note-header">
+  <div class="title-section">
+    <img src="/img/planner-icon.png" alt="오답노트 아이콘" class="WrongAnswerNote-icon">
+    <h2>오답노트</h2>
+  </div>
+</div>
+
+<!-- 메인 컨텐츠 -->
+<div class="container">
+  <main>
+    <h1>게시글 수정</h1>
+    <form action="/algoy/commit" method="post" enctype="multipart/form-data">
+      <label for="title">제목</label>
+      <input type="text" id="title" name="title" placeholder="제목을 입력하세요" class="input-field"><br/>
+
+      <label for="link">문제 링크</label>
+      <input type="text" id="link" name="link" placeholder="문제 링크를 입력하세요" class="input-field"><br/>
+
+      <label for="quizSite">문제 사이트</label>
+      <input type="text" id="quizSite" name="quizSite" placeholder="문제 사이트를 입력하세요"
+             class="input-field"><br/>
+
+      <div class="flex-container">
+        <div>
+          <label for="quizType">유형</label>
+          <input type="text" id="quizType" name="quizType" placeholder="유형을 입력하세요"
+                 class="input-field">
+        </div>
+        <div>
+          <label for="quizLevel">레벨</label>
+          <input type="text" id="quizLevel" name="quizLevel" placeholder="레벨을 입력하세요"
+                 class="input-field">
+        </div>
+      </div>
+
+      <label>파일 업로드</label>
+      <div id="drop-zone">
+        드래그 앤 드롭으로 이미지를 올려주세요<br>
+        또는<br>
+        <input type="file" id="files" name="files" accept="image/*" multiple style="display:none;">
+        <button type="button" onclick="document.getElementById('files').click()">파일 선택</button>
+      </div>
+      <div id="file-names"></div>
+
+      <label for="content">내용</label>
+      <textarea id="content" name="content" placeholder="내용을 입력하세요"
+                class="textarea-field"></textarea><br/>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+        <button type="submit">게시</button>
+        <button type="submit" formaction="/list">취소</button>
+      </div>
+    </form>
+  </main>
+</div>
+
+<!-- 스크립트 -->
+<script>
+  const dropZone = document.getElementById('drop-zone');
+  const fileInput = document.getElementById('files');
+  const fileNames = document.getElementById('file-names');
+  let selectedFiles = new DataTransfer();
+
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+  });
+
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('dragover');
+  });
+
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    addFiles(e.dataTransfer.files);
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    addFiles(e.target.files);
+  });
+
+  function addFiles(newFiles) {
+    for (let file of newFiles) {
+      selectedFiles.items.add(file);
+    }
+    fileInput.files = selectedFiles.files;
+    updateFileNames();
+  }
+
+  function updateFileNames() {
+    fileNames.innerHTML = '';
+    for (let i = 0; i < fileInput.files.length; i++) {
+      fileNames.innerHTML += `<p>선택된 파일 ${i + 1}: ${fileInput.files[i].name}</p>`;
+    }
+  }
+</script>
+</body>
+</html>

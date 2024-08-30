@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오답노트 목록</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/WrongAnswerNote/list-wrong-answer-note.css">
+</head>
+<body>
+<header>
+  <div class="logo">
+    <img src="/img/algoy-1.png" alt="ALGoy Logo">
+  </div>
+  <nav>
+    <a href="#">오답 노트</a>
+    <a href="#">플래너</a>
+  </nav>
+  <div class="user-actions">
+    <div class="search-bar">
+      <input type="text" placeholder="Search">
+      <img src="/img/search-glasses.png" alt="Search Icon" class="search-icon">
+    </div>
+    <button class="logout">Logout</button>
+    <div class="logout-container">
+      <img src="/img/user-icon.png" alt="User Icon" class="user-icon">
+    </div>
+  </div>
+</header>
+
+<div class="note-header">
+  <div class="title-section">
+    <img src="/img/planner-icon.png" alt="오답노트 아이콘" class="WrongAnawerNote-icon">
+    <h2>오답노트</h2>
+  </div>
+  <button class="new-button" onclick="redirectToCreate()">New</button>
+</div>
+
+<main>
+  <section class="note-list">
+    <!-- Thymeleaf로 노트 목록을 반복하여 출력 -->
+    <div th:each="note : ${notes}" class="note-item">
+      <h2>
+        <a th:href="@{/algoy/commit/{id}(id=${note.id})}" th:text="${note.title}"></a>
+      </h2>
+      <p th:text="${note.content}"></p>
+      <div class="note-details">
+        <span>링크: <a th:href="${note.link}" th:text="${note.link}"></a></span>
+        <span>출제 사이트: <span th:text="${note.quizSite}"></span></span>
+        <span>문제 유형: <span th:text="${note.quizType}"></span></span>
+        <span>문제 레벨: <span th:text="${note.quizLevel}"></span></span>
+        <span>풀이 여부: <span th:text="${note.isSolved != null ? (note.isSolved ? 'Solved' : 'Unsolved') : 'Unsolved'}"></span></span>
+      </div>
+      <div class="note-dates">
+        <span>작성일: <time th:text="${#dates.format(note.createdAt, 'yyyy년 MM월 dd일 HH:mm')}"></time></span>
+        <span>수정일: <time th:text="${#dates.format(note.updatedAt, 'yyyy년 MM월 dd일 HH:mm')}"></time></span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  // 'New' 버튼 클릭 시 리다이렉트
+  function redirectToCreate() {
+    window.location.href = '/algoy/commit/create';
+  }
+</script>
+</body>
+</html>
