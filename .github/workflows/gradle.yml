@@ -56,6 +56,13 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Deploy
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
+        run: |
+
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
