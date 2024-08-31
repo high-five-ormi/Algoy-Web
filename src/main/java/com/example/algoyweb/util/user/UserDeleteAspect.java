@@ -1,7 +1,7 @@
 package com.example.algoyweb.util.user;
 
 import com.example.algoyweb.model.entity.user.User;
-import com.example.algoyweb.service.user.UserService;
+import com.example.algoyweb.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.After;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserDeleteAspect {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Pointcut("within(@org.springframework.stereotype.Service *)")
     public void serviceMethods() {}
@@ -27,11 +27,11 @@ public class UserDeleteAspect {
     @After("serviceMethods()")
     @Transactional
     public void checkDeleted() {
-        List<User> userList = userService.findAll();
+        List<User> userList = userRepository.findAll();
         for(User user : userList) {
             if(user.getIsDeleted()) {
                 if(LocalDateTime.now().isAfter(user.getDeletedAt())) {
-                    userService.delete(user.getUsername());
+                    userRepository.delete(userRepository.findByEmail(user.getUsername()));
                 }
             }
         }
