@@ -108,6 +108,19 @@ public class UserService implements UserDetailsService {
     User findUser = userRepository.findByEmail(email);
     findUser.setDeleted();
   }
+
+  public List<User> findAll() {
+    return userRepository.findAll();
+  }
+
+  @Transactional
+  public void delete(String username) {
+    User findUser = userRepository.findByEmail(username);
+    if(!findUser.getIsDeleted()){
+      throw new CustomException(UserErrorCode.USER_NOT_EQUAL_EMAIL);
+    }
+    userRepository.delete(findUser);
+  }
 }
 
 
