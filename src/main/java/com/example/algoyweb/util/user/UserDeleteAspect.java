@@ -21,7 +21,9 @@ public class UserDeleteAspect {
 
     private final UserService userService;
 
-    @Pointcut("within(@org.springframework.stereotype.Service *)")
+    @Pointcut("execution(* com.example.algoyweb.service.*(..)) " +
+            "&& !execution(* com.example.algoyweb.service.user.UserService.delete(..))" +
+            "&& !execution(* com.example.algoyweb.service.user.UserService.findAll(..))")
     public void serviceMethods() {}
 
     @After("serviceMethods()")

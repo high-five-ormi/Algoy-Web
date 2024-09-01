@@ -70,12 +70,7 @@ public class PlannerService {
     }
 
     public List<PlannerDto> getPlans(String username) {
-        List<PlannerDto> plans = plannerRepository.findByUserEmail(username).stream()
+        return plannerRepository.findByUserEmail(username).stream()
                 .map(ConvertUtils::convertPlannerToDto).toList();
-        for(PlannerDto plan : plans){
-            System.out.println(plan.getContent());
-        }
-
-        return plans;
     }
 }
