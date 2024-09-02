@@ -6,29 +6,30 @@
     <link rel="stylesheet" th:href="@{/css/home/home.css}">
     <script th:src="@{/js/calendar/calendar.global.js}"></script>
     <link rel="stylesheet" th:href="@{/css/home/calendar.css}">
+    <script th:src="@{/js/home.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <header>
     <div id="header-container">
         <a th:href="@{/algoy/home}">
-            <img src="/img/algoy-1.png" width="190" height="190" alt="알고이 로고입니다." id="header-logo">
+            <img src="/img/algoy-1.png" alt="알고이 로고입니다." id="header-logo">
         </a>
         <nav id="header-nav-1">
-            <span>오답 노트</span>
-            <span>플래너</span>
-            <span>스터디 모집</span>
+            <a href="">오답 노트</a>
+            <a href="/algoy/planner/calender">플래너</a>
         </nav>
         <nav id="header-nav-2">
             <div id="search-container">
                 <input type="text" placeholder="search" class="search-input">
                 <button class="search-button">
-                    <img src="/img/search-glasses.png" width="29" height="29" alt="검색 창의 돋보기 입니다.">
+                    <img src="/img/search-glasses.png" alt="검색 창의 돋보기 입니다.">
                 </button>
             </div>
             <div id="header-user-area">
-                <a id="header-my-page" th:href="@{/algoy/mypage}">
-                    <img src="/img/user-icon.png" width="20" height="20" alt="마이 페이지 버튼입니다">
-                </a>
+                <button id="header-my-page" class="modal-btn">
+                    <img src="/img/user-icon.png" alt="마이 페이지 버튼입니다">
+                </button>
                 <div th:if="${isAuthenticated}">
                     <form action="/algoy/logout" method="post">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
@@ -48,12 +49,62 @@
         </nav>
     </div>
 </header>
-<h1>
-    <div id ='calendar-container'>
-        <div id='calendar'></div>
+
+
+<!-- 모달창 가능하면 모듈화 -->
+<div id="myModal" class="modal">
+    <div class="modal-header">
+        <div class="avatar">
+            <img src="/img/user-icon.png" class="avatar-icon" alt="유저 이미지">
+        </div>
+        <span class="nickname" th:text="${userNickname}">nickname</span>
+        <span class="close">&times;</span>
     </div>
-</h1>
+    <div class="modal-content">
+        <a th:href="@{/algoy/user/edit}"> 회원 정보 수정</a>
+        <a th:href="@{/algoy/user/edit}"> 회원 탈퇴</a>
+    </div>
+</div>
+<div class="graph-container">
+    <div id='calendar'></div>
+    <p class="today">Today's log <canvas id="myChart" width="300px" height="300px"></canvas> </p>
+</div>
+
 
 <script th:src="@{/js/calendar/add-event.js}"></script>
+<script>
+    const ctx = document.getElementById('myChart');
+    // <block:setup:1>
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                '완료',
+                '진행중',
+                '시작 전'
+            ],
+            datasets: [{
+                label: 'today',
+                data: [300, 50, 100],
+                backgroundColor: [
+                    'rgb(2, 99, 132)',
+                    'rgb(120, 99, 132)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: false,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+        }
+    });
+</script>
 </body>
 </html>
