@@ -20,97 +20,105 @@ import com.example.algoyweb.repository.user.UserRepository;
 
 @Service
 public class UserService implements UserDetailsService {
-  private final UserRepository userRepository;
-  private final PasswordEncoder passwordEncoder; // Spring Security의 PasswordEncoder 사용
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder; // Spring Security의 PasswordEncoder 사용
 
-  public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-    this.userRepository = userRepository;
-    this.passwordEncoder = passwordEncoder;
-  }
-
-  /**
-   * 회원가입 처리
-   *
-   * @author yuseok
-   * @param userDto 회원가입 정보를 담고 있는 DTO
-   */
-  @Transactional
-  public void signUpUser(UserDto userDto) {
-    // User 엔티티 생성
-    User user =
-        User.builder()
-            .username(userDto.getUsername())
-            .nickname(userDto.getNickname())
-            .email(userDto.getEmail())
-            .password(passwordEncoder.encode(userDto.getPassword())) // 비밀번호 암호화
-            .role(Role.NORMAL)
-            .isDeleted(false)
-            .createdAt(LocalDateTime.now())
-            .build();
-
-    // 저장
-    userRepository.save(user);
-  }
-
-  // 이메일 중복 체크
-  @Transactional
-  public User findByEmail(String email) {
-    return userRepository.findByEmail(email);
-  }
-
-  // 닉네임 중복 체크
-  @Transactional
-  public User findByNickname(String nickname) {
-    return userRepository.findByNickname(nickname);
-  }
-
-  /**
-   * 로그인
-   *
-   * @author jooyoung
-   * @param email 로그인시 email로 로그인
-   * @return 저장된 사용자 정보를 담은 UserDto
-   */
-  @Override
-  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    User user = userRepository.findByEmail(email);
-    if (user == null) {
-      throw new UsernameNotFoundException("User not found with email: " + email);
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
-    System.out.println(user);
 
-    return org.springframework.security.core.userdetails.User
-            .withUsername(user.getEmail())
-            .password(user.getPassword())  // Assuming this is already hashed
-            .build();
-  }
+    /**
+     * 회원가입 처리
+     *
+     * @param userDto 회원가입 정보를 담고 있는 DTO
+     * @author yuseok
+     */
+    @Transactional
+    public void signUpUser(UserDto userDto) {
+        // User 엔티티 생성
+        User user =
+                User.builder()
+                        .username(userDto.getUsername())
+                        .nickname(userDto.getNickname())
+                        .email(userDto.getEmail())
+                        .password(passwordEncoder.encode(userDto.getPassword())) // 비밀번호 암호화
+                        .role(Role.NORMAL)
+                        .isDeleted(false)
+                        .createdAt(LocalDateTime.now())
+                        .build();
 
-  @Transactional
-  public UserDto update(UserDto userDto, String email) {
-    if(!userDto.getEmail().equals(email)) {
-      throw new CustomException(UserErrorCode.USER_NOT_EQUAL_EMAIL);
+        // 저장
+        userRepository.save(user);
     }
-    User findUser = userRepository.findByEmail(email);
-    findUser.updateUserDto(userDto);
-    return ConvertUtils.convertUserToDto(findUser);
-  }
 
-  @Transactional
-  public void setDeleted(String email) {
-    User findUser = userRepository.findByEmail(email);
-    findUser.setDeleted();
-  }
-
-  public List<User> findAll() {
-    return userRepository.findAll();
-  }
-
-  @Transactional
-  public void delete(String username) {
-    User findUser = userRepository.findByEmail(username);
-    if(!findUser.getIsDeleted()){
-      throw new CustomException(UserErrorCode.USER_NOT_EQUAL_EMAIL);
+    // 이메일 중복 체크
+    @Transactional
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
-    userRepository.delete(findUser);
-  }
+
+    // 닉네임 중복 체크
+    @Transactional
+    public User findByNickname(String nickname) {
+        return userRepository.findByNickname(nickname);
+    }
+
+    /**
+     * 로그인
+     *
+     * @param email 로그인시 email로 로그인
+     * @return 저장된 사용자 정보를 담은 UserDto
+     * @author jooyoung
+     */
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
+        }
+        System.out.println(user);
+
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getEmail())
+                .password(user.getPassword())  // Assuming this is already hashed
+                .build();
+    }
+
+    @Transactional
+    public UserDto update(UserDto userDto, String email) {
+        if (!userDto.getEmail().equals(email)) {
+            throw new CustomException(UserErrorCode.USER_NOT_EQUAL_EMAIL);
+        }
+        User findUser = userRepository.findByEmail(email);
+        findUser.updateUserDto(userDto);
+        return ConvertUtils.convertUserToDto(findUser);
+    }
+
+    @Transactional
+    public void setDeleted(String email) {
+        User findUser = userRepository.findByEmail(email);
+        findUser.setDeleted();
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Transactional
+    public void delete(String username) {
+        User findUser = userRepository.findByEmail(username);
+        if (!findUser.getIsDeleted()) {
+            throw new CustomException(UserErrorCode.USER_NOT_EQUAL_EMAIL);
+        }
+        userRepository.delete(findUser);
+    }
+
+    public String getUserNicknameByEmail(String email) {
+        User user = userRepository.findByEmail(email); // 이메일을 기준으로 사용자를 조회
+        if (user != null) {
+            return user.getNickname(); // 닉네임 반환
+        }
+        return null; // 사용자가 없으면 null 반환
+    }
 }

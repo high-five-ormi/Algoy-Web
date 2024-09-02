@@ -11,7 +11,7 @@
     <header>
         <a th:href="@{/algoy/home}">
             <div id="header-container">
-                <img src="/img/algoy-1.png" width="190" height="190" alt="알고이 로고입니다." id="header-logo">
+                <img src="/img/algoy-1.png" alt="알고이 로고입니다." id="header-logo">
             </div>
         </a>
     </header>
@@ -42,7 +42,8 @@
                 <button type="submit" class="btn-signin">Sign in</button>
             </form>
             <div class="google-signin">
-                <button class="btn-google"><!--<img src="google-icon.png" alt="Google Icon">--> Or sign in with Google
+                <button class="btn-google">
+                    <img src="/img/google-icon.png" alt="Google Icon">Or sign in with Google
                 </button>
             </div>
             <p class="signup-link">Don't have an account? <a th:href="@{/algoy/sign}">Sign up now</a></p>
