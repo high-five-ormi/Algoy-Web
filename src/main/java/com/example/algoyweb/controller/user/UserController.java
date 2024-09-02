@@ -52,7 +52,7 @@ public class UserController {
    */
   @GetMapping("/sign")
   public String showSignUpForm(Model model) {
-    // 새로운 UserDto 객체를 생성 후, "userDto"라는 이름으로 Model에 추가
+    // 새로운 User 객체를 생성 후, "user"라는 이름으로 Model에 추가
     model.addAttribute("user", new User());
 
     return "signup/signup";
