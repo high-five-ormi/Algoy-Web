@@ -1,5 +1,5 @@
 body {
-    margin: 0;
+    margin :0;
 }
 
 a{
@@ -10,7 +10,7 @@ a{
 
 #header-container {
     width: 100%;
-    height: 130px;
+    height: 120px;
     background-color: #E4EDF3;
     box-sizing: border-box;
     padding: 0 36px;
@@ -21,10 +21,9 @@ a{
 }
 
 #header-logo {
-    width: 130px;
-    height: 130px;
+    width: 120px;
+    height: 120px;
     float: left;
-    margin-right: 5%;
 }
 
 #header-nav-1 {
@@ -33,14 +32,14 @@ a{
     gap: 36px;
     font-size: 18px;
     margin-bottom: 20px;
-    margin-left: 5%;
+    margin-left: 20px;
 }
 
 #header-nav-2 {
     float: right;
     display: flex;
     gap: 30px;
-    margin-left: 17%;
+    margin-left: auto;
     margin-bottom: 20px;
 }
 
@@ -74,6 +73,11 @@ a{
     justify-content: center;
 }
 
+.search-button image {
+    width: 29px;
+    height: 29px;
+}
+
 #header-logout, #header-my-page, #header-login {
     display: flex;
     align-items: center;
@@ -96,6 +100,11 @@ a{
     height: 40px;
 }
 
+#header-my-page img {
+    width: 20px;
+    height: 20px;
+}
+
 #header-user-area {
     display: flex;
     gap: 8px;
@@ -107,3 +116,79 @@ a{
     display: table;
     clear: both;
 }
+
+
+.modal {
+    display: none;
+    width: 200px;
+    height: 250px;
+    padding: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    position: absolute; /* 절대 위치 설정 */
+    transform: translateX(-50%); /* 수평 중앙 정렬을 위한 변환 */
+}
+
+.modal-header {
+    background-color: #007bff;
+    color: white;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.close {
+    color: white;
+    margin-left: auto;
+}
+
+.avatar-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.nickname {
+    font-size: 16px;
+}
+
+.modal-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-content a {
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.nickname {
+    font-weight: bold;
+}
+
+.graph-container {
+    display: flex;
+}
+
+
+.today {
+    margin-left: 100px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
