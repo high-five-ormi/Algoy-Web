@@ -33,6 +33,6 @@ public class ChatBotViewController {
   @GetMapping("/algoy/bot/temp")
   public String chatPage(Model model) {
     model.addAttribute("backendUrl", backendUrl);
-    return "/temp/chatbot";
+    return "temp/chatbot";
   }
 }
