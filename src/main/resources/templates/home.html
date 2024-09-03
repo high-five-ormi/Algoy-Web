@@ -6,65 +6,18 @@
     <link rel="stylesheet" th:href="@{/css/home/home.css}">
     <script th:src="@{/js/calendar/calendar.global.js}"></script>
     <link rel="stylesheet" th:href="@{/css/home/calendar.css}">
-    <script th:src="@{/js/home.js}"></script>
+    <script th:src="@{/js/fragments/modal.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <header>
-    <div id="header-container">
-        <a th:href="@{/algoy/home}">
-            <img src="/img/algoy-1.png" alt="알고이 로고입니다." id="header-logo">
-        </a>
-        <nav id="header-nav-1">
-            <a href="">오답 노트</a>
-            <a href="/algoy/planner/calender">플래너</a>
-        </nav>
-        <nav id="header-nav-2">
-            <div id="search-container">
-                <input type="text" placeholder="search" class="search-input">
-                <button class="search-button">
-                    <img src="/img/search-glasses.png" alt="검색 창의 돋보기 입니다.">
-                </button>
-            </div>
-            <div id="header-user-area">
-                <button id="header-my-page" class="modal-btn">
-                    <img src="/img/user-icon.png" alt="마이 페이지 버튼입니다">
-                </button>
-                <div th:if="${isAuthenticated}">
-                    <form action="/algoy/logout" method="post">
-                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-                        <button type="submit" name="logout" id="header-logout">
-                            <span>Logout</span>
-                        </button>
-                    </form>
-                </div>
-                <div th:unless="${isAuthenticated}">
-                    <a href="/algoy/login">
-                        <button id="header-login">
-                            <span>Login</span>
-                        </button>
-                    </a>
-                </div>
-            </div>
-        </nav>
-    </div>
+    <div th:replace="fragments/header :: header"></div>
+    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
 </header>
+<!-- 모달을 header에 추가하고 싶은데 추가하니 실행이 잘 안되네요.. -->
+<div th:replace="fragments/modal :: modal"></div>
+<link rel="stylesheet" th:href="@{/css/fragments/modal.css}">
 
-
-<!-- 모달창 가능하면 모듈화 -->
-<div id="myModal" class="modal">
-    <div class="modal-header">
-        <div class="avatar">
-            <img src="/img/user-icon.png" class="avatar-icon" alt="유저 이미지">
-        </div>
-        <span class="nickname" th:text="${userNickname}">nickname</span>
-        <span class="close">&times;</span>
-    </div>
-    <div class="modal-content">
-        <a th:href="@{/algoy/user/edit}"> 회원 정보 수정</a>
-        <a th:href="@{/algoy/user/edit}"> 회원 탈퇴</a>
-    </div>
-</div>
 <div class="graph-container">
     <div id='calendar'></div>
     <p class="today">Today's log <canvas id="myChart" width="300px" height="300px"></canvas> </p>

@@ -7,7 +7,6 @@
     <link rel="stylesheet" th:href="@{/css/user/login.css}">
 </head>
 <body>
-<div class="container">
     <header>
         <a th:href="@{/algoy/home}">
             <div id="header-container">
@@ -17,7 +16,7 @@
     </header>
     <main>
         <!--<div class="image-container">
-            <img th:src="@{/image/background-image.jpg}" alt="Background Image">
+            <img src="/img/login-image.png" alt="Background Image">
         </div>-->
         <div class="login-container">
             <div class="login-header">
@@ -25,7 +24,6 @@
                 <p>어서오세요!</p>
             </div>
             <form class="login-form" th:action="@{/algoy/login}" method="post">
-                <!--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">-->
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="username" placeholder="Email">
@@ -49,7 +47,7 @@
             <p class="signup-link">Don't have an account? <a th:href="@{/algoy/sign}">Sign up now</a></p>
         </div>
     </main>
-</div>
+
 
 </body>
 
