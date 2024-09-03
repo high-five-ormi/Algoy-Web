@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+/*document.addEventListener('DOMContentLoaded', function() {
     let isModalOpen = false;
 
     function toggleModal() {
@@ -58,4 +58,4 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModal();
         });
     }
-});
+});*/

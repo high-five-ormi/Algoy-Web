@@ -27,6 +27,15 @@ public class MyPageController {
         this.userService = userService;
     }
 
+    /**
+     * 닉네임 반환
+     *
+     * @author jooyoung
+     * @param userDetails 이메일로 유저의 닉네임을 찾아 반환함.
+     * @return userNickname
+     * 다른 코드랑 합칠 수 있을 것 같아요 (지금은 모달에 띄우기 위해 사용합니다)
+     */
+
     // 사용자 닉네임을 반환하는 API
     @GetMapping("/nickname")
     public ResponseEntity<Map<String, String>> getUserNickname(@AuthenticationPrincipal UserDetails userDetails) {
@@ -46,7 +55,14 @@ public class MyPageController {
         }
     }
 
-    // 유저 수정 폼 불러오기
+
+    /**
+     * 유저 수정
+     *
+     * @author 창섭님,jooyoung
+     * @param userDetails 로그인 된 유저 수정폼을 불러옴
+     * @return mav, 수정 완료
+     */
     @GetMapping("/edit")
     @PreAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
     public ModelAndView editForm(@AuthenticationPrincipal UserDetails userDetails) {
@@ -74,7 +90,13 @@ public class MyPageController {
     }
 
 
-    // 유저 수정 폼 불러오기
+    /**
+     * 유저 삭제
+     *
+     * @author 창섭님,jooyoung
+     * @param userDetails 로그인 된 유저를 소프트딜리트함
+     * @return mav, 삭제완료 메세지
+     */
     @GetMapping("/delete")
     @PreAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
     public ModelAndView deleteForm(@AuthenticationPrincipal UserDetails userDetails) {
