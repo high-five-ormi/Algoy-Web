@@ -11,6 +11,12 @@ $(document).ready(function (){
             $(`input:radio[name="status"][value="${data.status}"]`).prop('checked', true);
             $('#start-date').val(data.startAt);
             $('#end-date').val(data.endAt);
+            $('#site-dropdown').val(data.siteName);
+            if(data.siteName === 'ETC') {
+                $('#etc-input').show();
+                $('#etc-input').val(data.etcName);
+            }
+            $('#question').val(data.questionName);
         },
         error: function (error) {
             alert('조회에 실패했습니다.');
@@ -26,6 +32,9 @@ $('.btn-update').on('click', function(event) {
     const link = $('#link').val().trim();
     const startAt = $('#start-date').val().trim();
     const endAt = $('#end-date').val().trim();
+    const questionName = $('#question').val().trim();
+    const siteName = $('#site-dropdown').val().trim();
+    const etcName = $('#etc-input').val().trim();
 
     if (title === "") {
         alert('제목을 입력해주세요.');
@@ -47,16 +56,45 @@ $('.btn-update').on('click', function(event) {
         alert('종료 날짜를 입력해주세요');
         return;
     }
+    if(questionName === "") {
+        alert('문제 이름을 입력해주세요');
+        return;
+    }
+    if(siteName === "ETC" && etcName === "") {
+        alert('사이트 이름을 입력해주세요');
+        return;
+    }
+
+    if(questionName.length > 20) {
+        alert('문제 이름이 너무 깁니다.');
+        $('#question').val('');
+        return;
+    }
+    if(etcName.length > 20) {
+        alert('사이트 이름이 너무 깁니다.');
+        $('#etc-input').val('');
+        return;
+    }
 
     // json 통신할 객체 생성
-    const plannerDto = {
+    let plannerDto = {
         title: $('#title').val(),
         content: $('#content').val(),
         link: $('#link').val(),
         startAt: $('#start-date').val(),
         endAt: $('#end-date').val(),
-        status: $(':radio[name="status"]:checked').val()
+        status: $(':radio[name="status"]:checked').val(),
+        questionName: $('#question').val()
     };
+    console.log(plannerDto.questionName);
+
+    if(siteName === "ETC") {
+        plannerDto.siteName = $('#site-dropdown').val();
+        plannerDto.etcName = $('#etc-input').val();
+    } else {
+        plannerDto.siteName = $('#site-dropdown').val();
+    }
+
     $.ajax({
         type: "POST",
         url: "/algoy/planner/edit/" + id,
@@ -74,3 +112,13 @@ $('.btn-update').on('click', function(event) {
         }
     })
 })
+
+$(document).ready(function() {
+    $('#site-dropdown').change(function () {
+        if ($('#site-dropdown').val() === 'ETC') {
+            $('#etc-input').show();
+        } else {
+            $('#etc-input').hide();
+        }
+    });
+});

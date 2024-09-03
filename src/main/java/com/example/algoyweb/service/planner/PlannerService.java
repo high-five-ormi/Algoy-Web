@@ -4,7 +4,6 @@ import com.example.algoyweb.model.entity.planner.Planner;
 import com.example.algoyweb.model.dto.planner.PlannerDto;
 import com.example.algoyweb.exception.CustomException;
 import com.example.algoyweb.exception.PlannerErrorCode;
-import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.repository.planner.PlannerRepository;
 import com.example.algoyweb.repository.user.UserRepository;
 import com.example.algoyweb.util.ConvertUtils;
@@ -12,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.Collections;
@@ -29,11 +29,11 @@ public class PlannerService {
 
     @Transactional(readOnly = true)
     public List<PlannerDto> getPlansMonth(int year, int month) {
-        LocalDateTime startTime = LocalDateTime.of(year, month, 1, 0, 0);
+        LocalDate startTime = LocalDate.of(year, month, 1);
 
         YearMonth yearMonth = YearMonth.from(startTime);
         int lastDayOfMonth = yearMonth.lengthOfMonth();
-        LocalDateTime endTime = LocalDateTime.of(year, month, lastDayOfMonth, 0, 0);
+        LocalDate endTime = LocalDate.of(year, month, lastDayOfMonth);
 
         return Optional.of(plannerRepository.findByMonth(startTime, endTime)).orElseGet(Collections::emptyList).stream()
                 .map(ConvertUtils::convertPlannerToDto).toList();

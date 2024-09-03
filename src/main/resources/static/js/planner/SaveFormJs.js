@@ -9,6 +9,9 @@ $('.btn-create').on('click', function (event) {
     const link = $('#link').val().trim();
     const startAt = $('#start-date').val().trim();
     const endAt = $('#end-date').val().trim();
+    const questionName = $('#question').val().trim();
+    const siteName = $('#site-dropdown').val().trim();
+    const etcName = $('#etc-input').val().trim();
 
     if (title === "") {
         alert('제목을 입력해주세요.');
@@ -30,16 +33,43 @@ $('.btn-create').on('click', function (event) {
         alert('종료 날짜를 입력해주세요');
         return;
     }
+    if(questionName === "") {
+        alert('문제 이름을 입력해주세요');
+        return;
+    }
+    if(siteName === "ETC" && etcName === "") {
+        alert('사이트 이름을 입력해주세요');
+        return;
+    }
+
+    if(questionName.length > 20) {
+        alert('문제 이름이 너무 깁니다.');
+        $('#question').val('');
+        return;
+    }
+    if(etcName.length > 20) {
+        alert('사이트 이름이 너무 깁니다.');
+        $('#etc-input').val('');
+        return;
+    }
 
     // json 통신할 객체 생성
-    const plannerDto = {
+    let plannerDto = {
         title: $('#title').val(),
         content: $('#content').val(),
         link: $('#link').val(),
         startAt: $('#start-date').val(),
         endAt: $('#end-date').val(),
-        status: $(':radio[name="status"]:checked').val()
+        status: $(':radio[name="status"]:checked').val(),
+        questionName: $('#question').val()
     };
+
+    if(siteName === "ETC") {
+        plannerDto.siteName = $('#site-dropdown').val();
+        plannerDto.etcName = $('#etc-input').val();
+    } else {
+        plannerDto.siteName = $('#site-dropdown').val();
+    }
 
     // json 통신
     $.ajax({
@@ -53,6 +83,16 @@ $('.btn-create').on('click', function (event) {
         },
         error: function (error) {
             alert('등록에 실패했습니다.');
+        }
+    });
+});
+
+$(document).ready(function() {
+    $('#site-dropdown').change(function () {
+        if ($('#site-dropdown').val() === 'ETC') {
+            $('#etc-input').show();
+        } else {
+            $('#etc-input').hide();
         }
     });
 });
