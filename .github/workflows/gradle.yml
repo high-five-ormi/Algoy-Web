@@ -55,7 +55,6 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    # Remove the condition for push events since we're only triggering on pull requests now
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v3
@@ -91,13 +90,23 @@ jobs:
           MYSQL_USERNAME: admin
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         run: |
-          if ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST '[ -f /home/ubuntu/web-pid ]'; then
-            echo "Algoy-Web PID file exists. Terminating previous process."
-            ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'kill -9 $(< /home/ubuntu/web-pid)'
+          # Function to check if process is running
+          check_process() {
+            ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST "ps -p \$(cat /home/ubuntu/web-pid 2>/dev/null) >/dev/null 2>&1"
+          }
+          
+          # Check if PID file exists and process is running
+          if ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST '[ -f /home/ubuntu/web-pid ]' && check_process; then
+            echo "Algoy-Web process is running. Terminating previous process."
+            ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'kill -9 $(cat /home/ubuntu/web-pid) || true'
+          elif ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST '[ -f /home/ubuntu/web-pid ]'; then
+            echo "Algoy-Web PID file exists but process is not running. Removing stale PID file."
+            ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'rm /home/ubuntu/web-pid'
           else
             echo "Algoy-Web PID file does not exist. Starting a new process."
           fi
           
+          # Start the new process
           ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST "nohup java -jar /home/ubuntu/Algoy-Web-0.0.1-SNAPSHOT.jar \
             --server.port=8081 \
             --spring.datasource.url=$MYSQL_URL \
@@ -109,4 +118,10 @@ jobs:
             --ai-backend.url=$AI_IP \
             >/dev/null 2>&1 & echo \$! > /home/ubuntu/web-pid"
           
-          ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'ps -p $(< /home/ubuntu/web-pid) && echo "Algoy-Web process started" || echo "Failed to start Algoy-Web process"'
+          # Check if the new process started successfully
+          if check_process; then
+            echo "Algoy-Web process started successfully"
+          else
+            echo "Failed to start Algoy-Web process"
+            exit 1
+          fi
