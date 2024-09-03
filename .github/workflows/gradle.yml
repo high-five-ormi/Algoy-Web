@@ -27,14 +27,18 @@ jobs:
       - name: Build with Gradle Wrapper
         run: ./gradlew clean build
 
-      - name: List build directory
-        run: ls -la build/libs
+      - name: Debug - List project root
+        run: ls -la
+
+      - name: Debug - Find JAR files
+        run: find . -name "*.jar"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
           path: build/libs/*.jar
+          if-no-files-found: error
 
   dependency-submission:
     runs-on: ubuntu-latest
@@ -60,9 +64,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-artifacts
+          path: build/libs
 
       - name: List artifact directory
-        run: ls -la build/libs  # 다운로드한 아티팩트의 디렉토리 내용 확인
+        run: ls -la build/libs
 
       - name: Set up SSH key
         run: |
