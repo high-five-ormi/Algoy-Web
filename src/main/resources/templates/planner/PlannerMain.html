@@ -56,7 +56,8 @@
                 <th style="width: 50px">No.</th>
                 <th>Title</th>
                 <th>Content</th>
-                <th>Link</th>
+                <th>Site</th>
+                <th>Question</th>
                 <th style="width: 120px">Status</th>
             </tr>
             </thead>
@@ -65,17 +66,32 @@
         </table>
     </div>
 </div>
+<!-- 모달 구조 -->
 <div id="planner-modal" class="modal">
     <div class="modal-content">
         <span class="modal-close">&times;</span>
-        <h2 id="modal-title">제목</h2>
-        <p><strong>내용:</strong> <span id="modal-content">Loading...</span></p>
-        <p><strong>만들어진 시간:</strong> <span id="modal-createdAt">Loading...</span></p>
-        <p><strong>업데이트된 시간:</strong> <span id="modal-updatedAt">Loading...</span></p>
-        <p><strong>시작 날짜:</strong> <span id="modal-startAt">Loading...</span></p>
-        <p><strong>끝난 날짜:</strong> <span id="modal-endAt">Loading...</span></p>
-        <p><strong>문제 링크:</strong> <a href="#" id="modal-link" target="_blank">Loading...</a></p>
-        <button id="btn-edit">Edit</button>
+        <!-- 제목 -->
+        <h2 id="modal-title">Title</h2>
+        <!-- 본문이 들어갈 div 요소 -->
+        <div id="modal-content" style="border: 1px solid #e3e3e3; padding: 15px; min-height: 279px; margin-top: 20px;">
+            <p>Loading...</p>
+        </div>
+        <!-- 작성된 시간 -->
+        <div id="modal-info" style="font-size: 12px; color: #666; margin-top: 30px;">
+            <p><span id="modal-createdAt">Loading...</span></p>
+            <!-- 문제 링크와 관련된 이슈 -->
+            <p>Related issues - <a href="#" id="modal-link" target="_blank">Loading...</a></p>
+            <!-- 플랜 작업 시간 -->
+            <p><span id="modal-timeAt"></span></p>
+            <!-- 문제 이름 -->
+            <p>Question Name - <span id="modal-question">Loading...</span></p>
+            <!-- 사이트 이름 -->
+            <p>Site Name - <span id="modal-site">Loading...</span></p>
+        </div>
+        <div class="modal-button-group">
+            <button id="btn-edit">수정</button>
+            <button id="btn-delete">삭제</button>
+        </div>
     </div>
 </div>
 </body>

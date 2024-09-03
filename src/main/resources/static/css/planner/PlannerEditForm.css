@@ -212,8 +212,26 @@ input[type="radio"] {
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    margin-bottom: 100px;
 }
 
 .btn-update:hover {
     background-color: #0056b3;
+}
+
+#site-dropdown {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 5px;
+}
+
+#etc-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
 }

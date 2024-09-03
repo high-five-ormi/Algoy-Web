@@ -39,7 +39,7 @@
     </div>
 </div>
 <div class="save-container">
-    <h1>새 플랜</h1>
+    <h1>플랜 수정</h1>
     <form>
         <div class="form-group">
             <label for="title">Title</label>
@@ -60,6 +60,21 @@
                 <label><input type="radio" name="status" value="IN_PROGRESS"> 진행 중</label>
                 <label><input type="radio" name="status" value="DONE"> 완료</label>
             </div>
+        </div>
+        <div class="form-group">
+            <label for="question">Question</label>
+            <input type="text" id="question" placeholder="문제 이름을 입력해주세요">
+        </div>
+        <div class="form-group">
+            <label for="site-dropdown">Site</label>
+            <select id="site-dropdown">
+                <option value="BOJ">백준</option>
+                <option value="PGS">프로그래머스</option>
+                <option value="SWEA">SW Expert Academy</option>
+                <option value="ETC">ETC</option>
+            </select>
+            <label for="etc-input"></label>
+            <input type="text" id="etc-input" placeholder="기타 사이트 이름을 입력해 주세요" style="display:none; margin-top:10px;">
         </div>
         <div class="form-group">
             <label for="start-date">Start date</label>
