@@ -2,7 +2,7 @@ server:
   port: 8081
 
 ai-backend:
-  url: ${IP}
+  url: http://15.165.235.170/8082
 
 spring:
   application:
