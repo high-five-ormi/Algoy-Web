@@ -58,7 +58,7 @@ jobs:
     steps:
       - name: Deploy
         env:
-          AI_IP: ${{ secrets.AI_IP }}
+          IP: ${{ secrets.IP }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
