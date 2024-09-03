@@ -32,7 +32,7 @@
   </div>
 </div>
 <script th:inline="javascript">
-  var backendUrl = 'http://localhost:8082';
+  var backendUrl = /*[[${backendUrl}]]*/ 'http://localhost:8082';
 </script>
 <script src="/js/temp/chatbot.js"></script>
 </body>
