@@ -38,7 +38,15 @@ public class Planner {
     private String link;
 
     @Column(nullable = false)
+    private String questionName;
+
+    @Column(nullable = false)
     private Status status;
+
+    @Column(nullable = false)
+    private SiteName siteName;
+
+    private String etcName;
 
     private LocalDateTime createAt;
 
@@ -53,6 +61,13 @@ public class Planner {
         DONE
     }
 
+    public enum SiteName {
+        BOJ,
+        PGS,
+        SWEA,
+        ETC
+    }
+
     public void updatePlan(PlannerDto plannerDto) {
         this.title = plannerDto.getTitle();
         this.content = plannerDto.getContent();
@@ -61,6 +76,9 @@ public class Planner {
         this.link = plannerDto.getLink();
         this.status = plannerDto.getStatus();
         this.updateAt = LocalDateTime.now();
+        this.questionName = plannerDto.getQuestionName();
+        this.siteName = plannerDto.getSiteName();
+        this.etcName = plannerDto.getEtcName();
     }
 
     public void connectUser(User user) {

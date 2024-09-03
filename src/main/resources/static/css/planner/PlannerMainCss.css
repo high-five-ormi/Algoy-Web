@@ -148,20 +148,9 @@ body {
     cursor: pointer;
 }
 
-/*
-#btn-edit {
-    background-color: #007bff;
-    width: 84px;
-    height: 40px;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    float:right;
-    margin-bottom:50px;
-}*/
+#btn-calendar:hover {
+    background-color: #0056b3;
+}
 
 /* table styling */
 .planner-container {
@@ -264,7 +253,6 @@ th {
     display: none;
 }
 
-/* Modal styling */
 .modal {
     display: none;
     position: fixed;
@@ -273,42 +261,22 @@ th {
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
     background-color: rgba(0, 0, 0, 0.4);
 }
 
-/* 기존 모달 관련 스타일 */
 .modal-content {
     background-color: #fff;
-    margin: 10% auto;
-    border: 1px solid #888;
-    width: 400px;
+    border: 1px solid #ddd;
+    min-width: 800px;
+    min-height: 600px;
     border-radius: 8px;
-    position: relative;
-    /* 버튼을 위한 공간 확보 */
-    padding: 20px 20px 50px;
-}
-
-/* 새로 추가된 버튼 스타일 */
-.modal-content #btn-edit {
     position: absolute;
-    bottom: 15px;
-    right: 15px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    width: 84px;
-    height: 40px;
-    font-size: 14px;
-    font-weight: bold;
-    float:right;
-}
-
-.modal-content #btn-edit:hover {
-    background-color: #0056b3;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 40px 60px 20px;
+    box-sizing: border-box;
 }
 
 .modal-close {
@@ -327,22 +295,61 @@ th {
     cursor: pointer;
 }
 
-/* Styling for modal content */
 .modal-content h2 {
     margin-top: 0;
-    font-size: 18px;
-    color: #333;
+    font-size: 28px;
+    font-weight: bold;
+    color: #000;
 }
 
-.modal-content p {
+.modal-button-group {
+    position: absolute;
+    bottom: 20px;
+    right: 60px;
+    display: flex;
+    gap: 30px;
+}
+
+.modal-button-group button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 84px;
+    height: 40px;
     font-size: 14px;
+    font-weight: bold;
+}
+
+.modal-button-group #btn-edit:hover,
+.modal-button-group #btn-delete:hover {
+    background-color: #0056b3;
+}
+
+#modal-content {
+    min-height: 279px;
+    overflow-y: auto;
+    font-size: 16px;
+    color: #333;
+    border: 1px solid #e3e3e3;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+#modal-info {
+    margin-top: 20px;
+    font-size: 12px;
     color: #666;
 }
 
-.modal-content .link {
-    margin-top: 10px;
-    font-size: 14px;
+#modal-info a {
     color: #007bff;
     text-decoration: underline;
     cursor: pointer;
+}
+
+#modal-info a:hover {
+    color: #0056b3;
 }
