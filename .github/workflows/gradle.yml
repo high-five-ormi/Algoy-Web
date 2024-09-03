@@ -1,5 +1,5 @@
-name: Java CI with Gradle
-#수정 필요
+name: Java CI/CD with Gradle
+
 on:
   pull_request:
     branches: [ main ]
@@ -55,22 +55,15 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    # Remove the condition for push events since we're only triggering on pull requests now
     steps:
-      - name: Deploy
-        env:
-          AI_IP: ${{ secrets.AI_IP }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
-        run: |
-
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
           name: build-artifacts
 
       - name: List artifact directory
-        run: ls -la  # 다운로드한 아티팩트의 디렉토리 내용 확인
+        run: ls -la
 
       - name: Set up SSH key
         run: |
@@ -86,23 +79,34 @@ jobs:
         run: |
           scp -i ~/.ssh/id_rsa *.jar $EC2_USER@$EC2_HOST:/home/ubuntu
 
-      - name: RUN java app
+      - name: Run Java app
         env:
           EC2_USER: ${{ secrets.EC2_USER }}
           EC2_HOST: ${{ secrets.EC2_HOST }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
+          AI_IP: ${{ secrets.AI_IP }}
+          MYSQL_URL: jdbc:mysql://mymysql.cjee2s48u8zx.ap-northeast-2.rds.amazonaws.com/algoy?serverTimezone=UTC
+          MYSQL_USERNAME: admin
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         run: |
-          # Algoy-Web 애플리케이션 관리
           if ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST '[ -f /home/ubuntu/web-pid ]'; then
-            echo "Algoy-Web PID 파일이 존재합니다. 이전 프로세스를 종료합니다."
-            # 프로세스 ID 읽고 종료
+            echo "Algoy-Web PID file exists. Terminating previous process."
             ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'kill -9 $(< /home/ubuntu/web-pid)'
           else
-            echo "Algoy-Web PID 파일이 존재하지 않습니다. 새로운 프로세스를 시작합니다."
+            echo "Algoy-Web PID file does not exist. Starting a new process."
           fi
           
-          # 새로운 Java 프로세스 시작
-          ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'nohup java -jar /home/ubuntu/Algoy-Web-0.0.1-SNAPSHOT.jar >/dev/null 2>&1 & echo $! > /home/ubuntu/web-pid'
+          ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST "nohup java -jar /home/ubuntu/Algoy-Web-0.0.1-SNAPSHOT.jar \
+            --server.port=8081 \
+            --spring.datasource.url=$MYSQL_URL \
+            --spring.datasource.username=$MYSQL_USERNAME \
+            --spring.datasource.password=$MYSQL_PASSWORD \
+            --spring.security.oauth2.client.registration.google.client-id=$GOOGLE_CLIENT_ID \
+            --spring.security.oauth2.client.registration.google.client-secret=$GOOGLE_CLIENT_SECRET \
+            --spring.security.oauth2.client.registration.google.redirect-uri=$GOOGLE_REDIRECT_URI \
+            --ai-backend.url=$AI_IP \
+            >/dev/null 2>&1 & echo \$! > /home/ubuntu/web-pid"
           
-          # 프로세스가 잘 시작되었는지 확인
-          ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'ps -p $(< /home/ubuntu/web-pid) && echo "Algoy-Web 프로세스 시작됨" || echo "Algoy-Web 프로세스 시작 실패"'
-          
+          ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'ps -p $(< /home/ubuntu/web-pid) && echo "Algoy-Web process started" || echo "Failed to start Algoy-Web process"'
