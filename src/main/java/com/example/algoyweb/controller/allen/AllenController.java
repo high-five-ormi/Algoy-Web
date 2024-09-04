@@ -8,6 +8,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/algoy/allen")
 public class AllenController {
@@ -20,11 +22,12 @@ public class AllenController {
     }
 
     @GetMapping("/solvedac")
-    public ResponseEntity<String> solvedac(@RequestParam String userName,@AuthenticationPrincipal UserDetails userDetails) throws Exception {
+    public ResponseEntity<String> solvedac(@RequestParam String username, @AuthenticationPrincipal UserDetails userDetails) throws Exception {
         System.out.println("controller check");
         try{
-            String response = allenService.sovledacCall(userName);
-            System.out.println(response);
+            List<String> titlesList = allenService.sovledacCall(username);
+
+            System.out.println(titlesList);
             return ResponseEntity.ok("solvedac");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("api 호출 중 에러가 발생하였습니다");
