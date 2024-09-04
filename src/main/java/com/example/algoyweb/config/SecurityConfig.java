@@ -42,10 +42,12 @@ public class SecurityConfig { // 보안 설정 담당 클래스
                                 .requestMatchers("/algoy/check-email-duplicate").permitAll()
                                 .requestMatchers("/algoy/check-nickname-duplicate").permitAll()
                                 .requestMatchers("/algoy/user/nickname").permitAll()
+                                .requestMatchers("/algoy/allen/**").permitAll() //permitALl로 임시 등록
                                 .requestMatchers("/css/**").permitAll()
                                 .requestMatchers("/js/**").permitAll()
                                 .requestMatchers("/img/**").permitAll()
                                 .requestMatchers("/algoy/user/**").authenticated()
+                                .requestMatchers("/algoy/commit/**").authenticated()
                                 .requestMatchers("/algoy/posts/**", "/algoy/comments/**").hasRole(Role.ADMIN.getKey())
                                 .requestMatchers("/algoy/posts/**", "/algoy/comments/**").hasRole(Role.NORMAL.getKey())
                                 // .requestMatchers("/algoy/posts/**", "/algoy/comments/**").hasRole(Role.NORMAL.name())
@@ -63,7 +65,6 @@ public class SecurityConfig { // 보안 설정 담당 클래스
                         logout -> logout
                                 .logoutUrl("/algoy/logout") // 로그아웃을 처리할 URL을 "/algoy/logout"으로 설정: 로그아웃 기능 구현 후 활성화
                                 .logoutSuccessUrl("/algoy/login") // 로그아웃 후 "/algoy/login" 페이지로 리다이렉트
-                                .logoutSuccessHandler(logoutSuccessHandler())
                                 .invalidateHttpSession(true) // 로그아웃 시 현재 세션을 무효화하여 세션 데이터 삭제
                                 .clearAuthentication(true) // 로그아웃 시 현재 인증 정보를 지우기
                                 .deleteCookies("JSESSIONID", "remember-me") // 로그아웃 시 "JSESSIONID" 쿠키를 삭제하여 세션 쿠키 제거
