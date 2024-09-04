@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -11,7 +11,7 @@
         <img src="/img/algoy-1.png" alt="알고이 로고입니다." id="header-logo">
     </a>
     <nav id="header-nav-1">
-        <a href="">오답 노트</a>
+        <a href="/algoy/commit">오답 노트</a>
         <a href="/algoy/planner/calender">플래너</a>
     </nav>
     <nav id="header-nav-2">
@@ -25,19 +25,16 @@
             <button id="header-my-page" class="modal-btn">
                 <img src="/img/user-icon.png" alt="마이 페이지 버튼입니다">
             </button>
-            <div th:if="${isAuthenticated}">
-                <form action="/algoy/logout" method="post" >
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+            <div sec:authorize="isAuthenticated()">
+                <form action="/algoy/logout" method="post">
                     <button type="submit" name="logout" id="header-logout">
                         <span>Logout</span>
                     </button>
                 </form>
             </div>
-            <div th:unless="${isAuthenticated}">
-                <a href="/algoy/login">
-                    <button id="header-login">
-                        <span>Login</span>
-                    </button>
+            <div sec:authorize="isAnonymous()">
+                <a href="/algoy/login" id="header-login">
+                    <span>Login</span>
                 </a>
             </div>
         </div>
