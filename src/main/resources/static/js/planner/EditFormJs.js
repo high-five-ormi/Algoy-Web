@@ -6,7 +6,13 @@ $(document).ready(function (){
         url: "/algoy/planner/" + id,
         success: function (data) {
             $('#title').val(data.title);
-            $('#content').text(data.content);
+
+            let restoredText = data.content
+                .replace(/<br>/g, '\n')
+                .replace(/&nbsp;/g, ' ')
+                .replace(/<\/?p>/g, '')
+                .replace(/<\/?pre>/g, '');
+            $('#content').val(restoredText);
             $('#link').val(data.link);
             $(`input:radio[name="status"][value="${data.status}"]`).prop('checked', true);
             $('#start-date').val(data.startAt);
@@ -76,17 +82,42 @@ $('.btn-update').on('click', function(event) {
         return;
     }
 
+    const startDate = new Date($('#start-date').val());
+    const endDate = new Date($('#end-date').val());
+    if(startDate.getTime() > endDate.getTime()) {
+        alert('시작 날짜는 종료 날짜를 지날 수 없습니다.');
+        return;
+    }
+
+
+    let text = $('#content').val();
+
+    var html = text
+        .trim()
+        .split('\n\n') // Separate paragraphs
+        .map(function(paragraph) {
+            return '<p>' + paragraph
+                .replace(/\n/g, '<br>')
+                .replace(/ /g, '&nbsp;') + '</p>';
+        })
+        .join('');
+
+    // 이미지 html 태그 변환
+    html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1">');
+
+    // 링크 html 태그 변환
+    html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+
     // json 통신할 객체 생성
     let plannerDto = {
         title: $('#title').val(),
-        content: $('#content').val(),
+        content: html,
         link: $('#link').val(),
         startAt: $('#start-date').val(),
         endAt: $('#end-date').val(),
         status: $(':radio[name="status"]:checked').val(),
         questionName: $('#question').val()
     };
-    console.log(plannerDto.questionName);
 
     if(siteName === "ETC") {
         plannerDto.siteName = $('#site-dropdown').val();

@@ -1,4 +1,4 @@
-package com.example.service.planner;
+package com.example.algoyweb.service.planner;
 
 import com.example.algoyweb.exception.CustomException;
 import com.example.algoyweb.exception.PlannerErrorCode;
@@ -8,7 +8,6 @@ import com.example.algoyweb.model.entity.user.Role;
 import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.repository.planner.PlannerRepository;
 import com.example.algoyweb.repository.user.UserRepository;
-import com.example.algoyweb.service.planner.PlannerService;
 import com.example.algoyweb.util.ConvertUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
