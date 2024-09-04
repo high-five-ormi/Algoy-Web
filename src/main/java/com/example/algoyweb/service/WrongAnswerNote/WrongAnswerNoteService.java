@@ -10,8 +10,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class WrongAnswerNoteService {
 
     private final WrongAnswerNoteRepository repository;
@@ -20,33 +22,37 @@ public class WrongAnswerNoteService {
         this.repository = repository;
     }
 
-    // 모든 오답 노트 조회
     public List<WrongAnswerNoteDTO> findAll() {
         return repository.findAll().stream()
-            .map(WrongAnswerNoteConvertUtil::convertToDto) // Entity -> DTO 변환
+            .map(WrongAnswerNoteConvertUtil::convertToDto)
             .collect(Collectors.toList());
     }
 
-    // ID로 오답 노트 조회
     public Optional<WrongAnswerNoteDTO> findById(Long id) {
         return repository.findById(id)
-            .map(WrongAnswerNoteConvertUtil::convertToDto); // Entity -> DTO 변환
+            .map(WrongAnswerNoteConvertUtil::convertToDto);
     }
 
-    // 오답 노트 저장 및 업데이트
-    public void save(WrongAnswerNoteDTO dto) {
-        WrongAnswerNote entity = WrongAnswerNoteConvertUtil.convertToEntity(dto); // DTO -> Entity 변환
+    public WrongAnswerNoteDTO save(WrongAnswerNoteDTO dto) {
+        WrongAnswerNote entity = WrongAnswerNoteConvertUtil.convertToEntity(dto);
         if (dto.getId() == null) {
-            // 새로운 게시물일 때 생성 시간 설정
             entity.setCreatedAt(LocalDateTime.now());
         }
-        // 수정 시간은 항상 업데이트
         entity.setUpdatedAt(LocalDateTime.now());
-        repository.save(entity); // Entity 저장
+        WrongAnswerNote savedEntity = repository.save(entity);
+        return WrongAnswerNoteConvertUtil.convertToDto(savedEntity);
     }
 
-    // ID로 오답 노트 삭제
     public void deleteById(Long id) {
-        repository.deleteById(id); // Repository를 통한 삭제
+        repository.deleteById(id);
+    }
+
+    public WrongAnswerNoteDTO update(Long id, WrongAnswerNoteDTO dto) {
+        WrongAnswerNote entity = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Entity not found"));
+        // 유틸 메서드를 사용해 DTO의 값을 엔티티에 업데이트
+        WrongAnswerNoteConvertUtil.updateEntityFromDto(entity, dto);
+        WrongAnswerNote updatedEntity = repository.save(entity);
+        return WrongAnswerNoteConvertUtil.convertToDto(updatedEntity);
     }
 }

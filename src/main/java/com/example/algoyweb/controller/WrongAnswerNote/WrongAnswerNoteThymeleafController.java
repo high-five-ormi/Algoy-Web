@@ -2,34 +2,35 @@ package com.example.algoyweb.controller.WrongAnswerNote;
 
 import com.example.algoyweb.model.dto.WrongAnswerNote.WrongAnswerNoteDTO;
 import com.example.algoyweb.service.WrongAnswerNote.WrongAnswerNoteService;
+import com.example.algoyweb.service.WrongAnswerNote.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/thymeleaf")
+@RequestMapping("/algoy/commit")
 @RequiredArgsConstructor
 public class WrongAnswerNoteThymeleafController {
 
     private final WrongAnswerNoteService service;
+    private final ImageService imageService;
 
     @GetMapping
     public String getAllWrongAnswerNotes(Model model) {
-        List<WrongAnswerNoteDTO> notes = service.findAll();
-        model.addAttribute("notes", notes);
-        return "list-wrong-answer-notes";
+        model.addAttribute("notes", service.findAll());
+        return "wronganswernote/list-wrong-answer-notes";
     }
 
-    @GetMapping("/commit/{id}")
+    @GetMapping("/{id}")
     public String getWrongAnswerNoteById(@PathVariable Long id, Model model) {
         Optional<WrongAnswerNoteDTO> note = service.findById(id);
         if (note.isPresent()) {
             model.addAttribute("note", note.get());
-            return "view-wrong-answer-note";
+            return "wronganswernote/view-wrong-answer-note";
         } else {
             return "error";
         }
@@ -38,13 +39,18 @@ public class WrongAnswerNoteThymeleafController {
     @GetMapping("/create")
     public String createWrongAnswerNoteForm(Model model) {
         model.addAttribute("note", new WrongAnswerNoteDTO());
-        return "create-wrong-answer-note";
+        return "wronganswernote/create-wrong-answer-note";
     }
 
     @PostMapping("/create")
-    public String createWrongAnswerNote(@ModelAttribute WrongAnswerNoteDTO dto) {
+    public String createWrongAnswerNote(
+        @ModelAttribute WrongAnswerNoteDTO dto,
+        @RequestParam(value = "image", required = false) MultipartFile imageFile) {
         service.save(dto);
-        return "redirect:/thymeleaf"; // 경로를 /thymeleaf로 수정
+        if (imageFile != null && !imageFile.isEmpty()) {
+            imageService.uploadImage(imageFile);
+        }
+        return "redirect:/algoy/commit";
     }
 
     @GetMapping("/{id}/edit")
@@ -52,22 +58,22 @@ public class WrongAnswerNoteThymeleafController {
         Optional<WrongAnswerNoteDTO> note = service.findById(id);
         if (note.isPresent()) {
             model.addAttribute("note", note.get());
-            return "edit-wrong-answer-note";
+            return "wronganswernote/edit-wrong-answer-note";
         } else {
             return "error";
         }
     }
 
-    @PostMapping("/{id}")
-    public String updateWrongAnswerNote(@PathVariable Long id, @ModelAttribute WrongAnswerNoteDTO dto) {
-        dto.setId(id);
-        service.save(dto);
-        return "redirect:/thymeleaf";
-    }
-
-    @GetMapping("/{id}/delete")
-    public String deleteWrongAnswerNoteById(@PathVariable Long id) {
-        service.deleteById(id);
-        return "redirect:/thymeleaf";
+    @PostMapping("/{id}/edit")
+    public String editWrongAnswerNote(
+        @PathVariable Long id,
+        @ModelAttribute WrongAnswerNoteDTO dto,
+        @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+        dto.setId(id); // DTO에 ID 설정
+        service.update(id, dto);
+        if (imageFile != null && !imageFile.isEmpty()) {
+            imageService.uploadImage(imageFile);
+        }
+        return "redirect:/algoy/commit/" + id;
     }
 }

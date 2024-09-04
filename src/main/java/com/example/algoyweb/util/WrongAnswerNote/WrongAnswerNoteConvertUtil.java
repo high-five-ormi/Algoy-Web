@@ -2,6 +2,7 @@ package com.example.algoyweb.util.WrongAnswerNote;
 
 import com.example.algoyweb.model.dto.WrongAnswerNote.WrongAnswerNoteDTO;
 import com.example.algoyweb.model.entity.WrongAnswerNote.WrongAnswerNote;
+import java.time.LocalDateTime;
 
 public class WrongAnswerNoteConvertUtil {
 
@@ -19,8 +20,6 @@ public class WrongAnswerNoteConvertUtil {
         dto.setQuizLevel(entity.getQuizLevel());
         dto.setContent(entity.getContent());
         dto.setIsSolved(entity.getIsSolved());
-        // DTO에서는 생성일과 수정일을 제외합니다.
-        // 엔티티에서 자동으로 처리되기 때문에 DTO에서 값을 설정하지 않습니다.
         return dto;
     }
 
@@ -29,7 +28,9 @@ public class WrongAnswerNoteConvertUtil {
             return null;
         }
         WrongAnswerNote entity = new WrongAnswerNote();
-        entity.setId(dto.getId());  // ID는 업데이트 시에만 사용
+        if (dto.getId() != null) {
+            entity.setId(dto.getId());
+        }
         entity.setUserId(dto.getUserId());
         entity.setTitle(dto.getTitle());
         entity.setLink(dto.getLink());
@@ -38,7 +39,21 @@ public class WrongAnswerNoteConvertUtil {
         entity.setQuizLevel(dto.getQuizLevel());
         entity.setContent(dto.getContent());
         entity.setIsSolved(dto.getIsSolved());
-        // DTO에서 날짜를 설정하지 않고, 엔티티에서 자동으로 처리되도록 합니다.
         return entity;
+    }
+
+    // 추가: DTO의 값을 엔티티로 업데이트
+    public static void updateEntityFromDto(WrongAnswerNote entity, WrongAnswerNoteDTO dto) {
+        if (entity == null || dto == null) {
+            return;
+        }
+        entity.setTitle(dto.getTitle());
+        entity.setContent(dto.getContent());
+        entity.setLink(dto.getLink());
+        entity.setQuizSite(dto.getQuizSite());
+        entity.setQuizType(dto.getQuizType());
+        entity.setQuizLevel(dto.getQuizLevel());
+        entity.setIsSolved(dto.getIsSolved());
+        entity.setUpdatedAt(LocalDateTime.now());
     }
 }
