@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>플래너</title>
+    <!-- 외부 CSS 파일 연결 -->
     <link rel="stylesheet" href="/css/planner/PlannerSaveForm.css">
+    <!-- jQuery 라이브러리 로드 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <header>
     <div id="header-container">
+        <!-- 로고 이미지 -->
         <img src="/img/algoy-1.png" width="190" height="190" alt="알고이 로고입니다." id="header-logo">
+        <!-- 네비게이션 메뉴 (첫 번째) -->
         <nav id="header-nav-1">
             <span><a href="">오답 노트</a></span>
             <span><a href="/algoy/planner/calender">플래너</a></span>
         </nav>
+        <!-- 네비게이션 메뉴 (두 번째) -->
         <nav id="header-nav-2">
+            <!-- 검색 창 -->
             <div id="search-container">
                 <input type="text" placeholder="search" class="search-input">
                 <button class="search-button">
                     <img src="/img/search-glasses.png" width="29" height="29" alt="검색 창의 돋보기 입니다.">
                 </button>
             </div>
+            <!-- 사용자 영역 (로그아웃 및 마이 페이지) -->
             <div class="header-user-area">
                 <button id="header-logout">
                     <span>Logout</span>
@@ -32,27 +39,35 @@
         </nav>
     </div>
 </header>
+
+<!-- 캘린더 헤더 -->
 <div id="calendar-header" class="calendar-nav">
     <div class="calendar-nav" style="width: 100px; height: 23px">
         <img src="/img/planner-icon.png" width="16" height="16" alt="플래너 아이콘입니다.">
         <span style="line-height: 23px">Planner</span>
     </div>
 </div>
+
+<!-- 새 플랜 생성 폼 -->
 <div class="save-container">
     <h1>새 플랜</h1>
     <form>
+        <!-- 제목 입력 -->
         <div class="form-group">
             <label for="title">Title</label>
             <input type="text" id="title" placeholder="제목을 입력해 주세요">
         </div>
+        <!-- 내용 입력 -->
         <div class="form-group">
             <label for="content">Content</label>
             <textarea id="content" rows="5"></textarea>
         </div>
+        <!-- 링크 입력 -->
         <div class="form-group">
             <label for="link">Link</label>
             <input type="text" id="link" placeholder="링크를 입력해 주세요">
         </div>
+        <!-- 상태 선택 (라디오 버튼) -->
         <div class="form-group">
             <label>Status</label>
             <div class="radio-group">
@@ -61,18 +76,40 @@
                 <label><input type="radio" name="status" value="DONE"> 완료</label>
             </div>
         </div>
+        <!-- 문제 이름 입력 -->
+        <div class="form-group">
+            <label for="question">Question</label>
+            <input type="text" id="question" placeholder="문제 이름을 입력해주세요">
+        </div>
+        <!-- 사이트 선택 -->
+        <div class="form-group">
+            <label for="site-dropdown">Site</label>
+            <select id="site-dropdown">
+                <option value="BOJ">백준</option>
+                <option value="PGS">프로그래머스</option>
+                <option value="SWEA">SW Expert Academy</option>
+                <option value="ETC">ETC</option>
+            </select>
+            <!-- 기타 사이트 입력 필드 (기본적으로 숨겨져 있음) -->
+            <label for="etc-input"></label>
+            <input type="text" id="etc-input" placeholder="기타 사이트 이름을 입력해 주세요" style="display:none; margin-top:10px;">
+        </div>
+        <!-- 시작 날짜 선택 -->
         <div class="form-group">
             <label for="start-date">Start date</label>
             <input type="date" id="start-date">
         </div>
+        <!-- 종료 날짜 선택 -->
         <div class="form-group">
             <label for="end-date">End date</label>
             <input type="date" id="end-date">
         </div>
+        <!-- 생성 버튼 -->
         <button class="btn-create">Create</button>
     </form>
 </div>
-</body>
 
+</body>
+<!-- 외부 JavaScript 파일 연결 -->
 <script src="/js/planner/SaveFormJs.js"></script>
 </html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>개인정보 수정</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/mypage/editUser.css}">
+    <script th:src="@{/js/fragments/modal.js}"></script>
+</head>
+<body>
+<header>
+    <div th:replace="fragments/header :: header"></div>
+    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
+</header>
+<!-- 모달을 header에 추가하고 싶은데 추가하니 실행이 잘 안되네요.. -->
+<div th:replace="fragments/modal :: modal"></div>
+<link rel="stylesheet" th:href="@{/css/fragments/modal.css}">
+<main>
+    <h1>회원 정보 수정</h1>
+    <form id="userEditForm" th:object="${user}" method="post">
+        <label for="email">E-amil</label>
+        <div class="input-group">
+            <input type="email" id="email" th:value="${user.email}" readonly/>
+        </div>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="새 비밀번호를 입력하세요.">
+
+        <label for="confirm-password">Re-enter Password</label>
+        <input type="password" id="confirm-password" name="confirmPassword" placeholder="비밀번호를 다시 입력하세요."
+               onblur="checkPasswordMatch()"/>
+        <p id="password-message" class="view-message"></p>
+
+        <label for="username">이름</label>
+        <input type="text" id="username" th:value="${user.username}" readonly/>
+
+        <label for="nickname">닉네임</label>
+        <div class="input-group">
+            <input type="text" id="nickname" th:value="${user.nickname}" placeholder="닉네임을 입력하세요." required/>
+            <button type="button" class="check-button" onclick="checkDuplicateNickname(event)">중복 확인</button>
+        </div>
+        <p id="nickname-message" class="view-message"></p>
+
+        <div class="btn-wrap">
+            <button type="button" class="updateUserBtn">저장하기</button>
+            <a th:href="@{/algoy/home}">
+                <button type="button" class="back-button">메인으로</button>
+            </a>
+        </div>
+    </form>
+
+</main>
+
+<script th:src="@{/js/mypage/userEdit.js}"></script>
+
+</body>
+</html>

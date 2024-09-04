@@ -27,6 +27,12 @@ public class PlannerDto {
 
     private String link;
 
+    private String questionName;
+
+    private String etcName;
+
+    private Planner.SiteName siteName;
+
     private Planner.Status status;
 
     private LocalDateTime createAt;

@@ -2,7 +2,7 @@ server:
   port: 8081
 
 ai-backend:
-  url: ${AI_IP}
+  url: http://localhost:8082
 
 spring:
   application:
@@ -28,7 +28,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:

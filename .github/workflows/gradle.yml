@@ -1,5 +1,5 @@
 name: Java CI with Gradle
-#수정 필요
+
 on:
   pull_request:
     branches: [ main ]
@@ -27,14 +27,18 @@ jobs:
       - name: Build with Gradle Wrapper
         run: ./gradlew clean build
 
-      - name: List build directory
-        run: ls -la build/libs
+      - name: Debug - List project root
+        run: ls -la
+
+      - name: Debug - Find JAR files
+        run: find . -name "*.jar"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
           path: build/libs/*.jar
+          if-no-files-found: error
 
   dependency-submission:
     runs-on: ubuntu-latest
@@ -56,21 +60,14 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy
-        env:
-          AI_IP: ${{ secrets.AI_IP }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
-        run: |
-
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
           name: build-artifacts
+          path: build/libs
 
       - name: List artifact directory
-        run: ls -la  # 다운로드한 아티팩트의 디렉토리 내용 확인
+        run: ls -la build/libs
 
       - name: Set up SSH key
         run: |
@@ -84,25 +81,32 @@ jobs:
           EC2_USER: ${{ secrets.EC2_USER }}
           EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
-          scp -i ~/.ssh/id_rsa *.jar $EC2_USER@$EC2_HOST:/home/ubuntu
+          scp -i ~/.ssh/id_rsa build/libs/*.jar $EC2_USER@$EC2_HOST:/home/ubuntu
+
+      - name: Set execute permission on jar
+        env:
+          EC2_USER: ${{ secrets.EC2_USER }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+        run: |
+          ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'chmod +x /home/ubuntu/Algoy-Web-0.0.1-SNAPSHOT.jar'
 
       - name: RUN java app
         env:
           EC2_USER: ${{ secrets.EC2_USER }}
           EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
-          # Algoy-Web 애플리케이션 관리
           if ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST '[ -f /home/ubuntu/web-pid ]'; then
-            echo "Algoy-Web PID 파일이 존재합니다. 이전 프로세스를 종료합니다."
-            # 프로세스 ID 읽고 종료
-            ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'kill -9 $(< /home/ubuntu/web-pid)'
+            PID=$(ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'cat /home/ubuntu/web-pid')
+            if ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST "ps -p $PID > /dev/null"; then
+              echo "Algoy-Web PID 파일이 존재하며, 프로세스가 실행 중입니다. 이전 프로세스를 종료합니다."
+              ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST "kill -9 $PID"
+            else
+              echo "Algoy-Web PID 파일이 존재하지만 프로세스가 실행 중이지 않습니다. 새로운 프로세스를 시작합니다."
+            fi
           else
             echo "Algoy-Web PID 파일이 존재하지 않습니다. 새로운 프로세스를 시작합니다."
           fi
           
-          # 새로운 Java 프로세스 시작
           ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'nohup java -jar /home/ubuntu/Algoy-Web-0.0.1-SNAPSHOT.jar >/dev/null 2>&1 & echo $! > /home/ubuntu/web-pid'
           
-          # 프로세스가 잘 시작되었는지 확인
           ssh -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST 'ps -p $(< /home/ubuntu/web-pid) && echo "Algoy-Web 프로세스 시작됨" || echo "Algoy-Web 프로세스 시작 실패"'
-          

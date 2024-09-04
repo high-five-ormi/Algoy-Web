@@ -71,14 +71,6 @@ public class User {
     this.updatedAt = LocalDateTime.now();
   }
 
-  public void updateUserDto(UserDto userDto) {
-    this.username = userDto.getUsername();
-    this.nickname = userDto.getNickname();
-    this.password = userDto.getPassword();
-    this.isDeleted = userDto.getIsDeleted();
-    this.updatedAt = LocalDateTime.now();
-  }
-
   public void setDeleted() {
     this.isDeleted = true;
     this.deletedAt = LocalDateTime.now().plusMonths(1);
@@ -87,6 +79,21 @@ public class User {
   public String getRoleKey() {
     return this.role.getKey();
   }
+
+
+  public void updateUser(UserDto userDto, String encodedPassword) {
+    if (userDto.getNickname() != null) {
+      this.nickname = userDto.getNickname();
+    }
+    if (encodedPassword != null) {
+      this.password = encodedPassword;
+    }
+    if (userDto.getIsDeleted() != null) {
+      this.isDeleted = userDto.getIsDeleted();
+    }
+    this.updatedAt = LocalDateTime.now();
+  }
+
 
   public void updatePassword(String password) {
     this.password = password;

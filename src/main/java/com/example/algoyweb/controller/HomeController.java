@@ -24,27 +24,8 @@ public class HomeController {
 
     @GetMapping("/algoy/home")
     public String home(Model model) {
-        // 로그인 여부 확인
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAuthenticated = authentication != null && authentication.isAuthenticated()
-                && !(authentication instanceof AnonymousAuthenticationToken);
-
-        // 로그인된 사용자의 닉네임 가져오기
-        String userNickname = "로그인하세요!"; // 기본값
-
-        if (isAuthenticated) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserDetails) {
-                UserDetails userDetails = (UserDetails) principal;
-                String email = userDetails.getUsername(); // 사용자 이메일
-                userNickname = userService.getUserNicknameByEmail(email); // 사용자 닉네임
-            }
-        }
-
-        // 모델에 데이터 추가
+        boolean isAuthenticated = userService.isAuthenticated();
         model.addAttribute("isAuthenticated", isAuthenticated);
-        model.addAttribute("userNickname", userNickname);
-
         return "home"; // view name
     }
 }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>개인정보 수정</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/mypage/editUser.css}">
+    <script th:src="@{/js/fragments/modal.js}"></script>
+</head>
+<body>
+<header>
+    <div th:replace="fragments/header :: header"></div>
+    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
+</header>
+<!-- 모달을 header에 추가하고 싶은데 추가하니 실행이 잘 안되네요.. -->
+<div th:replace="fragments/modal :: modal"></div>
+<link rel="stylesheet" th:href="@{/css/fragments/modal.css}">
+<main>
+    <h1>회원 탈퇴</h1>
+    <form id="userEditForm" th:object="${user}" method="post">
+        <div class="delete-btn-wrap">
+            <h2>탈퇴하시겠습니까? <br><br></h2>
+            <h3>고객님의 정보는 30일간 보관되며 30일 이후에는 모든 정보가 사라집니다.</h3>
+            <button type="button" id="deleteUserBtn" class="updateUserBtn">회원 탈퇴</button>
+            <a th:href="@{/algoy/home}">
+                <button type="button" class="back-button">메인으로</button>
+            </a>
+        </div>
+    </form>
+</main>
+
+<script th:src="@{/js/mypage/userDelete.js}"></script>
+
+</body>
+</html>
