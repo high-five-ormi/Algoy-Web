@@ -44,6 +44,7 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 					.requestMatchers("/algoy/set-password").permitAll()
 					.requestMatchers("/algoy/check-email-duplicate").permitAll()
 					.requestMatchers("/algoy/check-nickname-duplicate").permitAll()
+					.requestMatchers("/algoy/allen/**").permitAll()
 					.requestMatchers("/css/**").permitAll()
 					.requestMatchers("/js/**").permitAll()
 					.requestMatchers("/img/**").permitAll()
