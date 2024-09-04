@@ -109,4 +109,14 @@ public class PlannerController {
         // 삭제 완료 메시지를 HTTP 상태 코드 200(OK)와 함께 반환
         return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
     }
+
+    // 플랜을 검색하는 엔드포인트
+    @GetMapping("/search")
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
+    public ResponseEntity<List<PlannerDto>> search(@RequestParam String keyword) {
+
+        List<PlannerDto> plannerDtoList = plannerService.searchPlans(keyword);
+
+        return ResponseEntity.status(HttpStatus.OK).body(plannerDtoList);
+    }
 }
