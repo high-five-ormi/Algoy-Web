@@ -1,0 +1,278 @@
+/* 기본 스타일 초기화 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* 헤더 스타일 */
+header {
+  background-color: #e6eff8;
+  height: 190px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 15px 20px;
+  position: relative;
+  border-bottom: 2px solid #d1d9e3;
+}
+
+.logo {
+  position: absolute;
+  top: -3px;
+  left: 20px;
+}
+
+.logo img {
+  width: 197px;
+  height: 197px;
+}
+
+nav {
+  font-family: Manrope, 'sans-serif';
+  position: absolute;
+  top: 130px;
+  left: 240px;
+}
+
+nav a {
+  margin-right: 20px;
+  color: #121417;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 20px;
+}
+
+nav a:hover {
+  color: #007bff;
+}
+
+.user-actions {
+  position: absolute;
+  bottom: 29px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.search-bar {
+  position: relative;
+  margin-right: 20px;
+}
+
+/* 수정된 검색 바 스타일 */
+.search-bar input[type="text"] {
+  height: 40px;
+  width: 325px;
+  padding: 8px 35px 8px 8px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* 수정된 로그아웃 버튼 스타일 */
+.user-actions button {
+  width: 84px;
+  height: 40px;
+  border: none;
+  background-color: #ffffff;
+  color: #121417;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.logout-container {
+  display: flex;
+  align-items: center;
+}
+
+.logout-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logout-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* note-header 섹션 스타일 */
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #ffffff;
+  border-bottom: 2px solid #e6eff8;
+  max-width: 1105px;
+  margin: 0 auto;
+}
+
+.title-section {
+  display: flex;
+  align-items: center;
+}
+
+.small-icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+
+.note-header h2 {
+  font-size: 18px;
+  color: #333;
+}
+
+/* New 버튼 스타일 */
+.new-button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.new-button:hover {
+  background-color: #0056b3;
+}
+
+/* 메인 콘텐츠 스타일 */
+main {
+  width: 100%;
+  max-width: 1105px;
+  margin: 30px auto;
+  padding: 0 15px;
+}
+
+.note-list {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.note-item {
+  width: 100%;
+  height: 260px;
+  border-bottom: 1px solid #e6eff8;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.note-item:last-child {
+  border-bottom: none;
+}
+
+.note-item h2 {
+  font-size: 18px;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.note-item p {
+  color: #666;
+  font-size: 16px;
+  flex-grow: 1;
+}
+
+.note-item time {
+  font-size: 14px;
+  color: #aaa;
+  text-align: right;
+}
+
+/* 입력 필드 스타일 */
+.input-field,
+.textarea-field {
+  height: 67px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #EDF0F2;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+.textarea-field {
+  height: 150px;
+  background-color: #EDF0F2;
+}
+
+/* 버튼 스타일 */
+button {
+  width: 100px;
+  height: 38px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* 게시 버튼 기본 색상 */
+button[type="submit"] {
+  background-color: #007aff;
+  color: #ffffff;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* 취소 버튼 색상 */
+button[type="button"] {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #007AFF;
+}
+
+button[type="button"]:hover {
+  background-color: #f0f0f0;
+}
+
+/* 드롭존 스타일 */
+#drop-zone {
+  padding: 20px;
+  border: 2px dashed #ccc;
+  border-radius: 5px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+#drop-zone.dragover {
+  border-color: #007bff;
+}
+
+/* 이미지 미리보기 스타일 */
+.image-preview {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+}

@@ -1,0 +1,346 @@
+/* 기본 스타일 초기화 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* 헤더 스타일 */
+header {
+  background-color: #e6eff8;
+  height: 190px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 15px 20px;
+  position: relative;
+  border-bottom: 2px solid #d1d9e3;
+}
+
+.logo {
+  position: absolute;
+  top: -3px;
+  left: 20px;
+}
+
+.logo img {
+  width: 197px;
+  height: 197px;
+}
+
+nav {
+  font-family: Manrope, 'sans-serif';
+  position: absolute;
+  top: 130px;
+  left: 240px;
+}
+
+nav a {
+  margin-right: 20px;
+  color: #121417;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 20px;
+}
+
+nav a:hover {
+  color: #007bff;
+}
+
+.user-actions {
+  position: absolute;
+  bottom: 29px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.search-bar {
+  position: relative;
+  margin-right: 20px;
+}
+
+.search-bar input[type="text"] {
+  height: 40px;
+  width: 325px;
+  padding: 8px 35px 8px 8px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.user-actions button {
+  width: 84px;
+  height: 40px;
+  border: none;
+  background-color: #ffffff;
+  color: #121417;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.logout-container {
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.logout-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* note-header 섹션 스타일 */
+.note-header {
+  background-color: #ffffff;
+  width: 1280px;  /* 박스 너비 */
+  height: 65px;   /* 박스 높이 */
+  margin: 0 auto; /* 가운데 정렬 */
+  padding: 0 20px; /* 내부 여백 */
+  border-bottom: 2px solid #d1d9e3;
+  display: flex; /* 수평 정렬을 위한 flexbox 사용 */
+  align-items: center; /* 세로 정렬을 가운데로 */
+  justify-content: space-between; /* 양 끝에 배치 */
+}
+
+/* title-section 스타일 */
+.title-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 이미지 크기 조정 */
+.WrongAnawerNote-icon {
+  width: 16px;  /* 이미지 크기 */
+  height: 16px; /* 이미지 크기 */
+}
+
+/* note-header 글자 크기 조정 */
+.note-header h2 {
+  font-size: 18px; /* 글자 크기 */
+  color: #333;
+}
+
+/* 미디어 쿼리 */
+@media (max-width: 768px) {
+  /* 작은 화면에서 이미지와 글자 크기 조정 */
+  .WrongAnawerNote-icon {
+    width: 16px;  /* 작은 화면에서의 이미지 크기 */
+    height: 16px; /* 작은 화면에서의 이미지 크기 */
+  }
+
+  .note-header h2 {
+    font-size: 18px; /* 작은 화면에서의 글자 크기 */
+  }
+}
+
+/* note-details 스타일 */
+.note-details {
+  max-width: 1105px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.note-title {
+  font-size: 24px;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.note-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.problem-info {
+  margin-bottom: 20px;
+}
+
+.problem-site, .problem-details {
+  margin-bottom: 15px;
+}
+
+.problem-site strong, .problem-details .detail-item strong {
+  font-weight: 600;
+  color: #333;
+}
+
+.problem-details {
+  display: flex;
+  gap: 20px;
+}
+
+.detail-item {
+  font-size: 14px;
+}
+
+.content {
+  margin-bottom: 20px;
+}
+
+.content h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.sample-code-container {
+  margin-bottom: 20px;
+}
+
+.sample-code {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  position: relative;
+}
+
+.sample-code h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.sample-code pre {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+.delete-code-btn {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  background: #ff4d4d;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.delete-code-btn:hover {
+  background: #ff1a1a;
+}
+
+.code-action-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#add-code-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#add-code-button:hover {
+  background-color: #0056b3;
+}
+
+.action-buttons button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.action-buttons button:hover {
+  background-color: #0056b3;
+}
+
+/* 모달 스타일 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  position: relative;
+}
+
+textarea {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+#submitCode, #cancelCode {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+#submitCode:hover {
+  background-color: #0056b3;
+}
+
+#cancelCode {
+  background-color: #ff4d4d;
+}
+
+#cancelCode:hover {
+  background-color: #ff1a1a;
+}
