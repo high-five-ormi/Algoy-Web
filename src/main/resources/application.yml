@@ -4,6 +4,9 @@ server:
 ai-backend:
   url: http://localhost:8082
 
+solvedac:
+  url: https://solved.ac/api/v3/user/top_100?handle=
+
 spring:
   application:
     name: algoy
