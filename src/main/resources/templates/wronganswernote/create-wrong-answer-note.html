@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>오답노트 작성</title>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/WrongAnswerNote/create-wrong-answer-note.css">
+  <link rel="stylesheet" href="/css/wronganswernote/create-wrong-answer-note.css">
 </head>
 <body>
 <header>
@@ -22,7 +22,7 @@
       <img src="/img/search-glasses.png" alt="Search Icon" class="search-icon">
     </div>
     <button class="logout">Logout</button>
-    <div class="logout-container" style="margin-left: 8px;">
+    <div class="logout-container">
       <div class="logout-icon-wrapper">
         <img src="/img/user-icon.png" alt="User Icon" class="logout-icon">
       </div>
@@ -32,7 +32,7 @@
 
 <div class="note-header">
   <div class="title-section">
-    <img src="/img/planner-icon.png" alt="오답노트 아이콘" class="WrongAnawerNote-icon">
+    <img src="/img/planner-icon.png" alt="오답노트 아이콘" class="small-icon">
     <h2>오답노트</h2>
   </div>
 </div>
@@ -40,7 +40,7 @@
 <div class="container">
   <main>
     <h1>게시글 작성</h1>
-    <form id="noteForm" action="/algoy/commit" method="post" enctype="multipart/form-data">
+    <form id="noteForm" action="/algoy/commit/create" method="post" enctype="multipart/form-data">
       <label for="title">제목</label>
       <input type="text" id="title" name="title" placeholder="제목을 입력하세요" class="input-field" required><br/>
 
@@ -65,7 +65,7 @@
       <div id="drop-zone">
         드래그 앤 드롭으로 이미지를 올려주세요<br>
         또는<br>
-        <input type="file" id="files" name="images" accept="image/*" multiple style="display:none;">
+        <input type="file" id="files" name="image" accept="image/*" multiple style="display:none;">
         <button type="button" onclick="document.getElementById('files').click()">파일 선택</button>
       </div>
       <div id="file-names"></div>
@@ -75,66 +75,16 @@
 
       <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
         <button type="submit">게시</button>
-        <a href="/algoy/commit"><button type="button">취소</button></a>
+        <a href="/algoy/commit">
+          <button type="button">취소</button>
+        </a>
       </div>
     </form>
+
+    <div id="image-previews" style="margin-top: 20px;"></div>
   </main>
 </div>
 
-<script>
-  const dropZone = document.getElementById('drop-zone');
-  const fileInput = document.getElementById('files');
-  const fileNames = document.getElementById('file-names');
-  let selectedFiles = new DataTransfer();
-
-  dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropZone.classList.add('dragover');
-  });
-
-  dropZone.addEventListener('dragleave', () => {
-    dropZone.classList.remove('dragover');
-  });
-
-  dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZone.classList.remove('dragover');
-    addFiles(e.dataTransfer.files);
-  });
-
-  fileInput.addEventListener('change', (e) => {
-    addFiles(e.target.files);
-  });
-
-  function addFiles(newFiles) {
-    for (let file of newFiles) {
-      selectedFiles.items.add(file);
-    }
-    fileInput.files = selectedFiles.files;
-    updateFileNames();
-  }
-
-  function updateFileNames() {
-    fileNames.innerHTML = '';
-    for (let i = 0; i < fileInput.files.length; i++) {
-      fileNames.innerHTML += `<p>선택된 파일 ${i + 1}: ${fileInput.files[i].name}</p>`;
-    }
-  }
-
-  // 폼 제출 시 빈 필드 확인
-  document.getElementById('noteForm').addEventListener('submit', (event) => {
-    const title = document.getElementById('title').value.trim();
-    const link = document.getElementById('link').value.trim();
-    const quizSite = document.getElementById('quizSite').value.trim();
-    const quizType = document.getElementById('quizType').value.trim();
-    const quizLevel = document.getElementById('quizLevel').value.trim();
-    const content = document.getElementById('content').value.trim();
-
-    if (!title || !link || !quizSite || !quizType || !quizLevel || !content) {
-      event.preventDefault(); // 폼 제출 막기
-      alert('모든 필드를 채워주세요.'); // 사용자에게 알림
-    }
-  });
-</script>
+<script src="/js/wronganswernote/create.js"></script>
 </body>
 </html>

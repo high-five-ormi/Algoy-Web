@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>오답노트 목록</title>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/WrongAnswerNote/list-wrong-answer-note.css">
+  <link rel="stylesheet" href="/css/wronganswernote/list-wrong-answer-note.css">
 </head>
 <body>
 <header>
@@ -30,7 +30,7 @@
 
 <div class="note-header">
   <div class="title-section">
-    <img src="/img/planner-icon.png" alt="오답노트 아이콘" class="WrongAnawerNote-icon">
+    <img src="/img/planner-icon.png" alt="오답노트 아이콘" class="WrongAnswerNote-icon">
     <h2>오답노트</h2>
   </div>
   <button class="new-button" onclick="redirectToCreate()">New</button>
@@ -38,7 +38,6 @@
 
 <main>
   <section class="note-list">
-    <!-- Thymeleaf로 노트 목록을 반복하여 출력 -->
     <div th:each="note : ${notes}" class="note-item">
       <h2>
         <a th:href="@{/algoy/commit/{id}(id=${note.id})}" th:text="${note.title}"></a>
@@ -59,11 +58,6 @@
   </section>
 </main>
 
-<script>
-  // 'New' 버튼 클릭 시 리다이렉트
-  function redirectToCreate() {
-    window.location.href = '/algoy/commit/create';
-  }
-</script>
+<script src="/js/wronganswernote/list.js"></script>
 </body>
 </html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오답노트 상세 페이지</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/wronganswernote/view-wrong-answer-note.css">
+</head>
+<body>
+<header>
+  <div class="logo">
+    <img src="/img/algoy-1.png" alt="ALGoy Logo">
+  </div>
+  <nav>
+    <a href="#">오답 노트</a>
+    <a href="#">플래너</a>
+  </nav>
+  <div class="user-actions">
+    <div class="search-bar">
+      <input type="text" id="searchInput" name="search" placeholder="Search">
+      <img src="/img/search-glasses.png" alt="Search Icon" class="search-icon">
+    </div>
+    <button class="logout">Logout</button>
+    <div class="logout-container" style="margin-left: 8px;">
+      <div class="logout-icon-wrapper">
+        <img src="/img/user-icon.png" alt="User Icon" class="logout-icon">
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- 노트 헤더 섹션 -->
+<div class="note-header">
+  <div class="title-section">
+    <img src="/img/planner-icon.png" alt="오답노트 아이콘" class="WrongAnawerNote-icon">
+    <h2>오답노트</h2>
+  </div>
+</div>
+
+<main>
+  <section class="note-details">
+    <h1 class="note-title" th:text="${note.title}">[제목]</h1>
+    <div class="note-meta">
+      <span class="author" th:text="${note.userId}">닉네임</span>
+      <span class="date" th:text="${#dates.format(note.createdAt, 'yyyy.MM.dd HH:mm')}">2024.08.20 19:42</span>
+    </div>
+
+    <div class="problem-info">
+      <div class="problem-site">
+        <strong>문제 링크</strong>
+        <p><a th:href="${note.link}" th:text="${note.link}">문제 링크</a></p>
+      </div>
+      <div class="problem-details">
+        <div class="detail-item">
+          <strong>문제 사이트</strong>
+          <p th:text="${note.quizSite}">프로그래머스</p>
+        </div>
+        <div class="detail-item">
+          <strong>유형</strong>
+          <p th:text="${note.quizType}">배열</p>
+        </div>
+        <div class="detail-item">
+          <strong>레벨</strong>
+          <p th:text="${note.quizLevel}">0</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <h3>내용</h3>
+      <p th:utext="${note.content}">내용내용내용내용내용내용내용내용</p>
+      <!-- 내용 부분에 이미지 추가 -->
+      <div class="note-image-container">
+        <div th:each="url : ${note.imageUrls}">
+          <img th:src="@{/uploads/{url}(url=${url})}" alt="노트 이미지" class="note-image" />
+        </div>
+      </div>
+    </div>
+
+    <!-- 코드 추가 섹션 -->
+    <div class="sample-code-container">
+      <!-- 코드 블록이 여기에 추가됨 -->
+    </div>
+
+    <div class="code-action-container">
+      <button id="add-code-button">코드 추가</button>
+      <div class="action-buttons">
+        <button class="edit-btn" th:data-note-id="${note.id}">수정</button>
+        <button class="delete-btn" th:data-note-id="${note.id}">삭제</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 모달 입력창 -->
+<div class="modal" id="codeModal">
+  <div class="modal-content">
+    <textarea id="codeInput" placeholder="코드를 입력하세요"></textarea>
+    <button id="submitCode">추가</button>
+    <button id="cancelCode" class="cancel-btn">취소</button>
+  </div>
+</div>
+
+<!-- 스크립트 -->
+<script src="/js/wronganswernote/view.js"></script>
+</body>
+</html>
