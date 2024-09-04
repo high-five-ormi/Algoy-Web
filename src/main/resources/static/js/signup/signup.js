@@ -107,6 +107,6 @@ function checkPasswordMatch() {
 document.querySelector('form').addEventListener('submit', function (event) {
     if (!isMatch) { // 재입력한 비밀번호가 일치하지 않으면
         event.preventDefault(); // 폼 제출 중지
-        alert('비밀번호가 일치하지 않습니다. 다시 확인해주세요.'); // 메시지 출력
+        alert('비밀번호가 일치하지 않습니다. 다시 입력해 주세요.'); // 메시지 출력
     }
 });

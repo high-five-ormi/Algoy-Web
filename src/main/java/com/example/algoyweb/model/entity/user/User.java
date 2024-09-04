@@ -87,4 +87,8 @@ public class User {
   public String getRoleKey() {
     return this.role.getKey();
   }
+
+  public void updatePassword(String password) {
+    this.password = password;
+  }
 }
