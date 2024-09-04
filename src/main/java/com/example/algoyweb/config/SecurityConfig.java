@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.example.algoyweb.model.entity.user.Role;
 import com.example.algoyweb.service.auth.CustomOAuth2UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -47,11 +48,11 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 					.requestMatchers("/js/**").permitAll()
 					.requestMatchers("/img/**").permitAll()
 					.requestMatchers("/algoy/edituser").authenticated()
-					// .requestMatchers("/algoy/posts/**", "/algoy/comments/**").hasRole(Role.ADMIN.getKey())
-					// .requestMatchers("/algoy/posts/**", "/algoy/comments/**").hasRole(Role.NORMAL.getKey())
+					.requestMatchers("/algoy/posts/**", "/algoy/comments/**").hasRole(Role.ADMIN.getKey())
+					.requestMatchers("/algoy/posts/**", "/algoy/comments/**").hasRole(Role.NORMAL.getKey())
 					// .requestMatchers("/algoy/posts/**", "/algoy/comments/**").hasRole(Role.NORMAL.name())
-					// .requestMatchers("/algoy/admin/**").hasAuthority(Role.ADMIN.getKey())
-					// .requestMatchers("/algoy/user/**").hasAuthority(Role.NORMAL.getKey())
+					.requestMatchers("/algoy/admin/**").hasAuthority(Role.ADMIN.getKey())
+					.requestMatchers("/algoy/user/**").hasAuthority(Role.NORMAL.getKey())
 					.anyRequest().authenticated())
 			.formLogin(
 				form -> form

@@ -3,15 +3,8 @@ package com.example.algoyweb.controller.user;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.example.algoyweb.exception.CustomException;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.service.user.UserService;
-
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/algoy")
@@ -110,25 +101,6 @@ public class UserController {
 		response.put("exists", exists);
 
 		return ResponseEntity.ok(response);
-	}
-
-	// 유저 수정
-	@GetMapping("/user/edit")
-	@PreAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
-	public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto,
-		@AuthenticationPrincipal UserDetails userDetails) {
-		UserDto updatedUser = userService.update(userDto, userDetails.getUsername());
-
-		return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
-	}
-
-	// 유저 삭제(요청)
-	@PostMapping("/user/delete")
-	@PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
-	public ResponseEntity<String> deleteRequest(@AuthenticationPrincipal UserDetails userDetails) {
-		userService.setDeleted(userDetails.getUsername());
-
-		return ResponseEntity.status(HttpStatus.OK).body("삭제 요청이 완료되었습니다.");
 	}
 
 	/**
