@@ -17,7 +17,7 @@ public class AllenService {
     }
 
     //사용자가 푼 문제 중 문제 수준이 높은 상위 100 문제를 가져오는 api
-    @Value("https://solved.ac/api/v3/user/top_100?handle=")
+    @Value("${solvedac.url}")
     String solvedAcApi;
 
     //userName을 이용하여 sovledAC API를 통해 푼 문제 정보를 호출한다.

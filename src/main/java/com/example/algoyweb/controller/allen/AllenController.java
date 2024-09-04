@@ -4,10 +4,9 @@ import com.example.algoyweb.service.allen.AllenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/algoy/allen")
@@ -21,7 +20,7 @@ public class AllenController {
     }
 
     @GetMapping("/solvedac")
-    public ResponseEntity<String> solvedac(@PathVariable String userName) throws Exception {
+    public ResponseEntity<String> solvedac(@RequestParam String userName,@AuthenticationPrincipal UserDetails userDetails) throws Exception {
         System.out.println("controller check");
         try{
             String response = allenService.sovledacCall(userName);
