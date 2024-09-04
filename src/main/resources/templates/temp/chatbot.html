@@ -3,34 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <title>Alan AI Chatbot</title>
-  <!-- jQuery 라이브러리의 압축된 버전을 CDN을 통해 불러와 현재 HTML 문서에서 사용할 수 있습니다. -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <!-- 웹 페이지에서 마크다운으로 작성된 내용을 HTML로 변환하여 보여주는 역할을 합니다. -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <!-- 웹 애플리케이션의 보안을 강화하고, 사용자 생성 콘텐츠를 안전하게 처리하는 역할을 합니다. (XSS 방지용) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js"></script>
-  <!-- 웹 페이지 내의 코드를 시각적으로 매력적으로 표현하여 사용자 경험을 향상시키는 역할을 합니다. -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
-  <!-- highlight.js 라이브러리와 함께 사용되어 웹 페이지 내의 코드 블록에 시각적인 스타일을 적용하는 역할을 합니다. -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
   <link rel="stylesheet" href="/css/temp/chatbot.css">
 </head>
 <body>
-<div id="chat-container">
-  <div class="chat-header">
-    <div class="avatar">
-      <img src="/img/bot_icon.png" alt="AI Avatar">
+<div id="hamburger-menu">
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+<div id="chat-sidebar">
+  <div id="chat-container">
+    <div class="chat-header">
+      <div class="avatar">
+        <img src="/img/bot_icon.png" alt="AI Avatar">
+      </div>
+      <h1>Alan AI</h1>
     </div>
-    <h1>Alan AI</h1>
-  </div>
-  <div id="messages"></div>
-  <div class="input-area">
-    <input type="text" id="user-input" placeholder="Type your message...">
-    <button id="send-button">
-      <img src="/img/send_icon.png" alt="Send">
-    </button>
+    <div id="messages"></div>
+    <div class="input-area">
+      <input type="text" id="user-input" placeholder="Type your message...">
+      <button id="send-button">
+        <img src="/img/send_icon.png" alt="Send">
+      </button>
+    </div>
   </div>
 </div>
+
+<div id="main-content">
+  <!-- 여기에 기존 페이지의 주요 내용이 들어갑니다 -->
+  <h1>Welcome to the Main Page</h1>
+  <p>This is where your main content would go.</p>
+</div>
+
 <script th:inline="javascript">
   var backendUrl = 'http://15.165.235.170:8082';
 </script>

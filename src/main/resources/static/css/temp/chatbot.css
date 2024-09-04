@@ -2,23 +2,32 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f0f2f5;
   margin: 0;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 0;
   height: 100vh;
+  display: flex;
+}
+
+#main-content {
+  flex: 1;
+  padding: 20px;
+  transition: margin-right 0.3s ease;
+}
+
+#chat-sidebar {
+  position: fixed;
+  right: -400px;
+  top: 0;
+  width: 400px;
+  height: 100vh;
+  background-color: white;
+  transition: right 0.3s ease;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 #chat-container {
-  width: 100%;
-  max-width: 400px;
-  height: 80vh;
-  background-color: white;
-  border-radius: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .chat-header {
@@ -112,13 +121,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0; /* 패딩을 제거하여 버튼 크기를 이미지에 맞춤 */
+  padding: 0;
   transition: background-color 0.3s ease;
 }
 
 #send-button img {
-  width: 60%; /* 이미지 크기를 버튼 크기에 맞게 조정 */
-  height: 60%; /* 필요에 따라 크기를 조정 */
+  width: 60%;
+  height: 60%;
 }
 
 #send-button:hover {
@@ -130,7 +139,6 @@ body {
   cursor: not-allowed;
 }
 
-/* Scrollbar Styling */
 #messages::-webkit-scrollbar {
   width: 6px;
 }
@@ -170,4 +178,41 @@ body {
   margin-bottom: 10px;
   font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
   color: #002d2d;
+}
+
+#hamburger-menu {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+#hamburger-menu span {
+  display: block;
+  width: 30px;
+  height: 3px;
+  background-color: #333;
+  margin: 6px 0;
+  transition: 0.4s;
+}
+
+.open #hamburger-menu span:nth-child(1) {
+  transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.open #hamburger-menu span:nth-child(2) {
+  opacity: 0;
+}
+
+.open #hamburger-menu span:nth-child(3) {
+  transform: rotate(45deg) translate(-5px, -6px);
+}
+
+.open #chat-sidebar {
+  right: 0;
+}
+
+.open #main-content {
+  margin-right: 400px;
 }
