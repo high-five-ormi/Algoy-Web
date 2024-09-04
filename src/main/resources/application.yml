@@ -7,6 +7,10 @@ ai-backend:
 solvedac:
   url: https://solved.ac/api/v3/user/top_100?handle=
 
+askallen:
+  #url: http://15.165.235.170/ai/allenapi
+  url: http://localhost:8082/ai/allenapi
+
 spring:
   application:
     name: algoy
