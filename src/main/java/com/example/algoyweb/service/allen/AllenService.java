@@ -24,6 +24,9 @@ public class AllenService {
     @Value("${solvedac.url}")
     String solvedAcApi;
 
+    @Value("${askallen.url}")
+    String askAllenUrl;
+
     //userName을 이용하여 sovledAC API를 통해 푼 문제 정보를 호출한다.
     public List<String> sovledacCall(String userName) throws Exception {
 
@@ -71,5 +74,22 @@ public class AllenService {
         return titlesList;
     }
 
-    //질문을 allen API에 던진다.
+    //질문을 allen API에 묻고 답변을 받아온다
+    public String askAllen(String algoyUserName, String solvedACUserName) throws Exception {
+        String askUrl = askAllenUrl + "?algoyusername=" + algoyUserName + "&solvedacusername=" + solvedACUserName;
+        System.out.println(askUrl);
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+
+        String allenResponse = "";
+
+        try{
+            allenResponse = httpEx.get(askUrl, headers);
+            System.out.println(allenResponse);
+        }catch (Exception e){
+            throw new Exception("allen에게 답변 받기 실패", e);
+        }
+        return allenResponse;
+    }
 }
