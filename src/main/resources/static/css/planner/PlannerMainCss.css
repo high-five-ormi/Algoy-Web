@@ -25,12 +25,9 @@ body {
     text-decoration: none;
 }
 
-#header-nav-1:link {
-    color:black;
-}
-
-#header-nav-1:visited {
-    color:black;
+a{
+    text-decoration-line: none;
+    color: black;
 }
 
 #header-nav-2 {
@@ -152,7 +149,6 @@ body {
     background-color: #0056b3;
 }
 
-/* table styling */
 .planner-container {
     width: 1000px;
     margin: 20px auto;

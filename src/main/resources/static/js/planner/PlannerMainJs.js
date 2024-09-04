@@ -121,7 +121,7 @@ $(document).ready(function() {
             method: 'GET',
             success: function(data) {
                 $('#modal-title').text(data.title);
-                $('#modal-content').text(data.content);
+                $('#modal-content').html(data.content);
                 $('#modal-createdAt').text(`Created on ${formatDateTime(data.createAt)}`);
                 $('#modal-timeAt').text(`${formatDate(data.startAt)} ~ ${formatDate(data.endAt)}`);
                 $('#modal-question').text(data.questionName);

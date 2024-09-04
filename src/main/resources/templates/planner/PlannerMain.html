@@ -3,26 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>플래너</title>
+    <!-- 외부 CSS 파일 연결 -->
     <link rel="stylesheet" href="/css/planner/PlannerMainCss.css">
+    <!-- jQuery 라이브러리 로드 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <header>
     <div id="header-container">
+        <!-- 홈으로 이동하는 로고 링크 -->
         <a th:href="@{/algoy/home}">
             <img src="/img/algoy-1.png" width="190" height="190" alt="알고이 로고입니다." id="header-logo">
         </a>
+        <!-- 네비게이션 메뉴 (첫 번째) -->
         <nav id="header-nav-1">
             <span><a href="">오답 노트</a></span>
             <span><a href="/algoy/planner/calender">플래너</a></span>
         </nav>
+        <!-- 네비게이션 메뉴 (두 번째) -->
         <nav id="header-nav-2">
+            <!-- 검색 창 -->
             <div id="search-container">
                 <input type="text" placeholder="search" class="search-input">
                 <button class="search-button">
                     <img src="/img/search-glasses.png" width="29" height="29" alt="검색 창의 돋보기 입니다.">
                 </button>
             </div>
+            <!-- 사용자 영역 (로그아웃 및 마이 페이지) -->
             <div class="header-user-area">
                 <button id="header-logout">
                     <span>Logout</span>
@@ -34,21 +41,30 @@
         </nav>
     </div>
 </header>
+
+<!-- 캘린더 헤더 -->
 <div id="calendar-header" class="calendar-nav">
     <div class="calendar-nav" style="width: 100px; height: 23px">
         <img src="/img/planner-icon.png" width="16" height="16" alt="플래너 아이콘입니다.">
         <span style="line-height: 23px">Planner</span>
     </div>
+    <!-- 새 플랜을 생성하는 버튼 -->
     <button id="btn-calendar">New</button>
 </div>
+
+<!-- 플래너 컨테이너 -->
 <div class="planner-container">
+    <!-- 페이지 제목 -->
     <h2>코테 level up을 위한 오늘의 PLANNER</h2>
+    <!-- 페이지 설명 -->
     <p>Planner를 작성하시면서 플래너가 변경됩니다</p>
 
+    <!-- 로딩 스피너 -->
     <div class="loader">
         <p>Loading...</p>
     </div>
 
+    <!-- 스크롤 가능한 테이블 -->
     <div class="scrollable-table">
         <table id="planner-table">
             <thead>
@@ -62,21 +78,24 @@
             </tr>
             </thead>
             <tbody>
+            <!-- 플래너 데이터가 들어갈 자리 -->
             </tbody>
         </table>
     </div>
 </div>
-<!-- 모달 구조 -->
+
+<!-- 모달 창 구조 -->
 <div id="planner-modal" class="modal">
     <div class="modal-content">
+        <!-- 모달 닫기 버튼 -->
         <span class="modal-close">&times;</span>
-        <!-- 제목 -->
+        <!-- 모달 제목 -->
         <h2 id="modal-title">Title</h2>
-        <!-- 본문이 들어갈 div 요소 -->
+        <!-- 모달 본문 내용 -->
         <div id="modal-content" style="border: 1px solid #e3e3e3; padding: 15px; min-height: 279px; margin-top: 20px;">
             <p>Loading...</p>
         </div>
-        <!-- 작성된 시간 -->
+        <!-- 작성된 시간 정보 -->
         <div id="modal-info" style="font-size: 12px; color: #666; margin-top: 30px;">
             <p><span id="modal-createdAt">Loading...</span></p>
             <!-- 문제 링크와 관련된 이슈 -->
@@ -88,12 +107,15 @@
             <!-- 사이트 이름 -->
             <p>Site Name - <span id="modal-site">Loading...</span></p>
         </div>
+        <!-- 모달 버튼 그룹 (수정 및 삭제) -->
         <div class="modal-button-group">
             <button id="btn-edit">수정</button>
             <button id="btn-delete">삭제</button>
         </div>
     </div>
 </div>
+
 </body>
+<!-- 외부 JavaScript 파일 연결 -->
 <script src="/js/planner/PlannerMainJs.js"></script>
 </html>

@@ -25,13 +25,11 @@ body {
     text-decoration: none;
 }
 
-#header-nav-1:link {
-    color:black;
+a {
+    text-decoration-line: none;
+    color: black;
 }
 
-#header-nav-1:visited {
-    color:black;
-}
 #header-nav-2 {
     float: right;
     margin-top: 121px;
