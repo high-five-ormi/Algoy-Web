@@ -13,10 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.time.ZoneOffset;
+import java.util.*;
 
 @Service
 @Transactional
@@ -99,7 +97,57 @@ public class PlannerService {
     // 특정 사용자의 모든 플래너를 가져오는 메서드
     public List<PlannerDto> getPlans(String username) {
         // 사용자 이메일로 플래너를 조회하고, DTO로 변환하여 반환
-        return plannerRepository.findByUserEmail(username).stream()
+        List<PlannerDto> plannerDtoList = plannerRepository.findByUserEmail(username).stream()
+                .map(ConvertUtils::convertPlannerToDto).toList();
+
+        List<PlannerDto> tempList = new ArrayList<>();
+        List<PlannerDto> orderedList = new ArrayList<>();
+        int i, j;
+        for (i = 0; i < plannerDtoList.size(); i++) {
+            if(plannerDtoList.get(i).getStatus() == Planner.Status.IN_PROGRESS) {
+                tempList.add(plannerDtoList.get(i));
+            }
+        }
+        orderedList.addAll(sortPlans(tempList));
+
+        tempList = new ArrayList<>();
+
+        for (i = 0; i < plannerDtoList.size(); i++) {
+            if(plannerDtoList.get(i).getStatus() == Planner.Status.TODO) {
+                tempList.add(plannerDtoList.get(i));
+            }
+        }
+        orderedList.addAll(sortPlans(tempList));
+
+        tempList = new ArrayList<>();
+
+        for (i = 0; i < plannerDtoList.size(); i++) {
+            if(plannerDtoList.get(i).getStatus() == Planner.Status.DONE) {
+                tempList.add(plannerDtoList.get(i));
+            }
+        }
+        orderedList.addAll(sortPlans(tempList));
+
+
+        return orderedList;
+    }
+
+    private List<PlannerDto> sortPlans(List<PlannerDto> plannerDtoList) {
+        int i, j;
+        PlannerDto key;
+        for(i = 1; i < plannerDtoList.size(); i++) {
+            key = plannerDtoList.get(i);
+            for(j = i - 1; j >= 0 && plannerDtoList.get(j).getStartAt().isAfter(key.getStartAt()); j--){
+                plannerDtoList.set(j + 1, plannerDtoList.get(j)); // 레코드의 오른쪽으로 이동
+            }
+            plannerDtoList.set(j + 1, key);
+        }
+        return plannerDtoList;
+    }
+
+    public List<PlannerDto> searchPlans(String keyword) {
+
+        return plannerRepository.findByKeyword(keyword).stream()
                 .map(ConvertUtils::convertPlannerToDto).toList();
     }
 }
