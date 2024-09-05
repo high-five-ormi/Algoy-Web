@@ -18,12 +18,10 @@
     <h1>회원 탈퇴</h1>
     <form id="userDeleteForm" th:object="${user}" method="post">
         <h2>탈퇴하시겠습니까? <br><br></h2>
-        <h3>회원님의 정보는 30일간 보관되며 30일 이후에는 모든 정보가 사라집니다.</h3>
+        <h3>회원님의 정보는 30일간 보관되며 <br>30일 이후에는 모든 정보가 사라집니다.</h3>
         <div class="button-container">
             <button type="button" id="deleteUserBtn" class="deleteUserBtn">회원 탈퇴</button>
-            <a th:href="@{/algoy/home}">
-                <button type="button" class="back-button">메인으로</button>
-            </a>
+            <a href="/algoy/home" class="back-button">메인으로</a>
         </div>
     </form>
 </main>
