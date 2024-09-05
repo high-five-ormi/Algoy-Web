@@ -5,9 +5,9 @@
 #chat-sidebar {
   position: fixed;
   right: -500px;
-  top: 300px; /* Adjusted to leave space for the header */
+  top: 300px; /* 헤더에 맞게 조절 */
   width: 400px;
-  height: calc(100vh - 350px); /* Adjusted height */
+  height: calc(100vh - 350px); /* 높이 조절 */
   background-color: white;
   transition: right 0.3s ease;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
@@ -117,6 +117,11 @@
   transition: background-color 0.3s ease;
 }
 
+#send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 #send-button img {
   width: 60%;
   height: 60%;
@@ -124,7 +129,7 @@
 
 #hamburger-menu {
   position: fixed;
-  top: 800px; /* Adjusted to place below the header */
+  top: 800px; /* 헤더에 맞게 조절 */
   right: 30px;
   cursor: pointer;
   z-index: 1001;

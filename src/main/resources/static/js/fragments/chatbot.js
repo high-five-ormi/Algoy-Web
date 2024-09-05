@@ -1,7 +1,15 @@
+/**
+ * @author JSW
+ *
+ * 사용자가 입력한 메시지를 서버에 전송하고, 서버로부터 실시간으로 응답을 받아 화면에 표시하는 기능을 수행합니다. (SSE 연결)
+ * 메시지 전송 시 HTML 특수 문자를 이스케이프 처리하고, 서버 응답을 마크다운 형식으로 렌더링하는 기능도 합니다.
+ */
+
 class ChatbotComponent {
   constructor(backendUrl) {
     this.backendUrl = backendUrl;
     this.currentEventSource = null;
+    this.isResponding = false; // 챗봇이 응답 중인지 여부를 나타내는 플래그
     this.init();
   }
 
@@ -14,9 +22,11 @@ class ChatbotComponent {
 
     this.hamburgerMenu.addEventListener('click', () => this.toggleChatbot());
     this.userInput.addEventListener('keypress', (event) => {
-      if (event.key === 'Enter') this.sendMessage();
+      if (event.key === 'Enter' && !this.isResponding) this.sendMessage();
     });
-    this.sendButton.addEventListener('click', () => this.sendMessage());
+    this.sendButton.addEventListener('click', () => {
+      if (!this.isResponding) this.sendMessage();
+    });
 
     document.addEventListener('click', (event) => {
       if (!this.chatSidebar.contains(event.target) && !this.hamburgerMenu.contains(event.target)) {
@@ -59,6 +69,16 @@ class ChatbotComponent {
     this.messages.innerHTML = '';
   }
 
+  disableUserInput() {
+    this.sendButton.disabled = true;
+    this.isResponding = true;
+  }
+
+  enableUserInput() {
+    this.sendButton.disabled = false;
+    this.isResponding = false;
+  }
+
   sendMessage() {
     const message = this.userInput.value.trim();
     if (!message) return;
@@ -70,12 +90,13 @@ class ChatbotComponent {
 
     const escapedMessage = this.escapeHtml(message);
     this.messages.insertAdjacentHTML('beforeend', `<p><strong>You:</strong> ${escapedMessage}</p>`);
+
     const aiResponseElement = document.createElement('div');
     aiResponseElement.className = 'ai-message';
     aiResponseElement.innerHTML = '<strong>AI:</strong> <span class="loading">Thinking...</span>';
     this.messages.appendChild(aiResponseElement);
 
-    this.sendButton.disabled = true;
+    this.disableUserInput(); // 사용자 입력 비활성화
 
     this.currentEventSource = new EventSource(`${this.backendUrl}/ai/api/chat/stream?content=${encodeURIComponent(message)}`);
     let lastResponse = '';
@@ -102,7 +123,7 @@ class ChatbotComponent {
     this.currentEventSource.onerror = (event) => {
       console.error('EventSource failed:', event);
       this.currentEventSource.close();
-      this.sendButton.disabled = false;
+      this.enableUserInput(); // 사용자 입력 활성화
       if (lastResponse) {
         let parsedMarkdown = marked.parse(lastResponse);
         parsedMarkdown = parsedMarkdown.replace(/<pre><code([^>]*)>/g, '<div class="code-block-wrapper"><pre><code$1>');
@@ -115,7 +136,7 @@ class ChatbotComponent {
     };
 
     this.currentEventSource.onclose = () => {
-      this.sendButton.disabled = false;
+      this.enableUserInput(); // 사용자 입력 활성화
       if (lastResponse) {
         let parsedMarkdown = marked.parse(lastResponse);
         parsedMarkdown = parsedMarkdown.replace(/<pre><code([^>]*)>/g, '<div class="code-block-wrapper"><pre><code$1>');
