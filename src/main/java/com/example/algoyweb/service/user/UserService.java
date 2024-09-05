@@ -15,8 +15,10 @@ import com.example.algoyweb.util.ConvertUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -88,40 +90,40 @@ public class UserService implements UserDetailsService {
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found with email: " + email);
 		}
-		System.out.println(user);
 
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail())
-                .password(user.getPassword())  // Assuming this is already hashed
-                .build();
-    }
+		return org.springframework.security.core.userdetails.User
+			.withUsername(user.getEmail())
+			.password(user.getPassword())  // Assuming this is already hashed
+			.authorities(new SimpleGrantedAuthority(user.getRole().getKey())) // 권한 추가
+			.build();
+	}
 
-    @Transactional
-    public UserDto update(UserDto userDto, String email) {
-        User findUser = userRepository.findByEmail(email);
+	@Transactional
+	public UserDto update(UserDto userDto, String email) {
+		User findUser = userRepository.findByEmail(email);
 
-        if (findUser == null) {
-            throw new NoSuchElementException("No user found with the given email: " + email);
-        }
+		if (findUser == null) {
+			throw new NoSuchElementException("No user found with the given email: " + email);
+		}
 
-        if (!Objects.equals(userDto.getEmail(), email)) {
-            throw new CustomException(UserErrorCode.USER_NOT_EQUAL_EMAIL);
-        }
+		if (!Objects.equals(userDto.getEmail(), email)) {
+			throw new CustomException(UserErrorCode.USER_NOT_EQUAL_EMAIL);
+		}
 
-        // 비밀번호 암호화 처리
-        String encodedPassword = null;
-        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
-            encodedPassword = passwordEncoder.encode(userDto.getPassword());
-        }
+		// 비밀번호 암호화 처리
+		String encodedPassword = null;
+		if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+			encodedPassword = passwordEncoder.encode(userDto.getPassword());
+		}
 
-        // UserDto에서 업데이트 정보를 반영
-        findUser.updateUser(userDto, encodedPassword);
+		// UserDto에서 업데이트 정보를 반영
+		findUser.updateUser(userDto, encodedPassword);
 
-        // Save the updated user entity
-        userRepository.save(findUser);
+		// Save the updated user entity
+		userRepository.save(findUser);
 
-        return ConvertUtils.convertUserToDto(findUser);
-    }
+		return ConvertUtils.convertUserToDto(findUser);
+	}
 
 	/**
 	 * 탈퇴 신청
@@ -130,7 +132,6 @@ public class UserService implements UserDetailsService {
 	 * @return user를 repository에 저장
 	 * @author jooyoung
 	 */
-
 	@Transactional
 	public void setDeleted(String email, HttpServletRequest request, HttpServletResponse response) {
 		User user = userRepository.findByEmail(email);
