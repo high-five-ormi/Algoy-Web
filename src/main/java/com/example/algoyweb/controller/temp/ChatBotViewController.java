@@ -30,9 +30,9 @@ public class ChatBotViewController {
    * @param model Spring Framework의 Model 객체로, 뷰에 데이터를 전달하기 위해 사용됩니다.
    * @return "temp/chatbot" 뷰의 경로를 반환합니다.
    */
-  @GetMapping("/algoy/bot/temp")
+  @GetMapping("/algoy/chatbot-demo")
   public String chatPage(Model model) {
     model.addAttribute("backendUrl", backendUrl);
-    return "temp/chatbot";
+    return "temp/chatbot-demo";
   }
 }
