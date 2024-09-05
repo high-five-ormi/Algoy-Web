@@ -101,7 +101,6 @@ public class User {
     this.updatedAt = LocalDateTime.now();
   }
 
-
 	public void updatePassword(String password) {
 		this.password = password;
 	}
