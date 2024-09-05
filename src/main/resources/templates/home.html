@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <title>홈</title>
     <link rel="stylesheet" th:href="@{/css/home/home.css}">
-    <script th:src="@{/js/calendar/calendar.global.js}"></script>
+    <script th:src="@{/js/graph/calendar.global.js}"></script>
     <link rel="stylesheet" th:href="@{/css/home/calendar.css}">
     <script th:src="@{/js/fragments/modal.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.0.0/dist/main.min.js"></script>
 </head>
 <body>
 <header>
@@ -20,7 +21,11 @@
 
 <div class="graph-container">
     <div id='calendar'></div>
-    <p class="today">Today's log <canvas id="myChart" width="300px" height="300px"></canvas> </p>
+
+    <div class="today">
+        <span id="monthName"></span>
+        <canvas id="myChart" width="300px" height="300px"></canvas>
+    </div>
 </div>
 
 <!-- ALAN's Pick 섹션 -->
@@ -42,37 +47,6 @@
 
 <script th:src="@{/js/calendar/add-event.js}"></script>
 <script>
-    const ctx = document.getElementById('myChart');
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: [
-                '완료',
-                '진행중',
-                '시작 전'
-            ],
-            datasets: [{
-                label: 'today',
-                data: [300, 50, 100],
-                backgroundColor: [
-                    'rgb(2, 99, 132)',
-                    'rgb(120, 99, 132)',
-                    'rgb(255, 205, 86)'
-                ],
-                hoverOffset: 4
-            }]
-        },
-        options: {
-            responsive: false,
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            },
-        }
-    });
 
     // Allen's Pick API 호출 함수
     function getAllenResponse() {
@@ -151,6 +125,8 @@
     }
 </style>
 </body>
+
+<script src="/js/graph/graph.js"></script>
 <footer>
 
 </footer>
