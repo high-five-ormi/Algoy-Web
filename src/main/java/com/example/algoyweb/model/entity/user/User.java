@@ -53,7 +53,7 @@ public class User {
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
 
-	@OneToMany(mappedBy = "user", orphanRemoval = true)
+	@OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<Planner> plannerList;
 
   public void connectPlanner(Planner planner) {
@@ -74,7 +74,7 @@ public class User {
 
 	public void setDeleted() {
 		this.isDeleted = true;
-		this.deletedAt = LocalDateTime.now().plusMinutes(1);
+		this.deletedAt = LocalDateTime.now().plusMonths(1);
 	}
 
   public void restore() {
@@ -100,7 +100,6 @@ public class User {
     }
     this.updatedAt = LocalDateTime.now();
   }
-
 
 	public void updatePassword(String password) {
 		this.password = password;
