@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Chatbot Fragment</title>
+</head>
+<body>
+<!-- 챗봇 컴포넌트 프래그먼트 -->
+<div th:fragment="chatbot(backendUrl)">
+  <div id="chatbot-component">
+    <div id="hamburger-menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <div id="chat-sidebar">
+      <div id="chat-container">
+        <div class="chat-header">
+          <div class="avatar">
+            <img src="/img/bot_icon.png" alt="AI Avatar">
+          </div>
+          <h1>Alan AI</h1>
+        </div>
+        <div id="messages"></div>
+        <div class="input-area">
+          <input type="text" id="user-input" placeholder="Type your message...">
+          <button id="send-button">
+            <img src="/img/send_icon.png" alt="Send">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 챗봇 스타일시트 -->
+  <link rel="stylesheet" th:href="@{/css/fragments/chatbot.css}">
+
+  <!-- 챗봇 스크립트 -->
+  <script th:inline="javascript">
+    var backendUrl = 'http://15.165.235.170:8082';
+  </script>
+  <script th:src="@{/js/fragments/chatbot.js}"></script>
+  <script>
+    // 챗봇 컴포넌트 초기화
+    const chatbot = new ChatbotComponent(backendUrl);
+  </script>
+</div>
+</body>
+</html>

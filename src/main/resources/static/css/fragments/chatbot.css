@@ -1,24 +1,24 @@
-body {
+#chatbot-component {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f0f2f5;
-  margin: 0;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+}
+
+#chat-sidebar {
+  position: fixed;
+  right: -500px;
+  top: 300px; /* 헤더에 맞게 조절 */
+  width: 400px;
+  height: calc(100vh - 350px); /* 높이 조절 */
+  background-color: white;
+  transition: right 0.3s ease;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  margin-right: 100px;
 }
 
 #chat-container {
-  width: 100%;
-  max-width: 400px;
-  height: 80vh;
-  background-color: white;
-  border-radius: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .chat-header {
@@ -58,9 +58,10 @@ body {
   padding: 20px;
   display: flex;
   flex-direction: column;
+  scroll-behavior: smooth;
 }
 
-#messages p {
+.ai-message, #messages p {
   max-width: 80%;
   margin-bottom: 15px;
   padding: 10px 15px;
@@ -81,6 +82,11 @@ body {
   align-self: flex-start;
 }
 
+.ai-message {
+  background-color: #f0f0f0;
+  align-self: flex-end;
+}
+
 .input-area {
   padding: 15px;
   background-color: #f0f2f5;
@@ -97,10 +103,6 @@ body {
   outline: none;
 }
 
-#user-input::placeholder {
-  color: #999;
-}
-
 #send-button {
   background-color: #1e88e5;
   border: none;
@@ -112,62 +114,85 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0; /* 패딩을 제거하여 버튼 크기를 이미지에 맞춤 */
+  padding: 0;
   transition: background-color 0.3s ease;
 }
 
-#send-button img {
-  width: 60%; /* 이미지 크기를 버튼 크기에 맞게 조정 */
-  height: 60%; /* 필요에 따라 크기를 조정 */
-}
-
-#send-button:hover {
-  background-color: #1976d2;
-}
-
 #send-button:disabled {
-  background-color: #bdbdbd;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-/* Scrollbar Styling */
-#messages::-webkit-scrollbar {
-  width: 6px;
+#send-button img {
+  width: 60%;
+  height: 60%;
 }
 
-#messages::-webkit-scrollbar-track {
-  background: #f1f1f1;
+#hamburger-menu {
+  position: fixed;
+  top: 800px; /* 헤더에 맞게 조절 */
+  right: 30px;
+  cursor: pointer;
+  z-index: 1001;
+  background-color: #1e88e5;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-#messages::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 3px;
+#hamburger-menu span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 2px 0;
+  transition: 0.4s;
 }
 
-#messages::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+body.chatbot-open #chat-sidebar {
+  right: 0;
+}
+
+body.chatbot-open #hamburger-menu span:nth-child(1) {
+  transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+body.chatbot-open #hamburger-menu span:nth-child(2) {
+  opacity: 0;
+}
+
+body.chatbot-open #hamburger-menu span:nth-child(3) {
+  transform: rotate(45deg) translate(-5px, -6px);
 }
 
 .code-block-wrapper {
-  background-color: #f0ffff;
+  background-color: #f0f0f0;
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 10px;
+  margin: 10px 0;
   overflow-x: auto;
-  max-height: 300px;
-  overflow-y: auto;
+}
+
+.markdown-body {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.markdown-body p {
   margin-bottom: 10px;
 }
 
-.code-block-wrapper pre {
-  margin: 0;
-  padding: 10px;
-}
-
-.code-block-wrapper code {
-  max-height: 300px;
-  overflow-y: auto;
-  margin-bottom: 10px;
-  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-  color: #002d2d;
+.markdown-body pre {
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  font-size: 85%;
+  line-height: 1.45;
+  overflow: auto;
+  padding: 16px;
 }
