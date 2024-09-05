@@ -23,9 +23,7 @@ public class HomeController {
     private UserService userService;
 
     @GetMapping("/algoy/home")
-    public String home(Model model) {
-        boolean isAuthenticated = userService.isAuthenticated();
-        model.addAttribute("isAuthenticated", isAuthenticated);
+    public String home() {
         return "home"; // view name
     }
 }
