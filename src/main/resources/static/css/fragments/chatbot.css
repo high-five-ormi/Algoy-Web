@@ -4,14 +4,15 @@
 
 #chat-sidebar {
   position: fixed;
-  right: -400px;
-  top: 0;
+  right: -500px;
+  top: 300px; /* Adjusted to leave space for the header */
   width: 400px;
-  height: 100vh;
+  height: calc(100vh - 350px); /* Adjusted height */
   background-color: white;
   transition: right 0.3s ease;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+  margin-right: 100px;
 }
 
 #chat-container {
@@ -123,18 +124,27 @@
 
 #hamburger-menu {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 800px; /* Adjusted to place below the header */
+  right: 30px;
   cursor: pointer;
   z-index: 1001;
+  background-color: #1e88e5;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 #hamburger-menu span {
   display: block;
-  width: 30px;
+  width: 25px;
   height: 3px;
-  background-color: #333;
-  margin: 6px 0;
+  background-color: white;
+  margin: 2px 0;
   transition: 0.4s;
 }
 
