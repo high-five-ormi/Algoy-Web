@@ -50,21 +50,22 @@
 }
 
 .search-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: none;
     border: none;
     cursor: pointer;
     margin-right: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    text-decoration: none;
 }
 
-.search-button image {
+.search-button img {
     width: 29px;
     height: 29px;
 }
 
-#header-logout, #header-my-page, #header-login {
+#header-logout, #header-login, #header-my-page {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -74,11 +75,17 @@
     cursor: pointer;
     padding: 0;
     box-sizing: border-box;
+    text-decoration: none;
+    color: inherit;
 }
 
 #header-logout, #header-login {
     width: 84px;
     height: 40px;
+}
+
+#header-login {
+    font-weight: normal;
 }
 
 #header-my-page {
@@ -95,7 +102,6 @@
     display: flex;
     gap: 8px;
 }
-
 
 #header-container::after {
     content: "";

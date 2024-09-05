@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Restoration</title>
+    <link rel="stylesheet" th:href="@{/css/mypage/restoreUser.css}">
+</head>
+<body>
+<header>
+</header>
+<main>
+    <h1>계정 복구</h1>
+    <div id="userEditForm">
+        <div class="delete-btn-wrap">
+            <h2>계정을 복구 하시겠습니까? <br> <br></h2>
+            <h3>회원님의 계정은</h3>
+            <h3 th:text="${formattedDate} + 에"></h3>
+            <h3>삭제 될 예정입니다.</h3>
+            <div class="form-container">
+                <form id="" action="/algoy/user/restore" method="post">
+                    <button type="submit" id="deleteUserBtn" class="updateUserBtn">복구하기</button>
+                </form>
+                <form action="/algoy/logout" method="post">
+                    <button type="submit" class="back-button">탈퇴유지</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

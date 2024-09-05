@@ -4,15 +4,19 @@ import com.example.algoyweb.exception.CustomException;
 import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.service.user.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,10 +73,9 @@ public class MyPageController {
         String email = userDetails.getUsername();
         User user = userService.findByEmail(email);
 
-        boolean isAuthenticated = userService.isAuthenticated();
         ModelAndView mav = new ModelAndView("mypage/userEdit");
         mav.addObject("user", user);
-        mav.addObject("isAuthenticated", isAuthenticated);
+
         return mav;
     }
 
@@ -103,17 +106,47 @@ public class MyPageController {
         String email = userDetails.getUsername();
         User user = userService.findByEmail(email);
 
-        boolean isAuthenticated = userService.isAuthenticated();
         ModelAndView mav = new ModelAndView("mypage/userDelete");
         mav.addObject("user", user);
-        mav.addObject("isAuthenticated", isAuthenticated);
+
         return mav;
     }
 
     @PostMapping("/delete")
     @PreAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
-    public ResponseEntity<String> deleteRequest(@AuthenticationPrincipal UserDetails userDetails) {
-        userService.setDeleted(userDetails.getUsername());
-        return ResponseEntity.status(HttpStatus.OK).body("삭제 요청이 완료되었습니다.");
+    public ResponseEntity<String> deleteRequest(@AuthenticationPrincipal UserDetails userDetails,
+                                                HttpServletRequest request,
+                                                HttpServletResponse response) {
+        // 사용자 삭제 예약 로직
+        userService.setDeleted(userDetails.getUsername(), request, response);
+
+        // 성공 응답 반환
+        return ResponseEntity.ok("회원 탈퇴 요청이 완료되었습니다.");
+    }
+
+
+
+    /**
+     * 유저 복구
+     *
+     * @author jooyoung
+     * @param userDetails,model 탈퇴 유저를 복구함
+     * @return 복구 여부를 묻는 페이지, 복구 완료 시 홈 화면
+     */
+    @GetMapping("/restore")
+    public String restoreAccountPage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        String email = userDetails.getUsername();
+        User user = userService.findByEmail(email);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = user.getDeletedAt().format(formatter);
+        model.addAttribute("formattedDate", formattedDate);
+        model.addAttribute("user", user);
+        return "mypage/userRestore";
+    }
+
+    @PostMapping("/restore")
+    public String restoreAccount(@AuthenticationPrincipal UserDetails userDetails) {
+        userService.restoreAccount(userDetails.getUsername());
+        return "redirect:/algoy/home";
     }
 }
