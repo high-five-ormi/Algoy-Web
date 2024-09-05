@@ -216,3 +216,14 @@ body {
 .open #main-content {
   margin-right: 400px;
 }
+
+.ai-message {
+  max-width: 80%;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.4;
+  align-self: flex-end;
+  background-color: #f0f0f0;
+}
