@@ -23,21 +23,16 @@ public class AllenController {
 
     //solvedAC 기반으로 문제 추천 받기
     @GetMapping("/solvedac")
-    public ResponseEntity<String> solvedac(@RequestParam String solvedacusername, String algoyusername) throws Exception {
+    public ResponseEntity<String> solvedac(@RequestParam String solvedacusername, @AuthenticationPrincipal UserDetails userDetails) throws Exception {
         System.out.println("controller check"); //@AuthenticationPrincipal UserDetails userDetails
         try{
-            //사용자가 푼 문제중 상위 100문제 추출하기
-            //List<String> titlesList = allenService.sovledacCall(username);
-            //System.out.println(titlesList);
-            //userID와 (문제제목이 담긴)리스트를 앨런AI에게 요청보냄
-
             //userID와 solvedAC의 username을 8082로 보낸다.
-            //String allenResponse = allenService.askAllen(userDetails.getUsername(), username);
-            String allenResponse = allenService.askAllen(algoyusername, solvedacusername);
+            String allenResponse = allenService.askAllen(userDetails.getUsername(), solvedacusername);
+            //String allenResponse = allenService.askAllen(algoyusername, solvedacusername);
 
             return ResponseEntity.ok(allenResponse);
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("api 호출 중 에러가 발생하였습니다");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("username을 다시 입력하세요");
         }
 
     }
