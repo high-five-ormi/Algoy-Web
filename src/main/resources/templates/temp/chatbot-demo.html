@@ -43,7 +43,7 @@
 </main>
 
 <!-- 챗봇 컴포넌트 포함 -->
-<div th:replace="~{fragments/chatbot :: chatbot(${backendUrl})}"></div>
+<div th:replace="~{fragments/chatbot :: chatbot}" th:data-backend-url="${backendUrl}"></div>
 
 <footer>
   <p>&copy; 2024 Our Company. All rights reserved.</p>

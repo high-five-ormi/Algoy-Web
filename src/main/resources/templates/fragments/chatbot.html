@@ -6,7 +6,7 @@
 </head>
 <body>
 <!-- 챗봇 컴포넌트 프래그먼트 -->
-<div th:fragment="chatbot(backendUrl)">
+<div th:fragment="chatbot">
   <div id="chatbot-component">
     <div id="hamburger-menu">
       <span></span>
@@ -37,13 +37,14 @@
   <link rel="stylesheet" th:href="@{/css/fragments/chatbot.css}">
 
   <!-- 챗봇 스크립트 -->
-  <script th:inline="javascript">
-    var backendUrl = 'http://15.165.235.170:8082';
-  </script>
   <script th:src="@{/js/fragments/chatbot.js}"></script>
   <script>
     // 챗봇 컴포넌트 초기화
-    const chatbot = new ChatbotComponent(backendUrl);
+    document.addEventListener('DOMContentLoaded', function() {
+      var chatbotElement = document.getElementById('chatbot-component');
+      var backendUrl = chatbotElement.dataset.backendUrl;
+      const chatbot = new ChatbotComponent(backendUrl);
+    });
   </script>
 </div>
 </body>
