@@ -70,7 +70,8 @@ public class PlannerController {
     // 플래너 수정 폼을 불러오는 엔드포인트
     @GetMapping("/edit-form")
     @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
-    public ModelAndView editForm(@RequestParam Long id) {
+    public ModelAndView editForm(Model model, @RequestParam Long id) {
+        model.addAttribute("backendUrl", backendUrl);
         // 플래너 수정 폼 페이지로 이동 (수정할 플랜 ID와 함께)
         return new ModelAndView("planner/EditForm");
     }
