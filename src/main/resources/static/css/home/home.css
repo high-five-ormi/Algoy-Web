@@ -1,8 +1,8 @@
 body {
-    margin :0;
+    margin: 0;
 }
 
-a{
+a {
     text-decoration-line: none;
     color: black;
 }
@@ -13,10 +13,57 @@ a{
     margin-top: 20px;
 }
 
-
-.today {
-    margin-left: 100px;
-    font-weight: bold;
-    font-size: 14px;
+.mini-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-left: 20px;
 }
+
+
+.chart-container {
+    width: 100%;
+    max-width: 500px;
+    max-height: 300px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.chart {
+    width: 500px;
+    max-height: 220px;
+}
+
+#monthName {
+    margin-top: 0;
+}
+
+
+
+
+footer {
+    background-color: #e8e8e8;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    margin-top: 200px;
+    justify-content: space-around;
+}
+
+ul {
+    list-style: none;
+}
+
+#footer-logo {
+    width: 70px;
+    height: 70px;
+}
+
+
 
