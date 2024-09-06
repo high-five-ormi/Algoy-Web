@@ -3,11 +3,13 @@ package com.example.algoyweb.controller.planner;
 import com.example.algoyweb.model.dto.planner.PlannerDto;
 import com.example.algoyweb.service.planner.PlannerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,6 +21,10 @@ import java.util.List;
 public class PlannerController {
 
     private final PlannerService plannerService;
+
+    // ai-backend.url 설정값을 저장하는 변수입니다.
+    @Value("${ai-backend.url}")
+    private String backendUrl;
 
     // 메인 페이지에 들어갈 한달 사이의 플래너 목록을 불러오는 엔드포인트
     @GetMapping
@@ -72,7 +78,8 @@ public class PlannerController {
     // 플래너 메인 페이지를 불러오는 엔드포인트
     @GetMapping("/calender")
     @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
-    public ModelAndView viewCalender() {
+    public ModelAndView viewCalender(Model model) {
+        model.addAttribute("backendUrl", backendUrl);
         // 플래너 메인 페이지로 이동
         return new ModelAndView("planner/PlannerMain");
     }
