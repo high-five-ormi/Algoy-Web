@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // 사용자 정의 버튼 및 헤더 툴바 설정
         customButtons: {
             toggleView: {
-                text: '월간 보기',
+                text: '주간 보기',
                 click: function () {
                     const currentView = calendar.view.type;
                     if (currentView === 'dayGridWeek') {
@@ -94,7 +94,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(data => {
                     const events = data.map(item => {
+                        let endDate = new Date(item.endAt);
                         let color = '';
+
+                        let allDay = false;
+                        if (item.allDay || isOneDayEvent(item.startAt, item.endAt)) {
+                            allDay = true;
+                            endDate = new Date(item.startAt); // 하루짜리 이벤트의 경우 endDate를 startAt과 동일하게 설정
+                        }
 
                         if (item.status === 'TODO') {
                             color = '#aebcd7';
@@ -108,8 +115,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             id: item.id,
                             title: item.title,
                             start: item.startAt,
-                            end: item.endAt,
-                            color: color
+                            end: allDay ? null : endDate.toISOString(), // allDay 이벤트의 경우 end를 설정하지 않음
+                            allDay: allDay, // allDay 설정
+                            backgroundColor: color // FullCalendar의 색상 설정
                         };
                     });
 
@@ -126,11 +134,15 @@ document.addEventListener('DOMContentLoaded', function () {
             title.className = 'fc-event-title';
             title.textContent = arg.event.title;
 
-
             title.style.color = '#212121';
 
             return { domNodes: [title] };
-        }
+        },
+
+        eventClick: function(info) {
+            const eventId = info.event.id;
+            window.location.href = `/algoy/planner/edit-form?id=${eventId}`; // 클릭 시 해당 플래너 페이지로 이동
+        },
     });
 
     // 캘린더를 렌더링합니다.
@@ -179,5 +191,12 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => {
                 console.error('Error loading data:', error);
             });
+    }
+
+    // 하루짜리 이벤트 체크 함수
+    function isOneDayEvent(start, end) {
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        return startDate.toDateString() === endDate.toDateString();
     }
 });
