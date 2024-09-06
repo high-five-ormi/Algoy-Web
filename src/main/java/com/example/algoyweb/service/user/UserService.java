@@ -1,6 +1,7 @@
 package com.example.algoyweb.service.user;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -257,5 +258,50 @@ public class UserService implements UserDetailsService {
 		}
 
 		return false; // 유저가 없거나 토큰이 잘못된 경우 실패
+	}
+
+	public List<UserDto> getAllUsers() {
+		List<User> users = userRepository.findAll();
+		List<UserDto> userDtos = new ArrayList<>();
+
+		for (User user : users) {
+			UserDto userDto = ConvertUtils.convertUserToDto(user);
+			userDtos.add(userDto);
+		}
+
+		return userDtos;
+	}
+
+	// 관리자 승격
+	public void promoteToAdmin(Long userId) {
+		User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+		// 권한이 NORMAL일 경우 ADMIN으로 승격
+		if (user.getRole() == Role.NORMAL) {
+			user.updateRole(Role.ADMIN);
+			userRepository.save(user);
+		}
+	}
+
+	// 유저 밴
+	public void banUser(Long userId) {
+		User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+		// 권한이 NORMAL 또는 ADMIN인 경우 BANNED로 변경
+		if (user.getRole() == Role.NORMAL || user.getRole() == Role.ADMIN) {
+			user.updateRole(Role.BANNED);
+			userRepository.save(user);
+		}
+	}
+
+	// 유저 밴 해제
+	public void liftBan(Long userId) {
+		User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+		// 권한이 BANNED인 경우 NORMAL로 변경
+		if (user.getRole() == Role.BANNED) {
+			user.updateRole(Role.NORMAL);
+			userRepository.save(user);
+		}
 	}
 }
