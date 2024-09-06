@@ -260,15 +260,26 @@ public class UserService implements UserDetailsService {
 		return false; // 유저가 없거나 토큰이 잘못된 경우 실패
 	}
 
+	/**
+	 * 모든 사용자 정보 조회
+	 *
+	 * @author yuseok
+	 * @return 모든 사용자의 정보가 담긴 UserDto 객체들의 리스트
+	 */
 	public List<UserDto> getAllUsers() {
+		// 모든 User 엔티티를 데이터베이스에서 조회 후 리스트에 저장
 		List<User> users = userRepository.findAll();
+
+		// UserDto 객체들을 저장할 리스트 초기화
 		List<UserDto> userDtos = new ArrayList<>();
 
+		// 각 User 엔티티를 UserDto로 변환 후 리스트에 추가
 		for (User user : users) {
 			UserDto userDto = ConvertUtils.convertUserToDto(user);
 			userDtos.add(userDto);
 		}
 
+		// UserDto 리스트 반환
 		return userDtos;
 	}
 
