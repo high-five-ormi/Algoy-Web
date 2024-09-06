@@ -24,10 +24,9 @@ td {
 /* tr의 마지막 td가 아닌 모든 td에 적용 (버튼이 없는 열) */
 tr td:not(:last-child) {
     width: 160px;
-    max-width: 160px;
+    max-width: 160px; /* 셀의 최대 너비를 160픽셀로 제한: 콘텐츠가 많아도 160픽셀을 넘지 않음 */
     padding: 10px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    overflow-wrap: break-word; /* 셀 너비 초과 시 자동 줄바꿈 */
 }
 
 a {
