@@ -62,7 +62,8 @@ public class PlannerController {
     // 플래너 저장 폼을 불러오는 엔드포인트
     @GetMapping("/save-form")
     @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
-    public ModelAndView saveForm() {
+    public ModelAndView saveForm(Model model) {
+        model.addAttribute("backendUrl", backendUrl);
         // 플래너 저장 폼 페이지로 이동
         return new ModelAndView("planner/SaveForm");
     }
