@@ -15,15 +15,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 label: 'User`s commit Log',
                 data: [0, 0, 0], // 초기 데이터 (나중에 업데이트됨)
                 backgroundColor: [
-                    '#ABC2E8',
-                    '#F9F3CC',
-                    '#b4ce8b'
+                    '#b4ce8b',
+                    '#cab8d9',
+                    '#ABC2E8'
                 ],
                 hoverOffset: 4
             }]
         },
         options: {
-            responsive: false
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 16 // 레이블의 폰트 크기
+                        },
+                        color: '#333' // 레이블의 색상
+                    }
+                },
+                tooltip: {
+                    bodyFont: {
+                        size: 14 // 툴팁 본문의 폰트 크기
+                    },
+                    titleFont: {
+                        size: 16 // 툴팁 제목의 폰트 크기
+                    }
+                }
+            }
         }
     });
 
@@ -37,6 +56,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // 사용자 정의 버튼 및 헤더 툴바 설정
         customButtons: {
+            toggleView: {
+                text: '월간 보기',
+                click: function () {
+                    const currentView = calendar.view.type;
+                    if (currentView === 'dayGridWeek') {
+                        calendar.changeView('dayGridMonth');
+                        this.textContent = '주간 보기';
+                    } else {
+                        calendar.changeView('dayGridWeek');
+                        this.textContent = '월간 보기';
+                    }
+                }
+            },
             addSchedule: {
                 text: "일정 등록",
                 click: function () {
@@ -47,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
         headerToolbar: {
             start: "today prevYear,prev,next,nextYear",
             center: "title",
-            end: "addSchedule"
+            end: "toggleView addSchedule"
         },
 
         // 월 변경 시 차트 업데이트
@@ -56,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
             updateChart(info.view.currentStart);
         },
 
-        // 이벤트를 서버에서 가져오는 설정
+        // 이벤트를 서버에서 가져옴
         events: function(info, successCallback, failureCallback) {
             fetch('/algoy/planner/get/plans')
                 .then(response => response.json())
@@ -67,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (item.status === 'TODO') {
                             color = '#aebcd7';
                         } else if (item.status === 'IN_PROGRESS') {
-                            color = '#F9F3CC';
+                            color = '#cab8d9';
                         } else if (item.status === 'DONE') {
                             color = '#b4ce8b';
                         }
@@ -86,20 +118,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 .catch(error => {
                     console.error('Error loading events:', error);
                 });
+        },
+
+        // 이벤트의 글자색
+        eventContent: function(arg) {
+            const title = document.createElement('div');
+            title.className = 'fc-event-title';
+            title.textContent = arg.event.title;
+
+
+            title.style.color = '#212121';
+
+            return { domNodes: [title] };
         }
     });
 
     // 캘린더를 렌더링합니다.
     calendar.render();
 
-    // 현재 월 이름을 업데이트하는 함수
+    // 현재 월 이름을 업데이트
     function updateMonthName(startDate) {
         const start = new Date(startDate);
         const monthName = start.toLocaleString('default', { month: 'long', year: 'numeric' });
         document.getElementById('monthName').textContent = monthName;
     }
 
-    // 차트 업데이트 함수
+    // 차트 업데이트
     function updateChart(startDate) {
         const start = new Date(startDate);
         const end = new Date(start.getFullYear(), start.getMonth() + 1, 0); // 월의 마지막 날
