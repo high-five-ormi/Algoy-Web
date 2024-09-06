@@ -315,8 +315,8 @@ public class UserService implements UserDetailsService {
 
 		// 정지 횟수에 따라 정지 기간 결정
 		if (banCount == 0) { // 처음 정지면 하루
-			banExpiration = LocalDateTime.now().plusMinutes(1); // 테스트 목적으로 1분 설정
-			// banExpiration = LocalDateTime.now().plusDays(1); // 1일 10시 정지면 2일 10시에 해제
+			banExpiration = LocalDateTime.now().plusDays(1); // 1일 10시 정지면 2일 10시에 해제
+			// banExpiration = LocalDateTime.now().plusMinutes(1); // 테스트 목적으로 1분 설정
 		} else if (banCount == 1) { // 두 번째 정지는 7일
 			banExpiration = LocalDateTime.now().plusDays(7);
 		} else { // 세 번째 이후 정지는 15일
