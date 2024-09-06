@@ -30,19 +30,19 @@
                     <form th:action="@{/algoy/admin/role-control}" method="post" style="display:inline;">
                         <input type="hidden" name="userId" th:value="${user.getUserId()}"/>
                         <input type="hidden" name="action" value="admin"/>
-                        <button type="submit" class="admin-btn">관리자</button>
+                        <button type="submit" class="admin-btn">관리자 승격</button>
                     </form>
 
                     <form th:action="@{/algoy/admin/role-control}" method="post" style="display:inline;">
                         <input type="hidden" name="userId" th:value="${user.getUserId()}"/>
                         <input type="hidden" name="action" value="ban"/>
-                        <button type="submit" class="ban-btn">정지</button>
+                        <button type="submit" class="ban-btn">유저 정지</button>
                     </form>
 
                     <form th:action="@{/algoy/admin/role-control}" method="post" style="display:inline;">
                         <input type="hidden" name="userId" th:value="${user.getUserId()}"/>
                         <input type="hidden" name="action" value="lift"/>
-                        <button type="submit" class="lift-btn">해제</button>
+                        <button type="submit" class="lift-btn">정지 해제</button>
                     </form>
                 </td>
                 <!--<td>-->

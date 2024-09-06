@@ -287,8 +287,8 @@ public class UserService implements UserDetailsService {
 	public void banUser(Long userId) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-		// 권한이 NORMAL 또는 ADMIN인 경우 BANNED로 변경
-		if (user.getRole() == Role.NORMAL || user.getRole() == Role.ADMIN) {
+		// 권한이 NORMAL인 경우 BANNED로 변경
+		if (user.getRole() == Role.NORMAL) {
 			user.updateRole(Role.BANNED);
 			userRepository.save(user);
 		}
