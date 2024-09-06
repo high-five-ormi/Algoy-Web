@@ -53,6 +53,12 @@ public class User {
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
 
+	@Column(name = "ban_count", nullable = false)
+	private int banCount = 0; // 정지 횟수: 초기 값은 0
+
+	@Column(name = "ban_expiration")
+	private LocalDateTime banExpiration; // 정지 유효시간 (만료 시간)
+
 	@OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<Planner> plannerList;
 
@@ -106,5 +112,17 @@ public class User {
 	public void updateRole(Role role) {
 		this.role = role;
 		this.updatedAt = LocalDateTime.now();
+	}
+
+	public boolean isBanned() {
+		return role == Role.BANNED && banExpiration != null && LocalDateTime.now().isBefore(banExpiration);
+	}
+
+	public void increaseBanCount() {
+		this.banCount++;
+	}
+
+	public void updateBanExpiration(LocalDateTime expirationTime) {
+		this.banExpiration = expirationTime;
 	}
 }
