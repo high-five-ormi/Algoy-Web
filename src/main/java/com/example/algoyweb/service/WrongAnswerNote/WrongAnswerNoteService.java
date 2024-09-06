@@ -4,23 +4,23 @@ import com.example.algoyweb.model.dto.WrongAnswerNote.WrongAnswerNoteDTO;
 import com.example.algoyweb.model.entity.WrongAnswerNote.WrongAnswerNote;
 import com.example.algoyweb.repository.WrongAnswerNote.WrongAnswerNoteRepository;
 import com.example.algoyweb.util.WrongAnswerNote.WrongAnswerNoteConvertUtil;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class WrongAnswerNoteService {
 
     private final WrongAnswerNoteRepository repository;
-
-    public WrongAnswerNoteService(WrongAnswerNoteRepository repository) {
-        this.repository = repository;
-    }
+    private final ImageService imageService;
 
     public List<WrongAnswerNoteDTO> findAll() {
         return repository.findAll().stream()
@@ -33,26 +33,44 @@ public class WrongAnswerNoteService {
             .map(WrongAnswerNoteConvertUtil::convertToDto);
     }
 
-    public WrongAnswerNoteDTO save(WrongAnswerNoteDTO dto) {
+    public WrongAnswerNoteDTO save(WrongAnswerNoteDTO dto, List<MultipartFile> images) throws IOException {
         WrongAnswerNote entity = WrongAnswerNoteConvertUtil.convertToEntity(dto);
-        if (dto.getId() == null) {
-            entity.setCreatedAt(LocalDateTime.now());
+
+        // isSolved 필드 설정 (optional)
+        if (dto.getIsSolved() == null) {
+            entity.setIsSolved(false); // 기본값 설정
+        } else {
+            entity.setIsSolved(dto.getIsSolved());
         }
-        entity.setUpdatedAt(LocalDateTime.now());
-        WrongAnswerNote savedEntity = repository.save(entity);
-        return WrongAnswerNoteConvertUtil.convertToDto(savedEntity);
+
+        repository.save(entity);
+
+        if (images != null && !images.isEmpty()) {
+            for (MultipartFile image : images) {
+                imageService.uploadImage(image, entity);
+            }
+        }
+
+        return WrongAnswerNoteConvertUtil.convertToDto(entity);
+    }
+
+    public WrongAnswerNoteDTO update(Long id, WrongAnswerNoteDTO dto, List<MultipartFile> images) throws IOException {
+        WrongAnswerNote entity = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Entity not found"));
+
+        WrongAnswerNoteConvertUtil.updateEntityFromDto(entity, dto);
+        repository.save(entity);
+
+        if (images != null && !images.isEmpty()) {
+            for (MultipartFile image : images) {
+                imageService.uploadImage(image, entity);
+            }
+        }
+
+        return WrongAnswerNoteConvertUtil.convertToDto(entity);
     }
 
     public void deleteById(Long id) {
         repository.deleteById(id);
-    }
-
-    public WrongAnswerNoteDTO update(Long id, WrongAnswerNoteDTO dto) {
-        WrongAnswerNote entity = repository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Entity not found"));
-        // 유틸 메서드를 사용해 DTO의 값을 엔티티에 업데이트
-        WrongAnswerNoteConvertUtil.updateEntityFromDto(entity, dto);
-        WrongAnswerNote updatedEntity = repository.save(entity);
-        return WrongAnswerNoteConvertUtil.convertToDto(updatedEntity);
     }
 }

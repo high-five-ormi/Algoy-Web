@@ -1,7 +1,9 @@
 package com.example.algoyweb.model.entity.WrongAnswerNote;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,7 +39,11 @@ public class WrongAnswerNote {
     private Boolean isSolved;
 
     @OneToMany(mappedBy = "wrongAnswerNote", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Image> images;
+
+    @OneToMany(mappedBy = "wrongAnswerNote", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Code> codes = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
