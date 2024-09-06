@@ -22,30 +22,32 @@
 <div class="graph-container">
     <div id='calendar'></div>
 
-    <div class="today">
-        <span id="monthName"></span>
-        <canvas id="myChart" width="300px" height="300px"></canvas>
+    <div class="mini-bar">
+        <div class="chart-container">
+            <h2 id="monthName"></h2>
+            <div class="chart">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+        <!-- ALAN's Pick 섹션 -->
+        <div class="alans-pick">
+            <h2>ALAN'S PICK</h2>
+            <p>코딩테스트를 위한 AI 추천 문제 풀고 취뽀하자!</p>
+
+            <!-- Allen's Pick 결과 또는 초기 메시지 표시 -->
+            <div id="allen-response" class="allen-response">
+                <!-- 백준 username을 입력하시면 앨런이 문제를 추천해줘요! -->
+            </div>
+
+            <!-- 사용자 입력 필드와 Go 버튼 -->
+            <div class="pick-input-group">
+                <input type="text" id="solvedacusername" class="pick-input" placeholder="Enter solvedac username">
+                <button onclick="getAllenResponse()" class="pick-button">Go</button>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- ALAN's Pick 섹션 -->
-<div class="alans-pick">
-    <h2>ALAN'S PICK</h2>
-    <p>코딩테스트를 위한 AI 추천 문제 풀고 취뽀하자!</p>
-
-    <!-- Allen's Pick 결과 또는 초기 메시지 표시 -->
-    <div id="allen-response" class="allen-response">
-        <!-- 백준 username을 입력하시면 앨런이 문제를 추천해줘요! -->
-    </div>
-
-    <!-- 사용자 입력 필드와 Go 버튼 -->
-    <div class="pick-input-group">
-        <input type="text" id="solvedacusername" class="pick-input" placeholder="Enter solvedac username">
-        <button onclick="getAllenResponse()" class="pick-button">Go</button>
-    </div>
-</div>
-
-<script th:src="@{/js/calendar/add-event.js}"></script>
 <script>
 
     // Allen's Pick API 호출 함수
@@ -73,17 +75,17 @@
 
 <style>
     .alans-pick {
-        margin-top: 20px;
-        padding: 15px;
+        padding: 20px;
         border: 1px solid #ddd;
         border-radius: 8px;
-        background-color: #f9f9f9;
-        width: 600px; /* 가로 길이 조정 */
+        background-color: #ffffff;
+        width: 500px; /* 가로 길이 조정 */
         text-align: center; /* 중앙 정렬 */
     }
 
     .alans-pick h2 {
         margin-bottom: 10px;
+        margin-top: 0;
         font-size: 1.5em;
         text-align: center; /* 헤더는 중앙 정렬 유지 */
     }
@@ -105,7 +107,7 @@
     }
 
     .pick-button {
-        background-color: #4CAF50;
+        background-color: #007bff;
         color: white;
         padding: 10px 20px;
         border: none;
@@ -114,8 +116,9 @@
     }
 
     .pick-button:hover {
-        background-color: #45a049;
+        background-color: #0056b3;
     }
+
 
     .allen-response {
         margin-top: 20px;
@@ -128,6 +131,18 @@
 
 <script src="/js/graph/graph.js"></script>
 <footer>
-
+    <div id="our_information">
+        <ul>
+            <li>진행 프로젝트 : ESTSOFT ORMI 5기 백엔드 파이널 프로젝트</li>
+            <li>팀 이름 : 5조 high - five</li>
+            <li>프로젝트 이름 : Algoy</li>
+            <li>깃허브 : <a href="https://github.com/high-five-ormi">https://github.com/high-five-ormi</a></li>
+            <li>프로젝트 관련 컨텍은 깃허브 READ ME에 안내되어 있습니다</li>
+        </ul>
+    </div>
+    <div id="Catchphrase">
+        <img src="/img/algoy-1.png" alt="알고이 로고입니다." id="footer-logo">
+        <p>"Algoy: Your Coding Commit Companion —Track Mistakes, Plan Success, and Get AI Insights"</p>
+    </div>
 </footer>
 </html>
