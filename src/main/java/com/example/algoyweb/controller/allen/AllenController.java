@@ -24,11 +24,11 @@ public class AllenController {
     //solvedAC 기반으로 문제 추천 받기
     @GetMapping("/solvedac")
     public ResponseEntity<String> solvedac(@RequestParam String solvedacusername, @AuthenticationPrincipal UserDetails userDetails) throws Exception {
-        System.out.println("controller check"); //@AuthenticationPrincipal UserDetails userDetails
+        System.out.println("controller check"); //
         try{
             //userID와 solvedAC의 username을 8082로 보낸다.
             String allenResponse = allenService.askAllen(userDetails.getUsername(), solvedacusername);
-            //String allenResponse = allenService.askAllen(algoyusername, solvedacusername);
+            //String allenResponse = allenService.askAllen("zoan", solvedacusername);
 
             return ResponseEntity.ok(allenResponse);
         }catch (Exception e){
