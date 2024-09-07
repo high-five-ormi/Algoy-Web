@@ -17,20 +17,20 @@ public class ChattingWebSocketController {
   private final ChattingService chattingService;
   private final SimpMessagingTemplate messagingTemplate;
 
-  @MessageMapping("/chat/sendMessage")
+  @MessageMapping("/algoy/chat/sendMessage")
   public void sendMessage(@Payload ChattingDto chattingDto) {
     ChattingDto savedMessage = chattingService.saveAndSendMessage(chattingDto);
     messagingTemplate.convertAndSend("/topic/room/" + chattingDto.getRoomId(), savedMessage);
   }
 
-  @MessageMapping("/chat/joinRoom")
+  @MessageMapping("/algoy/chat/joinRoom")
   public void joinRoom(@Payload JoinRoomRequest joinRequest) {
     chattingService.joinRoom(joinRequest.getRoomId(), joinRequest.getUserId());
     messagingTemplate.convertAndSend("/topic/room/" + joinRequest.getRoomId(),
         "User " + joinRequest.getUserId() + " joined the room");
   }
 
-  @MessageMapping("/chat/leaveRoom")
+  @MessageMapping("/algoy/chat/leaveRoom")
   public void leaveRoom(@Payload LeaveRoomRequest leaveRequest) {
     chattingService.leaveRoom(leaveRequest.getRoomId(), leaveRequest.getUserId());
     messagingTemplate.convertAndSend("/topic/room/" + leaveRequest.getRoomId(),
