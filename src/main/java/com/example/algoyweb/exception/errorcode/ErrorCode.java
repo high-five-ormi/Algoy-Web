@@ -1,4 +1,4 @@
-package com.example.algoyweb.exception;
+package com.example.algoyweb.exception.errorcode;
 
 import org.springframework.http.HttpStatus;
 

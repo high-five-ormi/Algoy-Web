@@ -7,6 +7,8 @@ import java.util.List;
 import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.planner.Planner;
 
+import com.example.algoyweb.model.entity.study.Comment;
+import com.example.algoyweb.model.entity.study.Study;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -62,10 +64,29 @@ public class User {
 	@OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<Planner> plannerList;
 
+	@OneToMany(mappedBy = "user", orphanRemoval = true)
+	private List<Study> studyList;
+
+	@OneToMany(mappedBy = "user", orphanRemoval = true)
+	private List<Comment> commentList;
+
+
 	public void connectPlanner(Planner planner) {
 		if (this.plannerList == null)
 			this.plannerList = new ArrayList<>();
 		this.getPlannerList().add(planner);
+	}
+
+	public void connectStudy(Study study) {
+		if(this.studyList == null)
+			this.studyList = new ArrayList<>();
+		this.getStudyList().add(study);
+	}
+
+	public void connectComment(Comment comment) {
+		if(this.commentList == null)
+			this.commentList = new ArrayList<>();
+		this.getCommentList().add(comment);
 	}
 
 	public void update(String username, String nickname, String email, String password, Role role, Boolean isDeleted) {

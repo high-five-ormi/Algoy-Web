@@ -1,5 +1,6 @@
 package com.example.algoyweb.exception;
 
+import com.example.algoyweb.exception.errorcode.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

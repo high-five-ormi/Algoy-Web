@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import com.example.algoyweb.exception.CustomException;
-import com.example.algoyweb.exception.UserErrorCode;
+import com.example.algoyweb.exception.errorcode.UserErrorCode;
 import com.example.algoyweb.model.entity.user.Role;
 import com.example.algoyweb.util.ConvertUtils;
 
