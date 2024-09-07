@@ -1,5 +1,7 @@
 package com.example.algoyweb.exception;
 
+import com.example.algoyweb.exception.errorcode.CommonErrorCode;
+import com.example.algoyweb.exception.errorcode.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;

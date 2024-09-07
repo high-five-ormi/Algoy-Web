@@ -1,4 +1,4 @@
-package com.example.algoyweb.exception;
+package com.example.algoyweb.exception.errorcode;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
