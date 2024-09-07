@@ -10,6 +10,7 @@
     overflow: hidden;
     position: absolute; /* 절대 위치 설정 */
     transform: translateX(-50%); /* 수평 중앙 정렬을 위한 변환 */
+    z-index: 1000;
 }
 
 .modal-header {

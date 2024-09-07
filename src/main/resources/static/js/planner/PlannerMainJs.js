@@ -183,22 +183,22 @@ $(document).ready(function () {
             url: '/algoy/planner/' + plannerId,
             method: 'GET',
             success: function (data) {
-                $('#modal-title').text(data.title);
-                $('#modal-content').html(data.content);
-                $('#modal-createdAt').text(`Created on ${formatDateTime(data.createAt)}`);
-                $('#modal-timeAt').text(`${formatDate(data.startAt)} ~ ${formatDate(data.endAt)}`);
-                $('#modal-question').text(data.questionName);
+                $('#modal-main-title').text(data.title);
+                $('#modal-main-content').html(data.content);
+                $('#modal-main-createdAt').text(`Created on ${formatDateTime(data.createAt)}`);
+                $('#modal-main-timeAt').text(`${formatDate(data.startAt)} ~ ${formatDate(data.endAt)}`);
+                $('#modal-main-question').text(data.questionName);
                 if (data.siteName.trim() === "BOJ") {
-                    $('#modal-site').text("Baekjoon");
+                    $('#modal-main-site').text("Baekjoon");
                 } else if (data.siteName.trim() === "PGS") {
-                    $('#modal-site').text("Programmers");
+                    $('#modal-main-site').text("Programmers");
                 } else if (data.siteName.trim() === "SWEA") {
-                    $('#modal-site').text("SW Expert Academy");
+                    $('#modal-main-site').text("SW Expert Academy");
                 } else if (data.siteName.trim() === "ETC") {
-                    $('#modal-site').text(data.etcName);
+                    $('#modal-main-site').text(data.etcName);
                 }
-                $('#modal-link').attr('href', data.link);
-                $('#modal-link').text(data.link);
+                $('#modal-main-link').attr('href', data.link);
+                $('#modal-main-link').text(data.link);
                 $('#planner-modal').show();
                 $('#btn-edit').attr('data-id', data.id);
                 $('#btn-delete').attr('data-id', data.id);
@@ -210,7 +210,7 @@ $(document).ready(function () {
     }
 
     // 모달 내 닫기 버튼
-    $('.modal-close').on('click', function () {
+    $('.modal-main-close').on('click', function () {
         $('#planner-modal').hide();
     });
 
