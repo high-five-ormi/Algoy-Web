@@ -1,10 +1,17 @@
 package com.example.algoyweb.config.chatting;
 
+import com.example.algoyweb.exception.chatting.WebSocketExceptionHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
+import org.springframework.web.socket.handler.WebSocketHandlerDecorator;
+import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
 
 /**
  * @author JSW
@@ -40,5 +47,34 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     registry.addEndpoint("/algoy/chat-websocket")
         .setAllowedOriginPatterns("*")
         .withSockJS(); // SockJS를 사용하여 WebSocket을 지원하지 않는 브라우저에서도 동작하도록 합니다.
+  }
+
+  @Override
+  public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
+    registration.addDecoratorFactory(new WebSocketHandlerDecoratorFactory() {
+      @Override
+      public WebSocketHandler decorate(final WebSocketHandler handler) {
+        return new WebSocketHandlerDecorator(handler) {
+          @Override
+          public void afterConnectionEstablished(final WebSocketSession session) throws Exception {
+            // 연결 설정 후 로직
+            super.afterConnectionEstablished(session);
+          }
+
+          @Override
+          public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+            // 에러 처리 로직
+            System.err.println("WebSocket Error: " + exception.getMessage());
+            super.handleTransportError(session, exception);
+          }
+
+          @Override
+          public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
+            // 연결 종료 후 로직
+            super.afterConnectionClosed(session, closeStatus);
+          }
+        };
+      }
+    });
   }
 }
