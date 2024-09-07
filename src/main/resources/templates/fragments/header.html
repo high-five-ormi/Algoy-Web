@@ -15,6 +15,7 @@
         <a href="/algoy/planner/calender">플래너</a>
     </nav>
     <nav id="header-nav-2">
+        <a th:href="@{/algoy/admin}" sec:authorize="hasRole('ADMIN')" class="admin-btn">Administrator Page</a>
         <div id="search-container">
             <input type="text" placeholder="search" class="search-input">
             <button class="search-button">

@@ -30,6 +30,15 @@
     gap: 30px;
 }
 
+.admin-btn {
+    font-size: 13px;
+    background-color: white;
+    margin-right: -10px;
+    padding: 0px 10px;
+    border-radius: 12px;
+    align-content: center;
+}
+
 #search-container {
     width: 325px;
     height: 40px;
