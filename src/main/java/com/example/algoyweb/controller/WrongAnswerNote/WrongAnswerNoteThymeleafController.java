@@ -66,6 +66,7 @@ public class WrongAnswerNoteThymeleafController {
         Optional<WrongAnswerNoteDTO> note = service.findById(id);
         if (note.isPresent()) {
             model.addAttribute("note", note.get());
+            model.addAttribute("backendUrl", backendUrl);
             return "wronganswernote/edit-wrong-answer-note";
         } else {
             return "error";
