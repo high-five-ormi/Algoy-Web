@@ -205,3 +205,39 @@ main {
   color: #aaa;
   text-align: right;
 }
+
+.note-details {
+  margin: 1px 0;
+}
+
+.note-details span {
+  margin-right: 15px;
+}
+
+.note-dates span {
+  margin-right: 15px;
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+  display: flex;
+  justify-content: center; /* 중앙 정렬 */
+  margin: 20px 0; /* 위아래 여백 */
+}
+
+.pagination a {
+  padding: 0; /* 패딩 제거 */
+  margin: 0 10px; /* 좌우 여백 */
+  color: #000; /* 글자색 검은색 */
+  text-decoration: none; /* 밑줄 없애기 */
+  font-size: 16px; /* 폰트 크기 조정 */
+  line-height: 40px; /* 높이 맞추기 */
+}
+
+.pagination a:hover {
+  color: #007bff; /* hover 시 글자색 변경 */
+}
+
+.pagination a.active {
+  font-weight: bold; /* 활성 페이지 글자 굵게 */
+}

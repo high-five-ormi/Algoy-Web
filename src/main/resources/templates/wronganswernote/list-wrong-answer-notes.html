@@ -44,18 +44,28 @@
       </h2>
       <p th:text="${note.content}"></p>
       <div class="note-details">
-        <span>링크: <a th:href="${note.link}" th:text="${note.link}"></a></span>
-        <span>출제 사이트: <span th:text="${note.quizSite}"></span></span>
-        <span>문제 유형: <span th:text="${note.quizType}"></span></span>
-        <span>문제 레벨: <span th:text="${note.quizLevel}"></span></span>
-        <span>풀이 여부: <span th:text="${note.isSolved != null ? (note.isSolved ? 'Solved' : 'Unsolved') : 'Unsolved'}"></span></span>
+        <span><strong>링크:</strong> <a th:href="${note.link}" th:text="${note.link}" class="note-link"></a></span>
+      </div>
+      <div class="note-details">
+        <span><strong>출제 사이트:</strong> <span th:text="${note.quizSite}"></span></span>
+        <span><strong>문제 유형:</strong> <span th:text="${note.quizType}"></span></span>
+        <span><strong>문제 레벨:</strong> <span th:text="${note.quizLevel}"></span></span>
+        <span><strong>풀이 여부:</strong> <span th:text="${note.isSolved != null ? (note.isSolved ? 'Solved' : 'Unsolved') : 'Unsolved'}"></span></span>
       </div>
       <div class="note-dates">
-        <span>작성일: <time th:text="${#dates.format(note.createdAt, 'yyyy년 MM월 dd일 HH:mm')}"></time></span>
-        <span>수정일: <time th:text="${#dates.format(note.updatedAt, 'yyyy년 MM월 dd일 HH:mm')}"></time></span>
+        <span>작성일: <time th:text="${#temporals.format(note.createdAt, 'yyyy년 MM월 dd일 HH:mm')}"></time></span>
+        <span>수정일: <time th:text="${#temporals.format(note.updatedAt, 'yyyy년 MM월 dd일 HH:mm')}"></time></span>
       </div>
     </div>
   </section>
+
+  <div class="pagination">
+    <a th:href="@{/algoy/commit(page=${currentPage - 1}, size=${size})}" th:if="${currentPage > 0}">&laquo; 이전</a>
+    <span th:each="page : ${#numbers.sequence(0, totalPages - 1)}">
+      <a th:href="@{/algoy/commit(page=${page}, size=${size})}" th:text="${page + 1}" th:class="${page == currentPage ? 'active' : ''}"></a>
+    </span>
+    <a th:href="@{/algoy/commit(page=${currentPage + 1}, size=${size})}" th:if="${currentPage < totalPages - 1}">다음 &raquo;</a>
+  </div>
 </main>
 
 <script src="/js/wronganswernote/list.js"></script>
