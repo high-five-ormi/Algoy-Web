@@ -25,8 +25,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   public void configureMessageBroker(MessageBrokerRegistry config) {
     // "/topic" 접두사를 가진 메시지 브로커를 활성화합니다.
     config.enableSimpleBroker("/topic");
-    // 애플리케이션 목적지 접두사를 "/app"으로 설정합니다.
-    config.setApplicationDestinationPrefixes("/app");
+    // 애플리케이션 목적지 접두사를 "/algoy"로 설정합니다.
+    config.setApplicationDestinationPrefixes("/algoy");
   }
 
   /**
@@ -36,8 +36,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
    */
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
-    // "/chat-websocket" 엔드포인트를 추가하고, 모든 출처에서의 접근을 허용합니다.
-    registry.addEndpoint("/chat-websocket")
+    // "/algoy/chat-websocket" 엔드포인트를 추가하고, 모든 출처에서의 접근을 허용합니다.
+    registry.addEndpoint("/algoy/chat-websocket")
         .setAllowedOriginPatterns("*")
         .withSockJS(); // SockJS를 사용하여 WebSocket을 지원하지 않는 브라우저에서도 동작하도록 합니다.
   }
