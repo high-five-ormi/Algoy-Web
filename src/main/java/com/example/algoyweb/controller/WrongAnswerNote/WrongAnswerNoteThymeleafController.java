@@ -46,6 +46,7 @@ public class WrongAnswerNoteThymeleafController {
     @GetMapping("/create")
     public String createWrongAnswerNoteForm(Model model) {
         model.addAttribute("note", new WrongAnswerNoteDTO());
+        model.addAttribute("backendUrl", backendUrl);
         return "wronganswernote/create-wrong-answer-note";
     }
 
