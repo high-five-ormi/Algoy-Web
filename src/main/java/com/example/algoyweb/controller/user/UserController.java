@@ -68,13 +68,21 @@ public class UserController {
 		return "redirect:/algoy/login"; // 회원가입 성공시 로그인 화면으로 리다이렉트
 	}
 
+	/**
+	 * 회원가입 요청 처리
+	 *
+	 * @author 조아라
+	 * @param username 유효성 검사를 위해 solvedac username
+	 * @return boolean 값을 담은 josn 형식
+	 * solvedAC api를 통해 user 정보가 있는지 체크 후 정보가 존재하면 true반환
+	 */
 	@GetMapping("/validate-username")
 	public ResponseEntity<Map<String, Boolean>> validateUsername(@RequestParam("username") String username) {
-		System.out.println("controller check");
+
 		boolean isValid = userService.isUsernameValid(username);
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("isValid", isValid);
-		System.out.println(response);
+
 		return ResponseEntity.ok(response);
 	}
 
