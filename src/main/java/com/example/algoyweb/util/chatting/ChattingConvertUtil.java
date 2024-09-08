@@ -13,6 +13,7 @@ public class ChattingConvertUtil {
         .user(user)
         .roomId(chattingDto.getRoomId())
         .content(chattingDto.getContent())
+        .createdAt(LocalDateTime.now())
         .build();
   }
 

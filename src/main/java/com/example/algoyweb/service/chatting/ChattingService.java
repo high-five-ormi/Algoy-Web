@@ -11,20 +11,18 @@ import com.example.algoyweb.repository.chatting.ChattingRepository;
 import com.example.algoyweb.repository.chatting.ChattingRoomRepository;
 import com.example.algoyweb.repository.user.UserRepository;
 import com.example.algoyweb.util.chatting.ChattingConvertUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@EnableAsync
 @Transactional
 @RequiredArgsConstructor
 public class ChattingService {
@@ -100,26 +98,29 @@ public class ChattingService {
     chattingRoomRepository.save(room);
   }
 
-  @Async
-  public void saveMessage(ChattingDto chattingDto) {
-    User user = getUserById(chattingDto.getUserId());
-    ChattingRoom room = getChattingRoomByRoomId(chattingDto.getRoomId());
+  public ChattingDto processAndSaveMessage(String content, String roomId, String username) {
+    User user = getUserByUsername(username);
+    ChattingRoom room = getChattingRoomByRoomId(roomId);
 
     if (!room.getParticipants().contains(user.getUserId())) {
       throw new CustomException(ChattingErrorCode.USER_NOT_IN_ROOM);
     }
 
+    ChattingDto chattingDto = ChattingDto.builder()
+        .userId(user.getUserId())
+        .roomId(roomId)
+        .content(content)
+        .nickname(user.getNickname())
+        .build();
+
     Chatting chatting = ChattingConvertUtil.convertToEntity(chattingDto, user);
     chattingRepository.save(chatting);
+
+    return chattingDto;
   }
 
   private User getUserByUsername(String username) {
     return userRepository.findByEmail(username);
-  }
-
-  private User getUserById(Long userId) {
-    return userRepository.findById(userId)
-        .orElseThrow(() -> new CustomException(ChattingErrorCode.USER_NOT_FOUND));
   }
 
   private ChattingRoom getChattingRoomByRoomId(String roomId) {

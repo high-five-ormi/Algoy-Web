@@ -3,9 +3,12 @@ package com.example.algoyweb.controller.chatting;
 import com.example.algoyweb.model.dto.chatting.ChattingDto;
 import com.example.algoyweb.model.dto.chatting.JoinRoomRequest;
 import com.example.algoyweb.model.dto.chatting.LeaveRoomRequest;
+import com.example.algoyweb.model.dto.chatting.MessageRequest;
 import com.example.algoyweb.service.chatting.ChattingService;
 import jakarta.validation.Valid;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -13,15 +16,21 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class ChattingWebSocketController {
 
   private final ChattingService chattingService;
   private final SimpMessagingTemplate messagingTemplate;
 
-  @MessageMapping("/algoy/chat/sendMessage")
-  public void sendMessage(@Valid @Payload ChattingDto chattingDto) {
+  @MessageMapping("/chat/sendMessage")
+  public void sendMessage(@Payload MessageRequest messageRequest, Principal principal) {
+    ChattingDto chattingDto = chattingService.processAndSaveMessage(
+        messageRequest.getContent(),
+        messageRequest.getRoomId(),
+        principal.getName()
+    );
+
     messagingTemplate.convertAndSend("/topic/room/" + chattingDto.getRoomId(), chattingDto);
-    chattingService.saveMessage(chattingDto);
   }
 
   @MessageMapping("/algoy/chat/joinRoom")
