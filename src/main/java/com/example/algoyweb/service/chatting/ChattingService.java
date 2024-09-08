@@ -123,4 +123,22 @@ public class ChattingService {
     return chattingRoomRepository.findByRoomId(roomId)
         .orElseThrow(() -> new CustomException(ChattingErrorCode.ROOM_NOT_FOUND));
   }
+
+  public String joinRoom(String roomId, Long userId) {
+    User user = getUserById(userId);
+    ChattingRoom room = getChattingRoomByRoomId(roomId);
+    if (!room.getParticipants().contains(user.getUserId())) {
+      room.addParticipant(user.getUserId());
+      chattingRoomRepository.save(room);
+    }
+    return user.getNickname();
+  }
+
+  public String leaveRoom(String roomId, Long userId) {
+    User user = getUserById(userId);
+    ChattingRoom room = getChattingRoomByRoomId(roomId);
+    room.removeParticipant(user.getUserId());
+    chattingRoomRepository.save(room);
+    return user.getNickname();
+  }
 }

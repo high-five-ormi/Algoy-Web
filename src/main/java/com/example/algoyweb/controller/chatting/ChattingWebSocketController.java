@@ -21,22 +21,22 @@ public class ChattingWebSocketController {
   @MessageMapping("/algoy/chat/sendMessage")
   public void sendMessage(@Valid @Payload ChattingDto chattingDto) {
     messagingTemplate.convertAndSend("/topic/room/" + chattingDto.getRoomId(), chattingDto);
-    chattingService.processAndSendMessage(chattingDto);
+    chattingService.saveMessage(chattingDto);
   }
 
   @MessageMapping("/algoy/chat/joinRoom")
   public void joinRoom(@Valid @Payload JoinRoomRequest joinRequest) {
-    chattingService.joinRoom(joinRequest.getRoomId(), joinRequest.getUserId());
+    String nickname = chattingService.joinRoom(joinRequest.getRoomId(), joinRequest.getUserId());
     messagingTemplate.convertAndSend(
         "/topic/room/" + joinRequest.getRoomId(),
-        "User " + joinRequest.getUserId() + " joined the room");
+        nickname + " joined the room");
   }
 
   @MessageMapping("/algoy/chat/leaveRoom")
   public void leaveRoom(@Valid @Payload LeaveRoomRequest leaveRequest) {
-    chattingService.leaveRoom(leaveRequest.getRoomId(), leaveRequest.getUserId());
+    String nickname = chattingService.leaveRoom(leaveRequest.getRoomId(), leaveRequest.getUserId());
     messagingTemplate.convertAndSend(
         "/topic/room/" + leaveRequest.getRoomId(),
-        "User " + leaveRequest.getUserId() + " left the room");
+        nickname + " left the room");
   }
 }
