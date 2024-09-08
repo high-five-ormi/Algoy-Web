@@ -62,9 +62,20 @@ public class UserController {
 	 */
 	@PostMapping("/sign")
 	public String signUp(@ModelAttribute("user") UserDto userDto) {
+		System.out.println(userDto.getSolvedacUserName());
 		userService.signUpUser(userDto);
 
 		return "redirect:/algoy/login"; // 회원가입 성공시 로그인 화면으로 리다이렉트
+	}
+
+	@GetMapping("/validate-username")
+	public ResponseEntity<Map<String, Boolean>> validateUsername(@RequestParam("username") String username) {
+		System.out.println("controller check");
+		boolean isValid = userService.isUsernameValid(username);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("isValid", isValid);
+		System.out.println(response);
+		return ResponseEntity.ok(response);
 	}
 
 	/**

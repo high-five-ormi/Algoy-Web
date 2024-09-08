@@ -19,6 +19,7 @@ public class UserDto {
 	private String nickname;
 	private String email;
 	private String password;
+	private String solvedacUserName; // solvedAC username 입력받음
 	private Role role;
 	private Boolean isDeleted;
 	private LocalDateTime createdAt;
@@ -32,6 +33,7 @@ public class UserDto {
 				.nickname(user.getNickname())
 				.email(user.getEmail())
 				.password(user.getPassword())
+				.solvedacUserName(user.getSolvedacUserName()) // solvedac UserName 추가
 				.role(user.getRole())
 				.isDeleted(user.getIsDeleted())
 				.createdAt(user.getCreatedAt())
@@ -47,6 +49,7 @@ public class UserDto {
 				.nickname(this.getNickname())
 				.email(this.getEmail())
 				.password(this.getPassword())
+				.solvedacUserName(this.getSolvedacUserName()) // solvedac UserName 추가
 				.role(this.getRole())
 				.isDeleted(this.getIsDeleted())
 				.createdAt(this.getCreatedAt())
