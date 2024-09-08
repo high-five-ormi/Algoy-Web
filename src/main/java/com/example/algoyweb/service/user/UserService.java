@@ -62,6 +62,7 @@ public class UserService implements UserDetailsService {
 			.role(Role.NORMAL)
 			.isDeleted(false)
 			.createdAt(LocalDateTime.now())
+			.banCount(0)
 			.build();
 
 		// 저장
@@ -314,7 +315,7 @@ public class UserService implements UserDetailsService {
 		LocalDateTime banExpiration; // 정지 만료 시간
 
 		// 정지 횟수에 따라 정지 기간 결정
-		if (banCount == 0) { // 처음 정지면 하루
+		if (banCount == 0) { // 첫 번째 정지면 1일
 			banExpiration = LocalDateTime.now().plusDays(1); // 1일 10시 정지면 2일 10시에 해제
 			// banExpiration = LocalDateTime.now().plusMinutes(1); // 테스트 목적으로 1분 설정
 		} else if (banCount == 1) { // 두 번째 정지는 7일
@@ -323,7 +324,7 @@ public class UserService implements UserDetailsService {
 			banExpiration = LocalDateTime.now().plusDays(15);
 		}
 
-		// 유저의 역할을 BANNED로 업데이트 (정지 상태로 변경)
+		// 유저의 정지
 		user.updateRole(Role.BANNED);
 		// 유저의 정지 횟수를 1 증가시킴
 		user.increaseBanCount();
