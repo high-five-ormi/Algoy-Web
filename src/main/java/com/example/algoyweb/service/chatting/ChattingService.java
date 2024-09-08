@@ -14,6 +14,7 @@ import com.example.algoyweb.util.chatting.ChattingConvertUtil;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,10 +40,10 @@ public class ChattingService {
   }
 
   @Transactional(readOnly = true)
-  public Page<ChattingRoomDto> getRoomsForUser(String username, Pageable pageable) {
+  public List<ChattingRoomDto> getUserRooms(String username) {
     User user = getUserByUsername(username);
-    Page<ChattingRoom> rooms = chattingRoomRepository.findByParticipantsContaining(user.getUserId(), pageable);
-    return rooms.map(ChattingConvertUtil::convertToDto);
+    List<ChattingRoom> rooms = chattingRoomRepository.findByParticipantsContaining(user.getUserId());
+    return rooms.stream().map(ChattingConvertUtil::convertToDto).collect(Collectors.toList());
   }
 
   @Transactional(readOnly = true)
@@ -66,23 +67,25 @@ public class ChattingService {
     return ChattingConvertUtil.convertToDto(savedRoom);
   }
 
-  public void joinRoom(String roomId, String username) {
-    User user = getUserByUsername(username);
+  public String joinRoom(String roomId, Long userId) {
+    User user = getUserById(userId);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
     if (!room.getParticipants().contains(user.getUserId())) {
       room.addParticipant(user.getUserId());
       chattingRoomRepository.save(room);
     }
+    return user.getNickname();
   }
 
-  public void leaveRoom(String roomId, String username) {
-    User user = getUserByUsername(username);
+  public String leaveRoom(String roomId, Long userId) {
+    User user = getUserById(userId);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
     room.removeParticipant(user.getUserId());
     chattingRoomRepository.save(room);
+    return user.getNickname();
   }
 
-  public void inviteToRoom(String roomId, String inviterUsername, Long inviteeId) {
+  public void inviteUserByNickname(String roomId, String inviterUsername, String inviteeNickname) {
     User inviter = getUserByUsername(inviterUsername);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
 
@@ -90,10 +93,13 @@ public class ChattingService {
       throw new CustomException(ChattingErrorCode.NOT_ROOM_OWNER);
     }
 
-    User invitee = userRepository.findById(inviteeId)
-        .orElseThrow(() -> new CustomException(ChattingErrorCode.USER_NOT_FOUND));
+    User invitee = userRepository.findByNickname(inviteeNickname);
 
-    room.addParticipant(inviteeId);
+    if (room.getParticipants().contains(invitee.getUserId())) {
+      throw new CustomException(ChattingErrorCode.USER_ALREADY_IN_ROOM);
+    }
+
+    room.addParticipant(invitee.getUserId());
     chattingRoomRepository.save(room);
   }
 
@@ -122,23 +128,5 @@ public class ChattingService {
   private ChattingRoom getChattingRoomByRoomId(String roomId) {
     return chattingRoomRepository.findByRoomId(roomId)
         .orElseThrow(() -> new CustomException(ChattingErrorCode.ROOM_NOT_FOUND));
-  }
-
-  public String joinRoom(String roomId, Long userId) {
-    User user = getUserById(userId);
-    ChattingRoom room = getChattingRoomByRoomId(roomId);
-    if (!room.getParticipants().contains(user.getUserId())) {
-      room.addParticipant(user.getUserId());
-      chattingRoomRepository.save(room);
-    }
-    return user.getNickname();
-  }
-
-  public String leaveRoom(String roomId, Long userId) {
-    User user = getUserById(userId);
-    ChattingRoom room = getChattingRoomByRoomId(roomId);
-    room.removeParticipant(user.getUserId());
-    chattingRoomRepository.save(room);
-    return user.getNickname();
   }
 }
