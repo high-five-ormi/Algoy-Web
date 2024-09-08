@@ -99,24 +99,29 @@ public class ChattingService {
   }
 
   public ChattingDto processAndSaveMessage(String content, String roomId, String username) {
-    User user = getUserByUsername(username);
-    ChattingRoom room = getChattingRoomByRoomId(roomId);
+    try {
+      User user = getUserByUsername(username);
+      ChattingRoom room = getChattingRoomByRoomId(roomId);
 
-    if (!room.getParticipants().contains(user.getUserId())) {
-      throw new CustomException(ChattingErrorCode.USER_NOT_IN_ROOM);
+      if (!room.getParticipants().contains(user.getUserId())) {
+        throw new CustomException(ChattingErrorCode.USER_NOT_IN_ROOM);
+      }
+
+      ChattingDto chattingDto = ChattingDto.builder()
+          .userId(user.getUserId())
+          .roomId(roomId)
+          .content(content)
+          .nickname(user.getNickname())
+          .createdAt(LocalDateTime.now())
+          .build();
+
+      Chatting chatting = ChattingConvertUtil.convertToEntity(chattingDto, user);
+      chattingRepository.save(chatting);
+
+      return chattingDto;
+    } catch (Exception e) {
+      throw new CustomException(ChattingErrorCode.MESSAGE_PROCESSING_ERROR);
     }
-
-    ChattingDto chattingDto = ChattingDto.builder()
-        .userId(user.getUserId())
-        .roomId(roomId)
-        .content(content)
-        .nickname(user.getNickname())
-        .build();
-
-    Chatting chatting = ChattingConvertUtil.convertToEntity(chattingDto, user);
-    chattingRepository.save(chatting);
-
-    return chattingDto;
   }
 
   private User getUserByUsername(String username) {

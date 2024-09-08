@@ -13,7 +13,8 @@ public class ChattingConvertUtil {
         .user(user)
         .roomId(chattingDto.getRoomId())
         .content(chattingDto.getContent())
-        .createdAt(LocalDateTime.now())
+        .nickname(chattingDto.getNickname())
+        .createdAt(chattingDto.getCreatedAt() != null ? chattingDto.getCreatedAt() : LocalDateTime.now())
         .build();
   }
 
@@ -23,6 +24,7 @@ public class ChattingConvertUtil {
         .roomId(chatting.getRoomId())
         .content(chatting.getContent())
         .nickname(chatting.getNickname())
+        .createdAt(chatting.getCreatedAt() != null ? chatting.getCreatedAt() : LocalDateTime.now())
         .build();
   }
 

@@ -2,6 +2,7 @@ package com.example.algoyweb.model.dto.chatting;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,4 +21,6 @@ public class ChattingDto {
   private String content;
 
   private String nickname;
+
+  private LocalDateTime createdAt;
 }
