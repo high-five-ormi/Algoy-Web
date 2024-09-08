@@ -62,9 +62,12 @@ public class ChattingController {
 
   @PostMapping("/room/{roomId}/invite-by-nickname")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
-  public ResponseEntity<Void> inviteToRoomByNickname(@PathVariable String roomId, @RequestBody String inviteeNickname, Authentication authentication) {
+  public ResponseEntity<Void> inviteToRoomByNickname(
+      @PathVariable String roomId,
+      @RequestBody InviteRequest inviteRequest,
+      Authentication authentication) {
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-    chattingService.inviteUserByNickname(roomId, userDetails.getUsername(), inviteeNickname);
+    chattingService.inviteUserByNickname(roomId, userDetails.getUsername(), inviteRequest.getNickname());
     return ResponseEntity.ok().build();
   }
 }

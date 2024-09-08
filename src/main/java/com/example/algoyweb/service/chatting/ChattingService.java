@@ -88,6 +88,9 @@ public class ChattingService {
     }
 
     User invitee = userRepository.findByNickname(inviteeNickname);
+    if (invitee == null) {
+      throw new CustomException(ChattingErrorCode.USER_NOT_FOUND);
+    }
 
     if (room.getParticipants().contains(invitee.getUserId())) {
       throw new CustomException(ChattingErrorCode.USER_ALREADY_IN_ROOM);
