@@ -3,20 +3,17 @@ package com.example.algoyweb.service.WrongAnswerNote;
 import com.example.algoyweb.model.entity.WrongAnswerNote.Code;
 import com.example.algoyweb.repository.WrongAnswerNote.CodeRepository;
 import com.example.algoyweb.repository.WrongAnswerNote.WrongAnswerNoteRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CodeService {
     private final CodeRepository codeRepository;
     private final WrongAnswerNoteRepository wrongAnswerNoteRepository;
-
-    public CodeService(CodeRepository codeRepository, WrongAnswerNoteRepository wrongAnswerNoteRepository) {
-        this.codeRepository = codeRepository;
-        this.wrongAnswerNoteRepository = wrongAnswerNoteRepository;
-    }
 
     // 특정 오답노트의 코드 가져오기
     public List<Code> getCodesByWrongAnswerNoteId(Long wrongAnswerNoteId) {
@@ -30,13 +27,12 @@ public class CodeService {
 
     // 코드 수정
     public Code updateCode(Long codeId, Code updatedCode) {
-        Optional<Code> existingCodeOpt = codeRepository.findById(codeId);
-        if (existingCodeOpt.isPresent()) {
-            Code existingCode = existingCodeOpt.get();
-            existingCode.setCodeContent(updatedCode.getCodeContent());
-            return codeRepository.save(existingCode);
-        }
-        return null;  // 코드가 존재하지 않으면 null 반환
+        return codeRepository.findById(codeId)
+            .map(existingCode -> {
+                existingCode.setCodeContent(updatedCode.getCodeContent());
+                return codeRepository.save(existingCode);
+            })
+            .orElseThrow(() -> new IllegalArgumentException("코드를 찾을 수 없습니다: " + codeId));
     }
 
     // 코드 삭제

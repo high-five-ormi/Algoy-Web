@@ -2,6 +2,7 @@ package com.example.algoyweb.util.WrongAnswerNote;
 
 import com.example.algoyweb.model.dto.WrongAnswerNote.WrongAnswerNoteDTO;
 import com.example.algoyweb.model.entity.WrongAnswerNote.WrongAnswerNote;
+import com.example.algoyweb.model.entity.WrongAnswerNote.Image;  // Image 클래스 import 추가
 
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class WrongAnswerNoteConvertUtil {
 
         if (entity.getImages() != null) {
             dto.setImageUrls(entity.getImages().stream()
-                .map(image -> image.getFilePath())
+                .map(Image::getImgUrl)
                 .collect(Collectors.toList()));
         }
 

@@ -1,6 +1,8 @@
 package com.example.algoyweb.controller.WrongAnswerNote;
 
+import com.example.algoyweb.model.dto.WrongAnswerNote.ImageDTO;
 import com.example.algoyweb.model.dto.WrongAnswerNote.WrongAnswerNoteDTO;
+import com.example.algoyweb.service.WrongAnswerNote.ImageService;
 import com.example.algoyweb.service.WrongAnswerNote.WrongAnswerNoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,7 @@ import java.util.Optional;
 public class WrongAnswerNoteRestController {
 
     private final WrongAnswerNoteService service;
+    private final ImageService imageService;
 
     // 페이지네이션을 지원하는 오답노트 목록 조회
     @GetMapping
@@ -28,34 +31,42 @@ public class WrongAnswerNoteRestController {
         return ResponseEntity.ok(notes);
     }
 
-    // ID로 오답노트 조회 (기존)
+    // ID로 오답노트 조회
     @GetMapping("/{id}")
     public ResponseEntity<WrongAnswerNoteDTO> getWrongAnswerNoteById(@PathVariable Long id) {
         Optional<WrongAnswerNoteDTO> note = service.findById(id);
         return note.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // 오답노트 생성 (기존)
+    // 오답노트 생성
     @PostMapping
-    public ResponseEntity<WrongAnswerNoteDTO> createWrongAnswerNote(
-        @RequestPart("note") WrongAnswerNoteDTO dto,
-        @RequestPart(value = "images", required = false) List<MultipartFile> images) throws IOException {
-
-        WrongAnswerNoteDTO savedNote = service.save(dto, images);
+    public ResponseEntity<WrongAnswerNoteDTO> createWrongAnswerNote(@RequestBody WrongAnswerNoteDTO dto) {
+        WrongAnswerNoteDTO savedNote = service.save(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedNote);
     }
 
-    // 오답노트 수정 (기존)
+    // 오답노트 수정
     @PutMapping("/{id}")
-    public ResponseEntity<WrongAnswerNoteDTO> updateWrongAnswerNote(@PathVariable Long id,
-        @RequestPart("note") WrongAnswerNoteDTO dto,
-        @RequestPart(value = "images", required = false) List<MultipartFile> images) throws IOException {
-
-        WrongAnswerNoteDTO updatedNote = service.update(id, dto, images);
+    public ResponseEntity<WrongAnswerNoteDTO> updateWrongAnswerNote(@PathVariable Long id, @RequestBody WrongAnswerNoteDTO dto) {
+        WrongAnswerNoteDTO updatedNote = service.update(id, dto);
         return ResponseEntity.ok(updatedNote);
     }
 
-    // 오답노트 삭제 (기존)
+    // 이미지 URL을 오답노트와 연결
+    @PostMapping("/{id}/images")
+    public ResponseEntity<Void> linkImagesToNote(@PathVariable Long id, @RequestBody List<String> imageUrls) {
+        service.linkImagesToNote(id, imageUrls);
+        return ResponseEntity.ok().build();
+    }
+
+    // 이미지 업로드
+    @PostMapping("/upload-image")
+    public ResponseEntity<ImageDTO> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
+        ImageDTO imageDTO = imageService.uploadImage(file);
+        return ResponseEntity.ok(imageDTO);
+    }
+
+    // 오답노트 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteWrongAnswerNote(@PathVariable Long id) {
         service.deleteById(id);

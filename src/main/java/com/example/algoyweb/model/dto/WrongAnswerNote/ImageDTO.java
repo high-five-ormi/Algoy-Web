@@ -12,16 +12,16 @@ import java.time.LocalDateTime;
 @Builder
 public class ImageDTO {
     private Long id;
+    private String originFileName;
     private String imgUrl;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
     public static ImageDTO fromImage(Image image) {
         return ImageDTO.builder()
             .id(image.getId())
+            .originFileName(image.getOriginFileName())
             .imgUrl(image.getImgUrl())
             .createdAt(image.getCreatedAt())
-            .updatedAt(image.getUpdatedAt())
             .build();
     }
 }
