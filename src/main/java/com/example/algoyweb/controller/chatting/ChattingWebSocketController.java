@@ -20,8 +20,8 @@ public class ChattingWebSocketController {
 
   @MessageMapping("/algoy/chat/sendMessage")
   public void sendMessage(@Valid @Payload ChattingDto chattingDto) {
-    ChattingDto savedMessage = chattingService.saveAndSendMessage(chattingDto);
-    messagingTemplate.convertAndSend("/topic/room/" + chattingDto.getRoomId(), savedMessage);
+    messagingTemplate.convertAndSend("/topic/room/" + chattingDto.getRoomId(), chattingDto);
+    chattingService.processAndSendMessage(chattingDto);
   }
 
   @MessageMapping("/algoy/chat/joinRoom")

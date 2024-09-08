@@ -16,10 +16,13 @@ import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@EnableAsync
 @Transactional
 @RequiredArgsConstructor
 public class ChattingService {
@@ -67,7 +70,8 @@ public class ChattingService {
     chattingRoomRepository.save(room);
   }
 
-  public ChattingDto saveAndSendMessage(ChattingDto chattingDto) {
+  @Async
+  public void saveMessageAsync(ChattingDto chattingDto) {
     User user =
         userRepository
             .findById(chattingDto.getUserId())
@@ -83,7 +87,10 @@ public class ChattingService {
     }
 
     Chatting chatting = ChattingConvertUtil.convertToEntity(chattingDto, user);
-    Chatting savedChatting = chattingRepository.save(chatting);
-    return ChattingConvertUtil.convertToDto(savedChatting);
+    chattingRepository.save(chatting);
+  }
+
+  public void processAndSendMessage(ChattingDto chattingDto) {
+    saveMessageAsync(chattingDto);
   }
 }
