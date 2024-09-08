@@ -31,20 +31,21 @@ function loadRooms() {
   .catch(error => console.error('Error loading rooms:', error));
 }
 
-function showCreateRoomView() {
-  document.getElementById('create-room-view').classList.remove('hidden');
-  document.getElementById('chat-room-view').classList.add('hidden');
+function showView(viewId) {
+  ['room-list-view', 'create-room-view', 'chat-room-view'].forEach(id => {
+    document.getElementById(id).classList.add('hidden');
+  });
+  document.getElementById(viewId).classList.remove('hidden');
 }
 
-function showRoomListView() {
-  document.getElementById('create-room-view').classList.add('hidden');
-  document.getElementById('chat-room-view').classList.add('hidden');
-  if (currentRoomId) {
-    stompClient.unsubscribe(currentRoomId);
-    currentRoomId = null;
-  }
-  loadRooms();
-}
+document.getElementById('create-room-btn').onclick = () => showView('create-room-view');
+document.querySelectorAll('.back-btn').forEach(btn => {
+  btn.onclick = () => showView('room-list-view');
+});
+
+document.getElementById('create-room-submit').onclick = createRoom;
+document.getElementById('leave-room-btn').onclick = leaveRoom;
+document.getElementById('send-button').onclick = sendMessage;
 
 function createRoom() {
   const roomName = document.getElementById('room-name').value;
@@ -82,23 +83,21 @@ function joinRoom(roomId) {
   fetch(`/algoy/api/chat/room/${roomId}/join`, { method: 'POST' })
   .then(() => {
     currentRoomId = roomId;
-    document.getElementById('create-room-view').classList.add('hidden');
-    document.getElementById('chat-room-view').classList.remove('hidden');
+    showView('chat-room-view');
     document.getElementById('room-name-header').textContent = `Room: ${roomId}`;
     loadMessages(roomId);
     stompClient.subscribe(`/topic/room/${roomId}`, onMessageReceived, {id: currentRoomId});
-    stompClient.send("/algoy/chat/joinRoom", {}, JSON.stringify({roomId: roomId}));
   })
   .catch(error => console.error('Error joining room:', error));
 }
 
 function leaveRoom() {
   if (currentRoomId) {
-    stompClient.send("/algoy/chat/leaveRoom", {}, JSON.stringify({roomId: currentRoomId}));
     fetch(`/algoy/api/chat/room/${currentRoomId}/leave`, { method: 'POST' })
     .then(() => {
       stompClient.unsubscribe(currentRoomId);
-      showRoomListView();
+      showView('room-list-view');
+      currentRoomId = null;
     })
     .catch(error => console.error('Error leaving room:', error));
   }
@@ -108,7 +107,7 @@ function loadMessages(roomId) {
   fetch(`/algoy/api/chat/room/${roomId}/messages`)
   .then(response => response.json())
   .then(data => {
-    const chatMessages = document.getElementById('chat-messages');
+    const chatMessages = document.getElementById('messages');
     chatMessages.innerHTML = '';
     data.content.forEach(message => {
       displayMessage(message);
@@ -118,20 +117,18 @@ function loadMessages(roomId) {
 }
 
 function sendMessage() {
-  const messageContent = document.getElementById('message-input').value;
+  const messageContent = document.getElementById('user-input').value;
   if (messageContent && stompClient && currentRoomId) {
     const chatMessage = {
       roomId: currentRoomId,
       content: messageContent,
     };
-    console.log("Sending message:", chatMessage);
     stompClient.send("/algoy/chat/sendMessage", {}, JSON.stringify(chatMessage));
-    document.getElementById('message-input').value = '';
+    document.getElementById('user-input').value = '';
   }
 }
 
 function onMessageReceived(payload) {
-  console.log("Received message:", payload);
   const message = JSON.parse(payload.body);
   displayMessage(message);
 }
@@ -144,21 +141,19 @@ function displayMessage(message) {
   } else {
     messageElement.classList.add('received');
   }
-  const time = new Date(message.createdAt).toLocaleString(); // 날짜 형식 수정
+  const time = new Date(message.createdAt).toLocaleString();
   messageElement.innerHTML = `
-        <div class="message-content">
-            <strong>${message.nickname}</strong><br>
-            ${message.content}
-        </div>
+        <strong>${message.nickname}</strong><br>
+        ${message.content}<br>
         <small>${time}</small>
     `;
-  const chatMessages = document.getElementById('chat-messages');
-  chatMessages.appendChild(messageElement);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+  const messagesContainer = document.getElementById('messages');
+  messagesContainer.appendChild(messageElement);
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
 // 엔터 키로 메시지 전송
-document.getElementById('message-input').addEventListener('keypress', function(e) {
+document.getElementById('user-input').addEventListener('keypress', function(e) {
   if (e.key === 'Enter') {
     sendMessage();
   }
