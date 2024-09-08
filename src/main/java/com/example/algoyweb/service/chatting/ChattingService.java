@@ -13,6 +13,7 @@ import com.example.algoyweb.repository.user.UserRepository;
 import com.example.algoyweb.util.chatting.ChattingConvertUtil;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,24 +38,25 @@ public class ChattingService {
     return messages.map(ChattingConvertUtil::convertToDto);
   }
 
-  public ChattingRoomDto createRoom(String roomName) {
-    ChattingRoom chattingRoom =
-        ChattingRoom.builder()
-            .roomId("room-" + System.currentTimeMillis())
-            .name(roomName)
-            .participants(new ArrayList<>())
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
-            .build();
+  public ChattingRoomDto createRoom(String roomName, Long ownerId) {
+    User owner = userRepository.findById(ownerId)
+        .orElseThrow(() -> new CustomException(ChattingErrorCode.USER_NOT_FOUND));
+
+    ChattingRoom chattingRoom = ChattingRoom.builder()
+        .roomId("room-" + System.currentTimeMillis())
+        .name(roomName)
+        .owner(owner)
+        .participants(new ArrayList<>(List.of(ownerId)))
+        .createdAt(LocalDateTime.now())
+        .updatedAt(LocalDateTime.now())
+        .build();
     ChattingRoom savedRoom = chattingRoomRepository.save(chattingRoom);
     return ChattingConvertUtil.convertToDto(savedRoom);
   }
 
   public void joinRoom(String roomId, Long userId) {
-    ChattingRoom room =
-        chattingRoomRepository
-            .findByRoomId(roomId)
-            .orElseThrow(() -> new CustomException(ChattingErrorCode.ROOM_NOT_FOUND));
+    ChattingRoom room = chattingRoomRepository.findByRoomId(roomId)
+        .orElseThrow(() -> new CustomException(ChattingErrorCode.ROOM_NOT_FOUND));
     if (!room.getParticipants().contains(userId)) {
       room.addParticipant(userId);
       chattingRoomRepository.save(room);
@@ -62,25 +64,34 @@ public class ChattingService {
   }
 
   public void leaveRoom(String roomId, Long userId) {
-    ChattingRoom room =
-        chattingRoomRepository
-            .findByRoomId(roomId)
-            .orElseThrow(() -> new CustomException(ChattingErrorCode.ROOM_NOT_FOUND));
+    ChattingRoom room = chattingRoomRepository.findByRoomId(roomId)
+        .orElseThrow(() -> new CustomException(ChattingErrorCode.ROOM_NOT_FOUND));
     room.removeParticipant(userId);
+    chattingRoomRepository.save(room);
+  }
+
+  public void inviteToRoom(String roomId, Long inviterId, Long inviteeId) {
+    ChattingRoom room = chattingRoomRepository.findByRoomId(roomId)
+        .orElseThrow(() -> new CustomException(ChattingErrorCode.ROOM_NOT_FOUND));
+
+    if (!room.getOwner().getUserId().equals(inviterId)) {
+      throw new CustomException(ChattingErrorCode.NOT_ROOM_OWNER);
+    }
+
+    User invitee = userRepository.findById(inviteeId)
+        .orElseThrow(() -> new CustomException(ChattingErrorCode.USER_NOT_FOUND));
+
+    room.addParticipant(inviteeId);
     chattingRoomRepository.save(room);
   }
 
   @Async
   public void saveMessageAsync(ChattingDto chattingDto) {
-    User user =
-        userRepository
-            .findById(chattingDto.getUserId())
-            .orElseThrow(() -> new CustomException(ChattingErrorCode.USER_NOT_FOUND));
+    User user = userRepository.findById(chattingDto.getUserId())
+        .orElseThrow(() -> new CustomException(ChattingErrorCode.USER_NOT_FOUND));
 
-    ChattingRoom room =
-        chattingRoomRepository
-            .findByRoomId(chattingDto.getRoomId())
-            .orElseThrow(() -> new CustomException(ChattingErrorCode.ROOM_NOT_FOUND));
+    ChattingRoom room = chattingRoomRepository.findByRoomId(chattingDto.getRoomId())
+        .orElseThrow(() -> new CustomException(ChattingErrorCode.ROOM_NOT_FOUND));
 
     if (!room.getParticipants().contains(user.getUserId())) {
       throw new CustomException(ChattingErrorCode.USER_NOT_IN_ROOM);

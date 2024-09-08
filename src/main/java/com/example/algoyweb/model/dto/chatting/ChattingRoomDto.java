@@ -24,6 +24,8 @@ public class ChattingRoomDto {
   @Size(max = 50, message = "채팅방 이름은 50자를 초과할 수 없습니다.")
   private String name;
 
+  private Long ownerId;
+
   private List<Long> participants;
 
   private LocalDateTime createdAt;

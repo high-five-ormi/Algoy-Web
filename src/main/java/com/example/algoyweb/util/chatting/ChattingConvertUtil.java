@@ -21,6 +21,7 @@ public class ChattingConvertUtil {
         .userId(chatting.getUser().getUserId())
         .roomId(chatting.getRoomId())
         .content(chatting.getContent())
+        .nickname(chatting.getNickname())
         .build();
   }
 
