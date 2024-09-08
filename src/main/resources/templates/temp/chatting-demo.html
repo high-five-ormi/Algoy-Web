@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Application</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+    }
+    #app {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 800px;
+      margin: auto;
+      border: 1px solid #ccc;
+    }
+    .header {
+      background-color: #f1f1f1;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .content {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 10px;
+    }
+    .room-list, .chat-messages {
+      list-style-type: none;
+      padding: 0;
+    }
+    .room-list li, .chat-messages li {
+      margin-bottom: 10px;
+      padding: 5px;
+      border-bottom: 1px solid #eee;
+    }
+    .input-area {
+      display: flex;
+      padding: 10px;
+    }
+    .input-area input {
+      flex-grow: 1;
+      margin-right: 10px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div id="room-list-view">
+    <div class="header">
+      <h2>Chat Rooms</h2>
+      <button onclick="showCreateRoomView()">Create Room</button>
+    </div>
+    <div class="content">
+      <ul class="room-list" id="room-list"></ul>
+    </div>
+  </div>
+
+  <div id="create-room-view" class="hidden">
+    <div class="header">
+      <h2>Create Room</h2>
+      <button onclick="showRoomListView()">Back</button>
+    </div>
+    <div class="content">
+      <input type="text" id="room-name" placeholder="Room Name">
+      <input type="text" id="invite-users" placeholder="Invite Users (comma-separated nicknames)">
+      <button onclick="createRoom()">Create</button>
+    </div>
+  </div>
+
+  <div id="chat-room-view" class="hidden">
+    <div class="header">
+      <button onclick="showRoomListView()">Back</button>
+      <h2 id="room-name-header"></h2>
+      <button onclick="leaveRoom()">Leave Room</button>
+    </div>
+    <div class="content">
+      <ul class="chat-messages" id="chat-messages"></ul>
+    </div>
+    <div class="input-area">
+      <input type="text" id="message-input" placeholder="Type a message...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let stompClient = null;
+  let currentRoomId = null;
+
+  function connect() {
+    const socket = new SockJS('/algoy/chat-websocket');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function() {
+      loadRooms();
+    }, function(error) {
+      console.error('STOMP error:', error);
+    });
+  }
+
+  function loadRooms() {
+    fetch('/algoy/api/chat/rooms')
+    .then(response => response.json())
+    .then(rooms => {
+      const roomList = document.getElementById('room-list');
+      roomList.innerHTML = '';
+      rooms.forEach(room => {
+        const li = document.createElement('li');
+        li.textContent = room.name;
+        li.onclick = () => joinRoom(room.roomId);
+        roomList.appendChild(li);
+      });
+    });
+  }
+
+  function showCreateRoomView() {
+    document.getElementById('room-list-view').classList.add('hidden');
+    document.getElementById('create-room-view').classList.remove('hidden');
+  }
+
+  function showRoomListView() {
+    document.getElementById('room-list-view').classList.remove('hidden');
+    document.getElementById('create-room-view').classList.add('hidden');
+    document.getElementById('chat-room-view').classList.add('hidden');
+    if (currentRoomId) {
+      stompClient.unsubscribe(currentRoomId);
+      currentRoomId = null;
+    }
+    loadRooms();
+  }
+
+  function createRoom() {
+    const roomName = document.getElementById('room-name').value;
+    const inviteUsers = document.getElementById('invite-users').value.split(',').map(s => s.trim());
+
+    fetch('/algoy/api/chat/room', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: roomName })
+    })
+    .then(response => response.json())
+    .then(room => {
+      inviteUsers.forEach(nickname => {
+        fetch(`/algoy/api/chat/room/${room.roomId}/invite-by-nickname`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nickname: nickname })
+        }).then(response => {
+          if (!response.ok) {
+            console.error('Failed to invite user:', nickname);
+          }
+        }).catch(error => {
+          console.error('Error inviting user:', error);
+        });
+      });
+      joinRoom(room.roomId);
+    });
+  }
+
+  function joinRoom(roomId) {
+    fetch(`/algoy/api/chat/room/${roomId}/join`, { method: 'POST' })
+    .then(() => {
+      currentRoomId = roomId;
+      document.getElementById('room-list-view').classList.add('hidden');
+      document.getElementById('chat-room-view').classList.remove('hidden');
+      document.getElementById('room-name-header').textContent = `Room: ${roomId}`;
+      loadMessages(roomId);
+      stompClient.subscribe(`/topic/room/${roomId}`, onMessageReceived);
+      stompClient.send("/algoy/chat/joinRoom", {}, JSON.stringify({roomId: roomId}));
+    });
+  }
+
+  function leaveRoom() {
+    if (currentRoomId) {
+      stompClient.send("/algoy/chat/leaveRoom", {}, JSON.stringify({roomId: currentRoomId}));
+      fetch(`/algoy/api/chat/room/${currentRoomId}/leave`, { method: 'POST' })
+      .then(() => {
+        stompClient.unsubscribe(currentRoomId);
+        showRoomListView();
+      });
+    }
+  }
+
+  function loadMessages(roomId) {
+    fetch(`/algoy/api/chat/room/${roomId}/messages`)
+    .then(response => response.json())
+    .then(data => {
+      const chatMessages = document.getElementById('chat-messages');
+      chatMessages.innerHTML = '';
+      data.content.forEach(message => {
+        displayMessage(message);
+      });
+    });
+  }
+
+  function sendMessage() {
+    const messageContent = document.getElementById('message-input').value;
+    if (messageContent && stompClient && currentRoomId) {
+      const chatMessage = {
+        roomId: currentRoomId,
+        content: messageContent,
+      };
+      stompClient.send("/algoy/chat/sendMessage", {}, JSON.stringify(chatMessage));
+      document.getElementById('message-input').value = '';
+    }
+  }
+
+  function onMessageReceived(payload) {
+    const message = JSON.parse(payload.body);
+    displayMessage(message);
+  }
+
+  function displayMessage(message) {
+    const messageElement = document.createElement('li');
+    const time = new Date(message.createdAt).toLocaleTimeString();
+    messageElement.innerHTML = `<strong>${message.nickname}</strong> (${time}): ${message.content}`;
+    document.getElementById('chat-messages').appendChild(messageElement);
+  }
+
+  window.onload = connect;
+</script>
+</body>
+</html>
