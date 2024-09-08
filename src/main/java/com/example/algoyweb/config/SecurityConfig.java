@@ -49,6 +49,7 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 				.requestMatchers("/algoy/home", "/algoy/home?continue").permitAll()
 				.requestMatchers("/algoy/login").permitAll()
 				.requestMatchers("/algoy/sign").permitAll()
+				.requestMatchers("/algoy/validate-username").permitAll() // solvedAC username 유효성 검사를 위해 추가 by 조아라
 				.requestMatchers("/algoy/find-password").permitAll()
 				.requestMatchers("/algoy/set-password").permitAll()
 				.requestMatchers("/algoy/check-email-duplicate").permitAll()

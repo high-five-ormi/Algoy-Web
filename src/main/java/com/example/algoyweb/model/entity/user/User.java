@@ -39,6 +39,9 @@ public class User {
 	@Column(name = "password", nullable = false)
 	private String password;
 
+    @Column(name= "solvedac_username", nullable = true) // solvedAC username의 기본값은 null이다.
+    private String solvedacUserName;
+
 	@Enumerated(EnumType.STRING) // Enum 값을 문자열로 저장
 	@Column(name = "role", nullable = false)
 	private Role role;
@@ -120,6 +123,9 @@ public class User {
 		if (encodedPassword != null) {
 			this.password = encodedPassword;
 		}
+        if (userDto.getSolvedacUserName() != null) {  // solvedacUsername 업데이트 추가
+          this.solvedacUserName = userDto.getSolvedacUserName();
+        }
 		if (userDto.getIsDeleted() != null) {
 			this.isDeleted = userDto.getIsDeleted();
 		}

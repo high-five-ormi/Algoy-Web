@@ -17,6 +17,7 @@ public class UserDto {
 	private String nickname;
 	private String email;
 	private String password;
+	private String solvedacUserName; // solvedAC username 입력받음
 	private Role role;
 	private Boolean isDeleted;
 	private LocalDateTime createdAt;
@@ -24,4 +25,5 @@ public class UserDto {
 	private LocalDateTime deletedAt;
 	private Integer banCount;
 	private LocalDateTime banExpiration;
+
 }

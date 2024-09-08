@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -33,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.repository.user.UserRepository;
+import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @Service
@@ -51,14 +53,29 @@ public class UserService implements UserDetailsService {
 	 * @author yuseok
 	 * @param userDto 회원가입 정보를 담고 있는 DTO
 	 */
+	/**
+	 * 회원가입 처리
+	 *
+	 * @author 조아라
+	 * solvedAC username db 저장하는 로직 추가
+	 */
 	@Transactional
 	public void signUpUser(UserDto userDto) {
+		// SolvedAC username 유효성 확인 되면 db에 저장하기 위한 기능
+		if (userDto.getSolvedacUserName() != null && !userDto.getSolvedacUserName().isEmpty()) {
+			boolean isValid = isUsernameValid(userDto.getSolvedacUserName());
+			if (!isValid) {
+				throw new CustomException(UserErrorCode.INVALID_SOLVEDAC_USERNAME);
+			}
+		}
+
 		// User 엔티티 생성
 		User user = User.builder()
 			.username(userDto.getUsername())
 			.nickname(userDto.getNickname())
 			.email(userDto.getEmail())
 			.password(passwordEncoder.encode(userDto.getPassword())) // 비밀번호 암호화
+				.solvedacUserName(userDto.getSolvedacUserName())	//solvedAC username 저장(유효성을 확인하는 로직 필요)
 			.role(Role.NORMAL)
 			.isDeleted(false)
 			.createdAt(LocalDateTime.now())
@@ -346,6 +363,34 @@ public class UserService implements UserDetailsService {
 		}
 	}
 
+
+	/**
+	 * SolvedAC username 유효성 확인
+	 *
+	 * @author 조아라
+	 * @return username의 유효성을 체크하는 boolean
+	 * js에서 구현했을때 CORS에러로 인해 서버에서 로직을 처리함.
+	 */
+
+	public boolean isUsernameValid(String solvedacUsername){
+		String SOLVEDAC_USERNAME_VALID = "https://solved.ac/api/v3/user/show?handle=";
+
+		try{
+			RestTemplate restTemplate = new RestTemplate();
+			String apiUrl = SOLVEDAC_USERNAME_VALID + solvedacUsername;
+
+			ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
+			// username이 존재하면 true 반환
+			return response.getStatusCode().is2xxSuccessful();
+
+		}catch (Exception e) {
+			// 존재하지 않는다면 false 반환
+			return false;
+		}
+
+	}
+
+
 	@Scheduled(fixedRate = 60000) // 이전 작업 시작 후 1분마다 실행
 	// @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
 	public void unbanExpiredUsers() {
@@ -370,4 +415,5 @@ public class UserService implements UserDetailsService {
 			log.error("Error occurred during unban process", e);
 		}
 	}
+
 }

@@ -36,6 +36,15 @@
     </div>
     <p id="nickname-message" class="view-message"></p>
 
+<!--solvedAC username을 입력하는 필드추가 (유효성 검사도 한다)-->
+    <label for="solvedacUsername">solvedAC Username (선택)</label>
+    <div class="input-group">
+        <input type="text" id="solvedacUsername" th:field="*{solvedacUserName}" placeholder="solvedAC Username을 입력하세요." />
+        <button type="button" class="check-button" onclick="checkSolvedacUsername(event)">유효성 확인</button>
+    </div>
+    <p id="solvedac-message" class="view-message"></p>
+
+
     <div class="btn-wrap">
         <button type="submit" class="submit-button">회원 가입</button>
         <a href="/algoy/home" class="back-button">메인으로</a>
@@ -43,5 +52,6 @@
 </form>
 
 <script th:src="@{/js/signup/signup.js}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 </body>
 </html>

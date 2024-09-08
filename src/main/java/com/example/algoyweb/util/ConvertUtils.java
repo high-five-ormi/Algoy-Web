@@ -53,6 +53,7 @@ public class ConvertUtils {
         .email(findUser.getEmail())
         .nickname(findUser.getNickname())
         .userId(findUser.getUserId())
+            .solvedacUserName(findUser.getSolvedacUserName()) // solvedac UserName 추가
         .isDeleted(findUser.getIsDeleted())
         .createdAt(findUser.getCreatedAt())
         .updatedAt(findUser.getUpdatedAt())
