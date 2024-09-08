@@ -1,8 +1,6 @@
 package com.example.algoyweb.controller.chatting;
 
 import com.example.algoyweb.model.dto.chatting.*;
-import com.example.algoyweb.model.entity.user.User;
-import com.example.algoyweb.repository.user.UserRepository;
 import com.example.algoyweb.service.chatting.ChattingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,57 +18,54 @@ import org.springframework.web.bind.annotation.*;
 public class ChattingController {
 
   private final ChattingService chattingService;
-  private final UserRepository userRepository;
+
+  @GetMapping("/rooms")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
+  public ResponseEntity<Page<ChattingRoomDto>> getAllRooms(
+      @PageableDefault(size = 20) Pageable pageable) {
+    return ResponseEntity.ok(chattingService.getAllRooms(pageable));
+  }
+
+  @GetMapping("/my-rooms")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
+  public ResponseEntity<Page<ChattingRoomDto>> getMyRooms(
+      @PageableDefault(size = 20) Pageable pageable,
+      Authentication authentication) {
+    return ResponseEntity.ok(chattingService.getRoomsForUser(authentication.getName(), pageable));
+  }
 
   @GetMapping("/room/{roomId}/messages")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
   public ResponseEntity<Page<ChattingDto>> getRoomMessages(
       @PathVariable String roomId,
-      @PageableDefault(size = 20) Pageable pageable,
-      Authentication authentication) {
-    String username = authentication.getName();
-    User user = getUserByUsername(username);
-    Page<ChattingDto> messages = chattingService.getRoomMessages(roomId, pageable);
-    return ResponseEntity.ok(messages);
+      @PageableDefault(size = 20) Pageable pageable) {
+    return ResponseEntity.ok(chattingService.getRoomMessages(roomId, pageable));
   }
 
   @PostMapping("/room")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
   public ResponseEntity<ChattingRoomDto> createRoom(@Valid @RequestBody CreateRoomRequest request, Authentication authentication) {
-    String username = authentication.getName();
-    User user = getUserByUsername(username);
-    ChattingRoomDto createdRoom = chattingService.createRoom(request.getName(), user.getUserId());
-    return ResponseEntity.ok(createdRoom);
+    return ResponseEntity.ok(chattingService.createRoom(request.getName(), authentication.getName()));
   }
 
   @PostMapping("/room/{roomId}/join")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
   public ResponseEntity<Void> joinRoom(@PathVariable String roomId, Authentication authentication) {
-    String username = authentication.getName();
-    User user = getUserByUsername(username);
-    chattingService.joinRoom(roomId, user.getUserId());
+    chattingService.joinRoom(roomId, authentication.getName());
     return ResponseEntity.ok().build();
   }
 
   @PostMapping("/room/{roomId}/leave")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
   public ResponseEntity<Void> leaveRoom(@PathVariable String roomId, Authentication authentication) {
-    String username = authentication.getName();
-    User user = getUserByUsername(username);
-    chattingService.leaveRoom(roomId, user.getUserId());
+    chattingService.leaveRoom(roomId, authentication.getName());
     return ResponseEntity.ok().build();
   }
 
   @PostMapping("/room/{roomId}/invite")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
   public ResponseEntity<Void> inviteToRoom(@PathVariable String roomId, @Valid @RequestBody InviteRequest inviteRequest, Authentication authentication) {
-    String username = authentication.getName();
-    User user = getUserByUsername(username);
-    chattingService.inviteToRoom(roomId, user.getUserId(), inviteRequest.getInviteeId());
+    chattingService.inviteToRoom(roomId, authentication.getName(), inviteRequest.getInviteeId());
     return ResponseEntity.ok().build();
-  }
-
-  private User getUserByUsername(String username) {
-    return userRepository.findByEmail(username);
   }
 }
