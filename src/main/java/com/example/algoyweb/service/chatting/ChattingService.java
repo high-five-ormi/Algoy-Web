@@ -85,6 +85,10 @@ public class ChattingService {
       throw new CustomException(ChattingErrorCode.NOT_ROOM_OWNER);
     }
 
+    if (inviter.getNickname().equals(inviteeNickname)) {
+      throw new CustomException(ChattingErrorCode.SELF_INVITATION_NOT_ALLOWED);
+    }
+
     User invitee = userRepository.findByNickname(inviteeNickname);
     if (invitee == null) {
       throw new CustomException(ChattingErrorCode.USER_NOT_FOUND);

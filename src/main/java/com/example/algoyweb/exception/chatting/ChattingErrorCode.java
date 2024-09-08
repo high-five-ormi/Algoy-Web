@@ -10,7 +10,9 @@ public enum ChattingErrorCode implements ErrorCode {
 	NOT_ROOM_OWNER(HttpStatus.FORBIDDEN, "채팅방 소유자만 초대할 수 있습니다."),
 	USER_BANNED(HttpStatus.FORBIDDEN, "정지된 사용자는 초대할 수 없습니다."),
 	USER_ALREADY_IN_ROOM(HttpStatus.BAD_REQUEST, "사용자가 이미 채팅방에 참여하고 있습니다."),
-	MESSAGE_PROCESSING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "메시지 처리 중 오류가 발생했습니다.");
+	MESSAGE_PROCESSING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "메시지 처리 중 오류가 발생했습니다."),
+	SELF_INVITATION_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "자기 자신을 초대할 수 없습니다."),
+	INVALID_INVITATION(HttpStatus.BAD_REQUEST, "유효하지 않은 초대입니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;
