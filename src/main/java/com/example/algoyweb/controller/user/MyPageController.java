@@ -6,6 +6,7 @@ import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -79,10 +80,12 @@ public class MyPageController {
         return mav;
     }
 
+
     // 사용자 정보 수정
     @PostMapping("/update")
     @PreAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
     public ResponseEntity<String> updateUser(@RequestBody UserDto userDto, @AuthenticationPrincipal UserDetails userDetails) {
+        System.out.println("Received solvedac username: " + userDto.getSolvedacUserName());
         String email = userDetails.getUsername();
         try {
             userService.update(userDto, email);
