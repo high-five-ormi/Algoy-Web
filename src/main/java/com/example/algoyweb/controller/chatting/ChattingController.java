@@ -1,7 +1,6 @@
 package com.example.algoyweb.controller.chatting;
 
 import com.example.algoyweb.model.dto.chatting.*;
-import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.service.chatting.ChattingService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -13,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,8 +25,8 @@ public class ChattingController {
   @GetMapping("/rooms")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
   public ResponseEntity<List<ChattingRoomDto>> getRooms(Authentication authentication) {
-    User user = (User) authentication.getPrincipal();
-    return ResponseEntity.ok(chattingService.getUserRooms(user.getEmail()));
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    return ResponseEntity.ok(chattingService.getUserRooms(userDetails.getUsername()));
   }
 
   @GetMapping("/room/{roomId}/messages")
@@ -40,31 +40,31 @@ public class ChattingController {
   @PostMapping("/room")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
   public ResponseEntity<ChattingRoomDto> createRoom(@Valid @RequestBody CreateRoomRequest request, Authentication authentication) {
-    User user = (User) authentication.getPrincipal();
-    return ResponseEntity.ok(chattingService.createRoom(request.getName(), user.getEmail()));
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    return ResponseEntity.ok(chattingService.createRoom(request.getName(), userDetails.getUsername()));
   }
 
   @PostMapping("/room/{roomId}/join")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
   public ResponseEntity<Void> joinRoom(@PathVariable String roomId, Authentication authentication) {
-    User user = (User) authentication.getPrincipal();
-    chattingService.joinRoom(roomId, user.getUserId());
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    chattingService.joinRoom(roomId, userDetails.getUsername());
     return ResponseEntity.ok().build();
   }
 
   @PostMapping("/room/{roomId}/leave")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
   public ResponseEntity<Void> leaveRoom(@PathVariable String roomId, Authentication authentication) {
-    User user = (User) authentication.getPrincipal();
-    chattingService.leaveRoom(roomId, user.getUserId());
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    chattingService.leaveRoom(roomId, userDetails.getUsername());
     return ResponseEntity.ok().build();
   }
 
   @PostMapping("/room/{roomId}/invite-by-nickname")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
   public ResponseEntity<Void> inviteToRoomByNickname(@PathVariable String roomId, @RequestBody String inviteeNickname, Authentication authentication) {
-    User user = (User) authentication.getPrincipal();
-    chattingService.inviteUserByNickname(roomId, user.getEmail(), inviteeNickname);
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    chattingService.inviteUserByNickname(roomId, userDetails.getUsername(), inviteeNickname);
     return ResponseEntity.ok().build();
   }
 }

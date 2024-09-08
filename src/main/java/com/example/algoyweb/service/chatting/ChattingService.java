@@ -61,8 +61,8 @@ public class ChattingService {
     return ChattingConvertUtil.convertToDto(savedRoom);
   }
 
-  public String joinRoom(String roomId, Long userId) {
-    User user = getUserById(userId);
+  public String joinRoom(String roomId, String username) {
+    User user = getUserByUsername(username);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
     if (!room.getParticipants().contains(user.getUserId())) {
       room.addParticipant(user.getUserId());
@@ -71,8 +71,8 @@ public class ChattingService {
     return user.getNickname();
   }
 
-  public String leaveRoom(String roomId, Long userId) {
-    User user = getUserById(userId);
+  public String leaveRoom(String roomId, String username) {
+    User user = getUserByUsername(username);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
     room.removeParticipant(user.getUserId());
     chattingRoomRepository.save(room);

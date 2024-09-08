@@ -26,7 +26,7 @@ public class ChattingWebSocketController {
 
   @MessageMapping("/algoy/chat/joinRoom")
   public void joinRoom(@Valid @Payload JoinRoomRequest joinRequest) {
-    String nickname = chattingService.joinRoom(joinRequest.getRoomId(), joinRequest.getUserId());
+    String nickname = chattingService.joinRoom(joinRequest.getRoomId(), joinRequest.getUsername());
     messagingTemplate.convertAndSend(
         "/topic/room/" + joinRequest.getRoomId(),
         nickname + " joined the room");
@@ -34,7 +34,7 @@ public class ChattingWebSocketController {
 
   @MessageMapping("/algoy/chat/leaveRoom")
   public void leaveRoom(@Valid @Payload LeaveRoomRequest leaveRequest) {
-    String nickname = chattingService.leaveRoom(leaveRequest.getRoomId(), leaveRequest.getUserId());
+    String nickname = chattingService.leaveRoom(leaveRequest.getRoomId(), leaveRequest.getUsername());
     messagingTemplate.convertAndSend(
         "/topic/room/" + leaveRequest.getRoomId(),
         nickname + " left the room");
