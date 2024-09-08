@@ -137,6 +137,14 @@ public class UserService implements UserDetailsService {
 			encodedPassword = passwordEncoder.encode(userDto.getPassword());
 		}
 
+		// SolvedAC username 유효성 확인 되면 db에 저장하기 위한 기능
+		if (userDto.getSolvedacUserName() != null && !userDto.getSolvedacUserName().isEmpty()) {
+			boolean isValid = isUsernameValid(userDto.getSolvedacUserName());
+			if (!isValid) {
+				throw new CustomException(UserErrorCode.INVALID_SOLVEDAC_USERNAME);
+			}
+		}
+
 		// UserDto에서 업데이트 정보를 반영
 		findUser.updateUser(userDto, encodedPassword);
 
