@@ -24,14 +24,7 @@ public class ChattingController {
 
   @GetMapping("/rooms")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
-  public ResponseEntity<Page<ChattingRoomDto>> getAllRooms(
-      @PageableDefault(size = 20) Pageable pageable) {
-    return ResponseEntity.ok(chattingService.getAllRooms(pageable));
-  }
-
-  @GetMapping("/my-rooms")
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
-  public ResponseEntity<List<ChattingRoomDto>> getMyRooms(Authentication authentication) {
+  public ResponseEntity<List<ChattingRoomDto>> getRooms(Authentication authentication) {
     User user = (User) authentication.getPrincipal();
     return ResponseEntity.ok(chattingService.getUserRooms(user.getEmail()));
   }

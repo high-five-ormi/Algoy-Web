@@ -34,12 +34,6 @@ public class ChattingService {
   private final UserRepository userRepository;
 
   @Transactional(readOnly = true)
-  public Page<ChattingRoomDto> getAllRooms(Pageable pageable) {
-    Page<ChattingRoom> rooms = chattingRoomRepository.findAll(pageable);
-    return rooms.map(ChattingConvertUtil::convertToDto);
-  }
-
-  @Transactional(readOnly = true)
   public List<ChattingRoomDto> getUserRooms(String username) {
     User user = getUserByUsername(username);
     List<ChattingRoom> rooms = chattingRoomRepository.findByParticipantsContaining(user.getUserId());
