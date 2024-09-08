@@ -1,16 +1,14 @@
 * {
     margin: 0;
-    padding: 0;
     text-align: center;
 }
 
 h2 {
     margin-top: 20px;
-    margin-bottom: 20px;
 }
 
 table {
-    margin: auto auto 10px;
+    margin: 20px auto 20px;
     width: 1000px;
 }
 
@@ -21,30 +19,37 @@ th {
 
 td {
     background-color: #e6e6e6;
+}
+
+/* tr의 마지막 td가 아닌 모든 td에 적용 (버튼이 없는 열) */
+tr td:not(:last-child) {
+    width: 160px;
+    max-width: 160px; /* 셀의 최대 너비를 160픽셀로 제한: 콘텐츠가 많아도 160픽셀을 넘지 않음 */
     padding: 10px;
+    overflow-wrap: break-word; /* 셀 너비 초과 시 자동 줄바꿈 */
 }
 
 a {
     width: 200px;
     padding: 5px 10px;
     border-radius: 4px;
-    background-color: gray;
+    background-color: #5a6268;
 }
 
 a:link {
-    color: black;
+    color: white;
     text-decoration: none;
 }
 
 a:visited {
-    color: black;
+    color: white;
     text-decoration: none;
 }
 
 button {
     border: none;
     color: white;
-    padding: 10px 20px;
+    padding: 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;

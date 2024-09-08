@@ -6,6 +6,10 @@
     font-weight: bold;
 }
 
+.fc-event {
+    border: none;
+}
+
 .fc .fc-button {
     font-size: 0.7em;
 }

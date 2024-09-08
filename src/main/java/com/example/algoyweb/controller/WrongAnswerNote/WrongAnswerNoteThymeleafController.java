@@ -4,6 +4,7 @@ import com.example.algoyweb.model.dto.WrongAnswerNote.WrongAnswerNoteDTO;
 import com.example.algoyweb.service.WrongAnswerNote.WrongAnswerNoteService;
 import com.example.algoyweb.service.WrongAnswerNote.ImageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +20,14 @@ public class WrongAnswerNoteThymeleafController {
     private final WrongAnswerNoteService service;
     private final ImageService imageService;
 
+    // ai-backend.url 설정값을 저장하는 변수입니다.
+    @Value("${ai-backend.url}")
+    private String backendUrl;
+
     @GetMapping
     public String getAllWrongAnswerNotes(Model model) {
         model.addAttribute("notes", service.findAll());
+        model.addAttribute("backendUrl", backendUrl);
         return "wronganswernote/list-wrong-answer-notes";
     }
 
@@ -30,6 +36,7 @@ public class WrongAnswerNoteThymeleafController {
         Optional<WrongAnswerNoteDTO> note = service.findById(id);
         if (note.isPresent()) {
             model.addAttribute("note", note.get());
+            model.addAttribute("backendUrl", backendUrl);
             return "wronganswernote/view-wrong-answer-note";
         } else {
             return "error";
@@ -39,6 +46,7 @@ public class WrongAnswerNoteThymeleafController {
     @GetMapping("/create")
     public String createWrongAnswerNoteForm(Model model) {
         model.addAttribute("note", new WrongAnswerNoteDTO());
+        model.addAttribute("backendUrl", backendUrl);
         return "wronganswernote/create-wrong-answer-note";
     }
 
@@ -58,6 +66,7 @@ public class WrongAnswerNoteThymeleafController {
         Optional<WrongAnswerNoteDTO> note = service.findById(id);
         if (note.isPresent()) {
             model.addAttribute("note", note.get());
+            model.addAttribute("backendUrl", backendUrl);
             return "wronganswernote/edit-wrong-answer-note";
         } else {
             return "error";

@@ -1,8 +1,12 @@
 package com.example.algoyweb.util;
 
+import com.example.algoyweb.model.dto.comment.CommentDto;
+import com.example.algoyweb.model.dto.study.StudyDto;
 import com.example.algoyweb.model.dto.user.UserDto;
+import com.example.algoyweb.model.entity.study.Comment;
 import com.example.algoyweb.model.entity.planner.Planner;
 import com.example.algoyweb.model.dto.planner.PlannerDto;
+import com.example.algoyweb.model.entity.study.Study;
 import com.example.algoyweb.model.entity.user.User;
 
 import java.time.LocalDateTime;
@@ -21,7 +25,7 @@ public class ConvertUtils {
         .updateAt(planner.getUpdateAt())
         .link(planner.getLink())
         .questionName(planner.getQuestionName())
-            .etcName(planner.getEtcName())
+        .etcName(planner.getEtcName())
         .siteName(planner.getSiteName())
         .build();
   }
@@ -37,7 +41,7 @@ public class ConvertUtils {
         .startAt(plannerDto.getStartAt())
         .link(plannerDto.getLink())
         .siteName(plannerDto.getSiteName())
-            .etcName(plannerDto.getEtcName())
+        .etcName(plannerDto.getEtcName())
         .questionName(plannerDto.getQuestionName())
         .build();
   }
@@ -49,10 +53,47 @@ public class ConvertUtils {
         .email(findUser.getEmail())
         .nickname(findUser.getNickname())
         .userId(findUser.getUserId())
+            .solvedacUserName(findUser.getSolvedacUserName()) // solvedac UserName 추가
         .isDeleted(findUser.getIsDeleted())
         .createdAt(findUser.getCreatedAt())
         .updatedAt(findUser.getUpdatedAt())
         .deletedAt(findUser.getDeletedAt())
         .build();
+  }
+
+  public static StudyDto convertStudyToDto(Study study) {
+    return StudyDto.builder()
+        .language(study.getLanguage())
+        .title(study.getTitle())
+        .content(study.getContent())
+        .status(study.getStatus())
+        .createdAt(study.getCreatedAt())
+        .updatedAt(study.getUpdatedAt())
+        .build();
+  }
+
+  public static Study convertDtoToStudy(StudyDto studyDto) {
+    return Study.builder()
+        .content(studyDto.getContent())
+        .title(studyDto.getTitle())
+        .status(studyDto.getStatus())
+        .createdAt(studyDto.getCreatedAt())
+        .updatedAt(studyDto.getUpdatedAt())
+        .language(studyDto.getLanguage())
+        .build();
+  }
+
+  public static CommentDto convertCommentToDto(Comment save) {
+    return CommentDto.builder()
+            .id(save.getId())
+            .content(save.getContent())
+            .createdAt(save.getCreatedAt())
+            .updatedAt(save.getUpdatedAt())
+            .depth(save.getDepth())
+            .secret(save.getSecret())
+            .children(save.getChildren().stream().map(ConvertUtils::convertCommentToDto).toList())
+            .parent(save.getParent().getId())
+            .author(save.getUser().getNickname())
+            .build();
   }
 }

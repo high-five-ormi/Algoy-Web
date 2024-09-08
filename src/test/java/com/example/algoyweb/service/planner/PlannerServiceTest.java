@@ -1,7 +1,7 @@
 package com.example.algoyweb.service.planner;
 
 import com.example.algoyweb.exception.CustomException;
-import com.example.algoyweb.exception.PlannerErrorCode;
+import com.example.algoyweb.exception.errorcode.PlannerErrorCode;
 import com.example.algoyweb.model.dto.planner.PlannerDto;
 import com.example.algoyweb.model.entity.planner.Planner;
 import com.example.algoyweb.model.entity.user.Role;
