@@ -98,6 +98,23 @@ public class UserService implements UserDetailsService {
 		return userRepository.findByNickname(nickname);
 	}
 
+  /**
+   * @author JSW
+   *
+   * 주어진 사용자 이름(이메일)을 기준으로 사용자 정보를 가져옵니다.
+   *
+   * @param username 검색할 사용자의 사용자 이름(이메일)
+   * @return UserDto 사용자 정보를 담은 DTO 객체
+   */
+  @Transactional(readOnly = true)
+  public UserDto getUserByUsername(String username) {
+		User user = userRepository.findByEmail(username);
+		if (user == null) {
+			throw new RuntimeException("User not found");
+		}
+		return ConvertUtils.convertUserToDto(user);
+	}
+
 	/**
 	 * 로그인
 	 *

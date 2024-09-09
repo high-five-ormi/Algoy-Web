@@ -41,7 +41,7 @@ public class ChattingController {
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
   public ResponseEntity<ChattingRoomDto> createRoom(@Valid @RequestBody CreateRoomRequest request, Authentication authentication) {
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-    return ResponseEntity.ok(chattingService.createRoom(request.getName(), userDetails.getUsername()));
+    return ResponseEntity.ok(chattingService.createRoom(request.getName(), userDetails.getUsername(), request.getInvitees()));
   }
 
   @PostMapping("/room/{roomId}/join")

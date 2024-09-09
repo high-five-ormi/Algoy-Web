@@ -1,6 +1,7 @@
 let stompClient = null;
 let currentRoomId = null;
 let currentUserId = null; // 이 값은 서버에서 받아오거나 로그인 시 설정해야 합니다.
+let currentUserNickname = null; // 현재 사용자의 닉네임도 저장
 
 function connect() {
   const socket = new SockJS('/algoy/chat-websocket');
@@ -8,10 +9,22 @@ function connect() {
   stompClient.connect({}, function(frame) {
     console.log('Connected: ' + frame);
     loadRooms();
+    // 여기서 현재 사용자의 정보를 가져오는 API를 호출하고 currentUserNickname을 설정해야 합니다.
+    fetchCurrentUserInfo();
   }, function(error) {
     console.error('STOMP error:', error);
     setTimeout(connect, 5000); // 5초 후 재연결 시도
   });
+}
+
+// 현재 사용자 정보를 가져오는 함수
+function fetchCurrentUserInfo() {
+  fetch('/algoy/api/user/current')
+  .then(response => response.json())
+  .then(user => {
+    currentUserNickname = user.nickname;
+  })
+  .catch(error => console.error('Error fetching current user info:', error));
 }
 
 function loadRooms() {
@@ -48,32 +61,37 @@ document.getElementById('leave-room-btn').onclick = leaveRoom;
 document.getElementById('send-button').onclick = sendMessage;
 
 function createRoom() {
-  const roomName = document.getElementById('room-name').value;
-  const inviteUsers = document.getElementById('invite-users').value.split(',').map(s => s.trim());
+  const roomName = document.getElementById('room-name').value.trim();
+  const inviteUsers = document.getElementById('invite-users').value.split(',').map(s => s.trim()).filter(s => s !== '');
+
+  if (!roomName) {
+    alert('방 이름을 입력해주세요.');
+    return;
+  }
+
+  if (inviteUsers.includes(currentUserNickname)) {
+    alert('자기 자신을 초대할 수 없습니다.');
+    return;
+  }
 
   fetch('/algoy/api/chat/room', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: roomName })
+    body: JSON.stringify({ name: roomName, invitees: inviteUsers })
   })
-  .then(response => response.json())
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(err => { throw err; });
+    }
+    return response.json();
+  })
   .then(room => {
-    inviteUsers.forEach(nickname => {
-      fetch(`/algoy/api/chat/room/${room.roomId}/invite-by-nickname`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nickname: nickname })
-      }).then(response => {
-        if (!response.ok) {
-          console.error('Failed to invite user:', nickname);
-        }
-      }).catch(error => {
-        console.error('Error inviting user:', error);
-      });
-    });
     joinRoom(room.roomId);
   })
-  .catch(error => console.error('Error creating room:', error));
+  .catch(error => {
+    console.error('Error creating room:', error);
+    alert('방 생성 중 오류가 발생했습니다: ' + error.message);
+  });
 }
 
 function joinRoom(roomId) {

@@ -44,8 +44,12 @@ public class ChattingService {
     return messages.map(ChattingConvertUtil::convertToDto);
   }
 
-  public ChattingRoomDto createRoom(String roomName, String username) {
+  public ChattingRoomDto createRoom(String roomName, String username, List<String> inviteeNicknames) {
     User owner = getUserByUsername(username);
+
+    if (roomName == null || roomName.trim().isEmpty()) {
+      throw new CustomException(ChattingErrorCode.INVALID_ROOM_NAME);
+    }
 
     ChattingRoom chattingRoom = ChattingRoom.builder()
         .roomId("room-" + System.currentTimeMillis())
@@ -56,6 +60,21 @@ public class ChattingService {
         .updatedAt(LocalDateTime.now())
         .build();
     ChattingRoom savedRoom = chattingRoomRepository.save(chattingRoom);
+
+    if (inviteeNicknames != null && !inviteeNicknames.isEmpty()) {
+      for (String nickname : inviteeNicknames) {
+        if (!nickname.equals(owner.getNickname())) {
+          try {
+            inviteUserByNickname(savedRoom.getRoomId(), username, nickname);
+          } catch (CustomException e) {
+            // Log the error but continue with other invitations
+            // You might want to collect these errors and return them to the user
+            // TODO: Implement a way to return partial success/failure information
+          }
+        }
+      }
+    }
+
     return ChattingConvertUtil.convertToDto(savedRoom);
   }
 
