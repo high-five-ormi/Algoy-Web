@@ -35,13 +35,6 @@ class BotFragChatbotComponent {
       if (!this.isResponding) this.sendMessage();
     });
 
-    // 화면의 다른 부분을 클릭하면 채팅창을 닫음
-    document.addEventListener('click', (event) => {
-      if (!this.chatSidebar.contains(event.target) && !this.hamburgerMenu.contains(event.target)) {
-        document.body.classList.remove('bot-frag-open');
-      }
-    });
-
     // 이전 대화 내용을 세션 스토리지에서 불러옴
     this.loadConversation();
     this.scrollToBottom(); // 대화 불러온 후 스크롤을 맨 아래로 이동
