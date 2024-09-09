@@ -362,6 +362,7 @@ public class UserService implements UserDetailsService {
 		if (user.getRole() == Role.BANNED) {
 			user.updateRole(Role.NORMAL);
 			user.updateBanExpiration(null); // 밴 만료 시간 초기화
+			user.updateBanReason(null);
 			userRepository.save(user);
 		}
 	}
@@ -407,6 +408,7 @@ public class UserService implements UserDetailsService {
 					// 정지 만료 시간이 지났으면 정지 해제
 					user.updateRole(Role.NORMAL);
 					user.updateBanExpiration(null);
+					user.updateBanReason(null);
 					userRepository.save(user);
 				} else {
 					log.debug("아직 정지 기간이 만료되지 않았습니다.");

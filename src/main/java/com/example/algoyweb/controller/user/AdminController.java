@@ -43,15 +43,17 @@ public class AdminController {
 	 *
 	 * @param userId 역할을 변경할 사용자의 ID
 	 * @param action 수행할 작업. 가능한 값: "admin" (관리자 승격), "ban" (사용자 밴), "lift" (밴 해제)
+	 * @param banReason 유저의 밴 사유 (필수값 아님)
 	 * @return 관리자 페이지로 리다이렉트할 URL
 	 */
 	@PostMapping("/admin/role-control")
-	public String changeUserRole(@RequestParam("userId") Long userId, @RequestParam("action") String action) {
+	public String changeUserRole(@RequestParam("userId") Long userId, @RequestParam("action") String action,
+		@RequestParam(value = "banReason", required = false) String banReason) {
 		// 유저 권한 변경 로직
 		if ("admin".equals(action)) { // 관리자 승격
 			userService.promoteToAdmin(userId);
 		} else if ("ban".equals(action)) { // 유저 밴
-			// userService.banUser(userId, banReason);
+			userService.banUser(userId, banReason);
 		} else if ("lift".equals(action)) { // 유저 밴 해제
 			userService.liftBan(userId);
 		}
