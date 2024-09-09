@@ -44,11 +44,27 @@ public class ChattingService {
     return messages.map(ChattingConvertUtil::convertToDto);
   }
 
-  public ChattingRoomDto createRoom(String roomName, String username, List<String> inviteeNicknames) {
-    User owner = getUserByUsername(username);
+  public ChattingRoomDto createRoom(String roomName, String ownerUsername, List<String> inviteeNicknames) {
+    User owner = getUserByUsername(ownerUsername);
 
     if (roomName == null || roomName.trim().isEmpty()) {
       throw new CustomException(ChattingErrorCode.INVALID_ROOM_NAME);
+    }
+
+    if (inviteeNicknames == null || inviteeNicknames.isEmpty()) {
+      throw new CustomException(ChattingErrorCode.NO_INVITEES);
+    }
+
+    List<User> invitees = new ArrayList<>();
+    for (String nickname : inviteeNicknames) {
+      if (nickname.equals(owner.getNickname())) {
+        throw new CustomException(ChattingErrorCode.SELF_INVITATION_NOT_ALLOWED);
+      }
+      User invitee = userRepository.findByNickname(nickname);
+      if (invitee == null) {
+        throw new CustomException(ChattingErrorCode.USER_NOT_FOUND);
+      }
+      invitees.add(invitee);
     }
 
     ChattingRoom chattingRoom = ChattingRoom.builder()
@@ -59,22 +75,12 @@ public class ChattingService {
         .createdAt(LocalDateTime.now())
         .updatedAt(LocalDateTime.now())
         .build();
-    ChattingRoom savedRoom = chattingRoomRepository.save(chattingRoom);
 
-    if (inviteeNicknames != null && !inviteeNicknames.isEmpty()) {
-      for (String nickname : inviteeNicknames) {
-        if (!nickname.equals(owner.getNickname())) {
-          try {
-            inviteUserByNickname(savedRoom.getRoomId(), username, nickname);
-          } catch (CustomException e) {
-            // Log the error but continue with other invitations
-            // You might want to collect these errors and return them to the user
-            // TODO: Implement a way to return partial success/failure information
-          }
-        }
-      }
+    for (User invitee : invitees) {
+      chattingRoom.addParticipant(invitee.getUserId());
     }
 
+    ChattingRoom savedRoom = chattingRoomRepository.save(chattingRoom);
     return ChattingConvertUtil.convertToDto(savedRoom);
   }
 

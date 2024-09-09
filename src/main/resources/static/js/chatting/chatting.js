@@ -1,7 +1,6 @@
 let stompClient = null;
 let currentRoomId = null;
-let currentUserId = null; // 이 값은 서버에서 받아오거나 로그인 시 설정해야 합니다.
-let currentUserNickname = null; // 현재 사용자의 닉네임도 저장
+let currentUserNickname = null;
 
 function connect() {
   const socket = new SockJS('/algoy/chat-websocket');
@@ -66,6 +65,11 @@ function createRoom() {
 
   if (!roomName) {
     alert('방 이름을 입력해주세요.');
+    return;
+  }
+
+  if (inviteUsers.length === 0) {
+    alert('초대할 사용자를 최소 한 명 이상 입력해주세요.');
     return;
   }
 
@@ -177,4 +181,7 @@ document.getElementById('user-input').addEventListener('keypress', function(e) {
   }
 });
 
-window.onload = connect;
+window.onload = function() {
+  connect();
+  fetchCurrentUserInfo();
+};
