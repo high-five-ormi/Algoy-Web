@@ -42,7 +42,10 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 	// HttpSecurity라는 객체를 사용하여 웹 애플리케이션의 보안을 설정
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-			.csrf((csrfConfig) -> csrfConfig.disable()) // CSRF 보안 기능 비활성화
+			.csrf((csrf) -> csrf
+				.ignoringRequestMatchers("/algoy/**")
+				.disable()
+			) // CSRF 보안 기능 비활성화
 			.authorizeHttpRequests((requests) -> requests
 				.requestMatchers("/").permitAll()
 				.requestMatchers("/algoy").permitAll()

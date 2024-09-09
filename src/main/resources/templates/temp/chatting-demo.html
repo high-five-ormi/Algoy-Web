@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Application</title>
+  <link rel="stylesheet" href="/css/chatting/chatting.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<div id="chat-sidebar">
+  <div id="chat-container">
+    <!-- 채팅방 목록 화면 -->
+    <div id="room-list-view">
+      <div class="chat-header">
+        <h1>Chat Rooms</h1>
+        <button id="create-room-btn">+</button>
+      </div>
+      <div id="room-list"></div>
+    </div>
+
+    <!-- 채팅방 생성 화면 -->
+    <div id="create-room-view" class="hidden">
+      <div class="chat-header">
+        <button class="back-btn">&lt;</button>
+        <h1>Create Room</h1>
+      </div>
+      <div class="content">
+        <input type="text" id="room-name" placeholder="Room Name">
+        <input type="text" id="invite-users" placeholder="Invite Users (comma-separated nicknames)">
+        <button id="create-room-submit">Create</button>
+      </div>
+    </div>
+
+    <!-- 채팅방 화면 -->
+    <div id="chat-room-view" class="hidden">
+      <div class="chat-header">
+        <button class="back-btn">&lt;</button>
+        <h1 id="room-name-header"></h1>
+        <button id="leave-room-btn">Leave</button>
+      </div>
+      <div id="messages"></div>
+      <div class="input-area">
+        <input type="text" id="user-input" placeholder="Type your message...">
+        <button id="send-button">
+          <img src="/img/send_icon.png" alt="Send">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/js/chatting/chatting.js"></script>
+</body>
+</html>

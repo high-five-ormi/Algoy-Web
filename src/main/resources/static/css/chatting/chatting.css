@@ -1,0 +1,138 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f2f5;
+}
+
+#chat-sidebar {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 400px;
+  height: 100vh;
+  background-color: white;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+#chat-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header {
+  background-color: #1e88e5;
+  color: white;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-header h1 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.chat-header button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#room-list, #messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+#room-list .room-item {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+#room-list .room-item:hover {
+  background-color: #f5f5f5;
+}
+
+.message {
+  max-width: 80%;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.message.sent {
+  background-color: #1e88e5;
+  color: white;
+  align-self: flex-end;
+}
+
+.message.received {
+  background-color: #e6e6e6;
+  color: #333;
+  align-self: flex-start;
+}
+
+.input-area {
+  padding: 15px;
+  background-color: #f0f2f5;
+  display: flex;
+  align-items: center;
+}
+
+#user-input, #room-name, #invite-users {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 14px;
+  outline: none;
+}
+
+#send-button, #create-room-submit {
+  background-color: #1e88e5;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+#send-button img {
+  width: 60%;
+  height: 60%;
+}
+
+.hidden {
+  display: none;
+}
+
+#create-room-view .content {
+  padding: 20px;
+}
+
+#create-room-view input, #create-room-submit {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#create-room-submit {
+  width: 100%;
+  border-radius: 20px;
+  height: auto;
+  padding: 10px;
+  color: white;
+}
