@@ -98,12 +98,24 @@ function joinRoom(roomId) {
 function leaveRoom() {
   if (currentRoomId) {
     fetch(`/algoy/api/chat/room/${currentRoomId}/leave`, { method: 'POST' })
-    .then(() => {
-      stompClient.unsubscribe(currentRoomId);
-      showRoomListView();
-      currentRoomId = null;
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to leave room');
+      }
+      return response.json();
     })
-    .catch(error => console.error('Error leaving room:', error));
+    .then(data => {
+      if (data.deleted) {
+        // 방이 삭제된 경우
+        alert('마지막으로 남은 사용자이므로 채팅방이 삭제됩니다.');
+      }
+      backToRoomList();
+    })
+    .catch(error => {
+      console.error('Error leaving room:', error);
+      // 에러가 발생해도 일단 방 목록으로 돌아갑니다.
+      backToRoomList();
+    });
   }
 }
 
@@ -205,12 +217,7 @@ function inviteUser() {
     return;
   }
 
-  if (inviteeNickname === currentUserNickname) {
-    alert('You cannot invite yourself.');
-    return;
-  }
-
-  fetch(`/algoy/api/chat/room/${currentRoomId}/invite`, {
+  fetch(`/algoy/api/chat/room/${currentRoomId}/invite-by-nickname`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ nickname: inviteeNickname })
@@ -219,21 +226,33 @@ function inviteUser() {
     if (!response.ok) {
       return response.json().then(err => { throw err; });
     }
-    alert(`${inviteeNickname} has been invited to the room.`);
+    return response.json();
+  })
+  .then(data => {
+    alert(data.message || '초대에 성공하였습니다.');
     hideInviteModal();
   })
   .catch(error => {
     console.error('Error inviting user:', error);
-    alert('Failed to invite user: ' + error.message);
+    alert('Failed to invite user: ' + (error.error || 'Unknown error'));
   });
 }
 
 function goBack() {
   if (currentView === 'chat-room') {
-    leaveRoom();
+    backToRoomList();
   } else if (currentView === 'create-room') {
     showRoomListView();
   }
+}
+
+function backToRoomList() {
+  if (currentRoomId) {
+    stompClient.unsubscribe(currentRoomId);
+  }
+  showRoomListView();
+  currentRoomId = null;
+  loadRooms(); // 채팅방 목록을 다시 로드
 }
 
 function initializeChat() {

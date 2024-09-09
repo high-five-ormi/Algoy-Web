@@ -1,9 +1,11 @@
 package com.example.algoyweb.controller.chatting;
 
+import com.example.algoyweb.exception.CustomException;
 import com.example.algoyweb.model.dto.chatting.*;
 import com.example.algoyweb.service.chatting.ChattingService;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,12 +62,18 @@ public class ChattingController {
 
   @PostMapping("/room/{roomId}/invite-by-nickname")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
-  public ResponseEntity<Void> inviteToRoomByNickname(
+  public ResponseEntity<?> inviteToRoomByNickname(
       @PathVariable String roomId,
       @RequestBody InviteRequest inviteRequest,
       Authentication authentication) {
-    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-    chattingService.inviteUserByNickname(roomId, userDetails.getUsername(), inviteRequest.getNickname());
-    return ResponseEntity.ok().build();
+    try {
+      UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+      chattingService.inviteUserByNickname(roomId, userDetails.getUsername(), inviteRequest.getNickname());
+      return ResponseEntity.ok().body(Map.of("message", "User invited successfully"));
+    } catch (CustomException e) {
+      return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+    } catch (Exception e) {
+      return ResponseEntity.internalServerError().body(Map.of("error", "An unexpected error occurred"));
+    }
   }
 }

@@ -90,7 +90,30 @@ public class ChattingService {
   public ChattingRoomDto leaveRoom(String roomId, String username) {
     User user = getUserByUsername(username);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
+
+    if (!room.isParticipant(user.getUserId())) {
+      throw new CustomException(ChattingErrorCode.USER_NOT_IN_ROOM);
+    }
+
     room.removeParticipant(user.getUserId());
+
+    // 방장이 나가는 경우
+    if (room.getOwner().getUserId().equals(user.getUserId())) {
+      if (!room.isEmpty()) {
+        // 다른 참가자를 방장으로 지정
+        User newOwner = userRepository.findById(room.getParticipants().get(0))
+            .orElseThrow(() -> new CustomException(ChattingErrorCode.USER_NOT_FOUND));
+        room.changeOwner(newOwner);
+      } else {
+        // 마지막 참가자가 나가는 경우 방 삭제
+        chattingRoomRepository.delete(room);
+        return ChattingRoomDto.builder()
+            .roomId(roomId)
+            .deleted(true)
+            .build(); // 방이 삭제되었음을 나타내는 특별한 DTO 반환
+      }
+    }
+
     room = chattingRoomRepository.save(room);
     return ChattingConvertUtil.convertToDto(room);
   }

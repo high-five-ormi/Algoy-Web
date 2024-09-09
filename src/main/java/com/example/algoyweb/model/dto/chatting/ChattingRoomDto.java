@@ -31,4 +31,6 @@ public class ChattingRoomDto {
   private LocalDateTime createdAt;
 
   private LocalDateTime updatedAt;
+
+  private boolean deleted;
 }
