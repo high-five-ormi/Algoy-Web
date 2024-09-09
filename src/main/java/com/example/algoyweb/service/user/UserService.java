@@ -53,12 +53,10 @@ public class UserService implements UserDetailsService {
 	 *
 	 * @author yuseok
 	 * @param userDto 회원가입 정보를 담고 있는 DTO
-	 */
-	/**
-	 * 회원가입 처리
 	 *
 	 * @author 조아라
 	 * solvedAC username db 저장하는 로직 추가
+	 * @since 24. 09. 08
 	 */
 	@Transactional
 	public void signUpUser(UserDto userDto) {
