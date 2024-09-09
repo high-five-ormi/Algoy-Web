@@ -102,6 +102,13 @@ body, html {
   align-self: flex-end;
 }
 
+.message.system {
+  background-color: #f0f0f0;
+  color: #666;
+  text-align: center;
+  font-style: italic;
+}
+
 .message.received {
   background-color: #e6e6e6;
   color: #333;

@@ -14,6 +14,7 @@ import com.example.algoyweb.util.chatting.ChattingConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class ChattingService {
   private final ChattingRepository chattingRepository;
   private final ChattingRoomRepository chattingRoomRepository;
   private final UserRepository userRepository;
+  private final SimpMessagingTemplate messagingTemplate;
 
   @Transactional(readOnly = true)
   public List<ChattingRoomDto> getUserRooms(String username) {
@@ -84,6 +86,7 @@ public class ChattingService {
       room.addParticipant(user.getUserId());
       room = chattingRoomRepository.save(room);
     }
+    sendSystemMessage(roomId, username + "님이 입장하셨습니다.");
     return ChattingConvertUtil.convertToDto(room);
   }
 
@@ -107,6 +110,7 @@ public class ChattingService {
       } else {
         // 마지막 참가자가 나가는 경우 방 삭제
         chattingRoomRepository.delete(room);
+        sendSystemMessage(roomId, username + "님이 퇴장하셨습니다.");
         return ChattingRoomDto.builder()
             .roomId(roomId)
             .deleted(true)
@@ -115,6 +119,7 @@ public class ChattingService {
     }
 
     room = chattingRoomRepository.save(room);
+    sendSystemMessage(roomId, username + "님이 퇴장하셨습니다.");
     return ChattingConvertUtil.convertToDto(room);
   }
 
@@ -141,6 +146,9 @@ public class ChattingService {
 
     room.addParticipant(invitee.getUserId());
     chattingRoomRepository.save(room);
+
+    // 초대 메시지 전송
+    sendSystemMessage(roomId, inviteeNickname + "님이 초대되었습니다.");
   }
 
   public ChattingDto processAndSaveMessage(String content, String roomId, String username) {
@@ -163,6 +171,18 @@ public class ChattingService {
     chattingRepository.save(chatting);
 
     return chattingDto;
+  }
+
+  private void sendSystemMessage(String roomId, String messageContent) {
+    ChattingDto systemMessage = ChattingDto.builder()
+        .userId(null)
+        .roomId(roomId)
+        .content(messageContent)
+        .nickname("System")
+        .createdAt(LocalDateTime.now())
+        .build();
+
+    messagingTemplate.convertAndSend("/topic/room/" + roomId, systemMessage);
   }
 
   private User getUserByUsername(String username) {
