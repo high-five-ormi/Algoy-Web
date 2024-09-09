@@ -33,11 +33,7 @@
                         <button type="submit" class="admin-btn">관리자 승격</button>
                     </form>
 
-                    <form th:action="@{/algoy/admin/role-control}" method="post" style="display:inline;">
-                        <input type="hidden" name="userId" th:value="${user.getUserId()}"/>
-                        <input type="hidden" name="action" value="ban"/>
-                        <button type="submit" class="ban-btn">유저 정지</button>
-                    </form>
+                    <button th:attr="data-user-id=${user.getUserId()}" class="ban-btn">유저 정지</button>
 
                     <form th:action="@{/algoy/admin/role-control}" method="post" style="display:inline;">
                         <input type="hidden" name="userId" th:value="${user.getUserId()}"/>
@@ -49,5 +45,19 @@
         </tbody>
     </table>
     <a th:href="@{/algoy/home}">메인화면</a>
+
+    <article id="modal">
+        <h2>유저 정지 사유</h2>
+        <form id="banForm" th:action="@{/algoy/admin/role-control}" method="post">
+            <input type="hidden" name="userId" id="banUserId"/>
+            <input type="hidden" name="action" value="ban"/>
+            <textarea name="banReason" id="banReason" rows="4" cols="50" required></textarea>
+            <br>
+            <button type="submit">확인</button>
+            <button type="button" id="cancelBan">취소</button>
+        </form>
+    </article>
+
+    <script th:src="@{/js/user/admin.js}"></script>
 </body>
 </html>

@@ -9,6 +9,7 @@ import com.example.algoyweb.model.entity.planner.Planner;
 
 import com.example.algoyweb.model.entity.study.Comment;
 import com.example.algoyweb.model.entity.study.Study;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,8 +40,8 @@ public class User {
 	@Column(name = "password", nullable = false)
 	private String password;
 
-    @Column(name= "solvedac_username", nullable = true) // solvedAC username의 기본값은 null이다.
-    private String solvedacUserName;
+	@Column(name = "solvedac_username", nullable = true) // solvedAC username의 기본값은 null이다.
+	private String solvedacUserName;
 
 	@Enumerated(EnumType.STRING) // Enum 값을 문자열로 저장
 	@Column(name = "role", nullable = false)
@@ -59,7 +60,10 @@ public class User {
 	private LocalDateTime deletedAt;
 
 	@Column(name = "ban_count", nullable = false)
-	private Integer banCount = 0; // 정지 횟수: 초기 값은 0
+	private int banCount = 0; // 정지 횟수: 초기 값은 0
+
+	@Column(name = "ban_reason")
+	private String banReason; // 정지 사유
 
 	@Column(name = "ban_expiration")
 	private LocalDateTime banExpiration; // 정지 유효시간 (만료 시간)
@@ -73,7 +77,6 @@ public class User {
 	@OneToMany(mappedBy = "user", orphanRemoval = true)
 	private List<Comment> commentList;
 
-
 	public void connectPlanner(Planner planner) {
 		if (this.plannerList == null)
 			this.plannerList = new ArrayList<>();
@@ -81,13 +84,13 @@ public class User {
 	}
 
 	public void connectStudy(Study study) {
-		if(this.studyList == null)
+		if (this.studyList == null)
 			this.studyList = new ArrayList<>();
 		this.getStudyList().add(study);
 	}
 
 	public void connectComment(Comment comment) {
-		if(this.commentList == null)
+		if (this.commentList == null)
 			this.commentList = new ArrayList<>();
 		this.getCommentList().add(comment);
 	}
@@ -123,9 +126,9 @@ public class User {
 		if (encodedPassword != null) {
 			this.password = encodedPassword;
 		}
-        if (userDto.getSolvedacUserName() != null) {  // solvedacUsername 업데이트 추가
-          this.solvedacUserName = userDto.getSolvedacUserName();
-        }
+		if (userDto.getSolvedacUserName() != null) {  // solvedacUsername 업데이트 추가
+			this.solvedacUserName = userDto.getSolvedacUserName();
+		}
 		if (userDto.getIsDeleted() != null) {
 			this.isDeleted = userDto.getIsDeleted();
 		}
@@ -152,5 +155,9 @@ public class User {
 
 	public void updateBanExpiration(LocalDateTime expirationTime) {
 		this.banExpiration = expirationTime;
+	}
+
+	public void updateBanReason(String banReason) {
+		this.banReason = banReason;
 	}
 }
