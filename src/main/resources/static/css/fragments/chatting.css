@@ -1,15 +1,15 @@
-body, html {
+.chat-frag body, .chat-frag html {
   height: 100%;
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f0f2f5;
 }
 
-#chat-component {
+.chat-frag {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-#chat-sidebar {
+.chat-frag-sidebar {
   position: fixed;
   right: -400px;
   top: 300px;
@@ -21,13 +21,13 @@ body, html {
   z-index: 1000;
 }
 
-#chat-container {
+.chat-frag-container {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.chat-header {
+.chat-frag-header {
   background-color: #1e88e5;
   color: white;
   padding: 15px;
@@ -36,17 +36,17 @@ body, html {
   justify-content: space-between;
 }
 
-.chat-header h1 {
+.chat-frag-header h1 {
   margin: 0;
   font-size: 18px;
 }
 
-.chat-header-buttons {
+.chat-frag-header-buttons {
   display: flex;
   gap: 10px;
 }
 
-.chat-header button {
+.chat-frag-header button {
   background: none;
   border: none;
   color: white;
@@ -57,44 +57,44 @@ body, html {
   transition: background-color 0.3s;
 }
 
-.chat-header button:hover {
+.chat-frag-header button:hover {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-#room-list-view, #chat-room-view, #create-room-view {
+.chat-frag-view {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-#room-list, #messages-container {
+.chat-frag-room-list, .chat-frag-messages-container {
   flex: 1;
   overflow-y: auto;
   padding: 20px;
 }
 
-#room-list .room-item {
+.chat-frag-room-list .chat-frag-room-item {
   padding: 10px;
   border-bottom: 1px solid #eee;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-#room-list .room-item:hover {
+.chat-frag-room-list .chat-frag-room-item:hover {
   background-color: #f5f5f5;
 }
 
-#messages-container {
+.chat-frag-messages-container {
   display: flex;
   flex-direction: column;
 }
 
-#messages {
+.chat-frag-messages {
   display: flex;
   flex-direction: column;
 }
 
-.message {
+.chat-frag-message {
   max-width: 80%;
   margin-bottom: 15px;
   padding: 10px 15px;
@@ -103,33 +103,33 @@ body, html {
   line-height: 1.4;
 }
 
-.message.sent {
+.chat-frag-message.sent {
   background-color: #1e88e5;
   color: white;
   align-self: flex-end;
 }
 
-.message.system {
+.chat-frag-message.system {
   background-color: #f0f0f0;
   color: #666;
   text-align: center;
   font-style: italic;
 }
 
-.message.received {
+.chat-frag-message.received {
   background-color: #e6e6e6;
   color: #333;
   align-self: flex-start;
 }
 
-.input-area {
+.chat-frag-input-area {
   padding: 15px;
   background-color: #f0f2f5;
   display: flex;
   align-items: center;
 }
 
-#user-input, #room-name, #invite-users, #invite-nickname {
+.chat-frag-input {
   flex: 1;
   padding: 10px 15px;
   border: 1px solid #ddd;
@@ -138,7 +138,7 @@ body, html {
   outline: none;
 }
 
-#send-button, #create-room-submit {
+.chat-frag-send-btn, .chat-frag-btn {
   background-color: #1e88e5;
   border: none;
   border-radius: 50%;
@@ -153,16 +153,16 @@ body, html {
   transition: background-color 0.3s;
 }
 
-#send-button:hover, #create-room-submit:hover {
+.chat-frag-send-btn:hover, .chat-frag-btn:hover {
   background-color: #1565c0;
 }
 
-#send-button img {
+.chat-frag-send-btn img {
   width: 60%;
   height: 60%;
 }
 
-#hamburger-menu {
+.chat-frag-hamburger {
   position: fixed;
   top: 800px;
   right: 30px;
@@ -179,7 +179,7 @@ body, html {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-#hamburger-menu span {
+.chat-frag-hamburger span {
   display: block;
   width: 25px;
   height: 3px;
@@ -188,36 +188,36 @@ body, html {
   transition: 0.4s;
 }
 
-body.chat-open #chat-sidebar {
+body.chat-open .chat-frag-sidebar {
   right: 0;
 }
 
-body.chat-open #hamburger-menu span:nth-child(1) {
+body.chat-open .chat-frag-hamburger span:nth-child(1) {
   transform: rotate(-45deg) translate(-5px, 6px);
 }
 
-body.chat-open #hamburger-menu span:nth-child(2) {
+body.chat-open .chat-frag-hamburger span:nth-child(2) {
   opacity: 0;
 }
 
-body.chat-open #hamburger-menu span:nth-child(3) {
+body.chat-open .chat-frag-hamburger span:nth-child(3) {
   transform: rotate(45deg) translate(-5px, -6px);
 }
 
-.hidden {
+.chat-frag-hidden {
   display: none !important;
 }
 
-#create-room-view .content {
+.chat-frag-content {
   padding: 20px;
 }
 
-#create-room-view input, #create-room-submit {
+.chat-frag-content .chat-frag-input, .chat-frag-content .chat-frag-btn {
   width: 100%;
   margin-bottom: 10px;
 }
 
-#create-room-submit {
+.chat-frag-content .chat-frag-btn {
   width: 100%;
   border-radius: 20px;
   height: auto;
@@ -226,7 +226,7 @@ body.chat-open #hamburger-menu span:nth-child(3) {
 }
 
 /* Modal styles */
-.modal {
+.chat-frag-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -239,11 +239,11 @@ body.chat-open #hamburger-menu span:nth-child(3) {
   z-index: 2000;
 }
 
-.modal.hidden {
+.chat-frag-modal.chat-frag-hidden {
   display: none;
 }
 
-.modal-content {
+.chat-frag-modal-content {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
@@ -251,44 +251,31 @@ body.chat-open #hamburger-menu span:nth-child(3) {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.modal h2 {
+.chat-frag-modal h2 {
   margin-top: 0;
   color: #1e88e5;
 }
 
-.modal-buttons {
+.chat-frag-modal-buttons {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
 }
 
-#send-invite {
-  background-color: #1e88e5;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.chat-frag-modal .chat-frag-btn {
   width: 120px;
 }
 
-#send-invite:hover {
-  background-color: #1565c0;
+#chat-send-invite {
+  background-color: #1e88e5;
+  color: white;
 }
 
-#cancel-invite {
+#chat-cancel-invite {
   background-color: #f0f2f5;
   color: #333;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.3s;
 }
 
-#cancel-invite:hover {
+#chat-cancel-invite:hover {
   background-color: #e0e0e0;
 }

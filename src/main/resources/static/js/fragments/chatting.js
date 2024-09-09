@@ -1,49 +1,49 @@
-let stompClient = null;
-let currentRoomId = null;
-let currentUserNickname = null;
-let currentView = 'room-list';
+let chatStompClient = null;
+let chatCurrentRoomId = null;
+let chatCurrentUserNickname = null;
+let chatCurrentView = 'room-list';
 
-function connect() {
+function chatConnect() {
   const socket = new SockJS('/algoy/chat-websocket');
-  stompClient = Stomp.over(socket);
-  stompClient.connect({}, function () {
-    loadRooms();
-    fetchCurrentUserInfo();
+  chatStompClient = Stomp.over(socket);
+  chatStompClient.connect({}, function () {
+    chatLoadRooms();
+    chatFetchCurrentUserInfo();
   }, function (error) {
     console.error('STOMP error:', error);
-    setTimeout(connect, 5000); // 5초 후 재연결 시도
+    setTimeout(chatConnect, 5000); // 5초 후 재연결 시도
   });
 }
 
-function fetchCurrentUserInfo() {
+function chatFetchCurrentUserInfo() {
   fetch('/algoy/api/user/current')
   .then(response => response.json())
   .then(user => {
-    currentUserNickname = user.nickname;
+    chatCurrentUserNickname = user.nickname;
   })
   .catch(error => console.error('Error fetching current user info:', error));
 }
 
-function loadRooms() {
+function chatLoadRooms() {
   fetch('/algoy/api/chat/rooms')
   .then(response => response.json())
   .then(rooms => {
-    const roomList = document.getElementById('room-list');
+    const roomList = document.getElementById('chat-room-list');
     roomList.innerHTML = '';
     rooms.forEach(room => {
       const roomElement = document.createElement('div');
-      roomElement.classList.add('room-item');
+      roomElement.classList.add('chat-frag-room-item');
       roomElement.textContent = room.name;
-      roomElement.onclick = () => joinRoom(room.roomId);
+      roomElement.onclick = () => chatJoinRoom(room.roomId);
       roomList.appendChild(roomElement);
     });
   })
   .catch(error => console.error('Error loading rooms:', error));
 }
 
-function createRoom() {
-  const roomName = document.getElementById('room-name').value.trim();
-  const inviteUsers = document.getElementById('invite-users').value.split(',').map(s => s.trim()).filter(s => s !== '');
+function chatCreateRoom() {
+  const roomName = document.getElementById('chat-room-name').value.trim();
+  const inviteUsers = document.getElementById('chat-invite-users').value.split(',').map(s => s.trim()).filter(s => s !== '');
 
   if (!roomName) {
     alert('방 이름을 입력해주세요.');
@@ -55,7 +55,7 @@ function createRoom() {
     return;
   }
 
-  if (inviteUsers.includes(currentUserNickname)) {
+  if (inviteUsers.includes(chatCurrentUserNickname)) {
     alert('자기 자신을 초대할 수 없습니다.');
     return;
   }
@@ -74,7 +74,7 @@ function createRoom() {
     return response.json();
   })
   .then(room => {
-    joinRoom(room.roomId);
+    chatJoinRoom(room.roomId);
   })
   .catch(error => {
     console.error('Error creating room:', error);
@@ -82,24 +82,24 @@ function createRoom() {
   });
 }
 
-function joinRoom(roomId) {
-  if (currentRoomId) {
-    stompClient.unsubscribe(currentRoomId);
+function chatJoinRoom(roomId) {
+  if (chatCurrentRoomId) {
+    chatStompClient.unsubscribe(chatCurrentRoomId);
   }
   fetch(`/algoy/api/chat/room/${roomId}/join`, {method: 'POST'})
   .then(response => response.json())
   .then(roomDto => {
-    currentRoomId = roomDto.roomId;
-    showChatRoomView(roomDto.name);
-    loadMessages(roomDto.roomId);
-    stompClient.subscribe(`/topic/room/${roomDto.roomId}`, onMessageReceived, {id: currentRoomId});
+    chatCurrentRoomId = roomDto.roomId;
+    chatShowChatRoomView(roomDto.name);
+    chatLoadMessages(roomDto.roomId);
+    chatStompClient.subscribe(`/topic/room/${roomDto.roomId}`, chatOnMessageReceived, {id: chatCurrentRoomId});
   })
   .catch(error => console.error('Error joining room:', error));
 }
 
-function leaveRoom() {
-  if (currentRoomId) {
-    fetch(`/algoy/api/chat/room/${currentRoomId}/leave`, {method: 'POST'})
+function chatLeaveRoom() {
+  if (chatCurrentRoomId) {
+    fetch(`/algoy/api/chat/room/${chatCurrentRoomId}/leave`, {method: 'POST'})
     .then(response => {
       if (!response.ok) {
         throw new Error('Failed to leave room');
@@ -111,54 +111,54 @@ function leaveRoom() {
         // 방이 삭제된 경우
         alert('마지막으로 남은 사용자이므로 채팅방이 삭제됩니다.');
       }
-      backToRoomList();
+      chatBackToRoomList();
     })
     .catch(error => {
       console.error('Error leaving room:', error);
       // 에러가 발생해도 일단 방 목록으로 돌아갑니다.
-      backToRoomList();
+      chatBackToRoomList();
     });
   }
 }
 
-function loadMessages(roomId) {
+function chatLoadMessages(roomId) {
   fetch(`/algoy/api/chat/room/${roomId}/messages`)
   .then(response => response.json())
   .then(data => {
-    const chatMessages = document.getElementById('messages');
+    const chatMessages = document.getElementById('chat-messages');
     chatMessages.innerHTML = '';
     // 메시지를 역순으로 표시
     data.content.reverse().forEach(message => {
-      displayMessage(message);
+      chatDisplayMessage(message);
     });
   })
   .catch(error => console.error('Error loading messages:', error));
 }
 
-function sendMessage() {
-  const messageContent = document.getElementById('user-input').value;
-  if (messageContent && stompClient && currentRoomId) {
+function chatSendMessage() {
+  const messageContent = document.getElementById('chat-user-input').value;
+  if (messageContent && chatStompClient && chatCurrentRoomId) {
     const chatMessage = {
-      roomId: currentRoomId,
+      roomId: chatCurrentRoomId,
       content: messageContent,
     };
-    stompClient.send("/algoy/chat/sendMessage", {}, JSON.stringify(chatMessage));
-    document.getElementById('user-input').value = '';
+    chatStompClient.send("/algoy/chat/sendMessage", {}, JSON.stringify(chatMessage));
+    document.getElementById('chat-user-input').value = '';
   }
 }
 
-function onMessageReceived(payload) {
+function chatOnMessageReceived(payload) {
   const message = JSON.parse(payload.body);
-  displayMessage(message);
+  chatDisplayMessage(message);
 }
 
-function displayMessage(message) {
+function chatDisplayMessage(message) {
   const messageElement = document.createElement('div');
-  messageElement.classList.add('message');
+  messageElement.classList.add('chat-frag-message');
 
   if (message.nickname === 'System') {
     messageElement.classList.add('system');
-  } else if (message.nickname === currentUserNickname) {
+  } else if (message.nickname === chatCurrentUserNickname) {
     messageElement.classList.add('sent');
   } else {
     messageElement.classList.add('received');
@@ -171,57 +171,57 @@ function displayMessage(message) {
         <small>${time}</small>
     `;
 
-  const messagesContainer = document.getElementById('messages');
+  const messagesContainer = document.getElementById('chat-messages');
   messagesContainer.appendChild(messageElement);
 
   // 스크롤을 최신 메시지로 이동
-  const scrollContainer = document.getElementById('messages-container');
+  const scrollContainer = document.getElementById('chat-messages-container');
   scrollContainer.scrollTop = scrollContainer.scrollHeight;
 }
 
-function showRoomListView() {
-  hideAllViews();
-  document.getElementById('room-list-view').classList.remove('hidden');
-  currentView = 'room-list';
+function chatShowRoomListView() {
+  chatHideAllViews();
+  document.getElementById('chat-room-list-view').classList.remove('chat-frag-hidden');
+  chatCurrentView = 'room-list';
 }
 
-function showCreateRoomView() {
-  hideAllViews();
-  document.getElementById('create-room-view').classList.remove('hidden');
-  currentView = 'create-room';
+function chatShowCreateRoomView() {
+  chatHideAllViews();
+  document.getElementById('chat-create-room-view').classList.remove('chat-frag-hidden');
+  chatCurrentView = 'create-room';
 }
 
-function showChatRoomView(roomName) {
-  hideAllViews();
-  document.getElementById('chat-room-view').classList.remove('hidden');
-  document.getElementById('room-name-header').textContent = roomName;
-  currentView = 'chat-room';
+function chatShowChatRoomView(roomName) {
+  chatHideAllViews();
+  document.getElementById('chat-room-view').classList.remove('chat-frag-hidden');
+  document.getElementById('chat-room-name-header').textContent = roomName;
+  chatCurrentView = 'chat-room';
 }
 
-function showInviteModal() {
-  document.getElementById('invite-modal').classList.remove('hidden');
+function chatShowInviteModal() {
+  document.getElementById('chat-invite-modal').classList.remove('chat-frag-hidden');
 }
 
-function hideInviteModal() {
-  document.getElementById('invite-modal').classList.add('hidden');
-  document.getElementById('invite-nickname').value = '';
+function chatHideInviteModal() {
+  document.getElementById('chat-invite-modal').classList.add('chat-frag-hidden');
+  document.getElementById('chat-invite-nickname').value = '';
 }
 
-function hideAllViews() {
-  ['room-list-view', 'create-room-view', 'chat-room-view'].forEach(id => {
-    document.getElementById(id).classList.add('hidden');
+function chatHideAllViews() {
+  ['chat-room-list-view', 'chat-create-room-view', 'chat-room-view'].forEach(id => {
+    document.getElementById(id).classList.add('chat-frag-hidden');
   });
-  hideInviteModal();
+  chatHideInviteModal();
 }
 
-function inviteUser() {
-  const inviteeNickname = document.getElementById('invite-nickname').value.trim();
+function chatInviteUser() {
+  const inviteeNickname = document.getElementById('chat-invite-nickname').value.trim();
   if (!inviteeNickname) {
     alert('Please enter a nickname to invite.');
     return;
   }
 
-  fetch(`/algoy/api/chat/room/${currentRoomId}/invite-by-nickname`, {
+  fetch(`/algoy/api/chat/room/${chatCurrentRoomId}/invite-by-nickname`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ nickname: inviteeNickname })
@@ -234,7 +234,7 @@ function inviteUser() {
   })
   .then(data => {
     alert(data.message || '초대에 성공하였습니다.');
-    hideInviteModal();
+    chatHideInviteModal();
   })
   .catch(error => {
     console.error('Error inviting user:', error);
@@ -242,61 +242,61 @@ function inviteUser() {
   });
 }
 
-function goBack() {
-  if (currentView === 'chat-room') {
-    backToRoomList();
-  } else if (currentView === 'create-room') {
-    showRoomListView();
+function chatGoBack() {
+  if (chatCurrentView === 'chat-room') {
+    chatBackToRoomList();
+  } else if (chatCurrentView === 'create-room') {
+    chatShowRoomListView();
   }
 }
 
-function backToRoomList() {
-  if (currentRoomId) {
-    stompClient.unsubscribe(currentRoomId);
+function chatBackToRoomList() {
+  if (chatCurrentRoomId) {
+    chatStompClient.unsubscribe(chatCurrentRoomId);
   }
-  showRoomListView();
-  currentRoomId = null;
-  loadRooms();
+  chatShowRoomListView();
+  chatCurrentRoomId = null;
+  chatLoadRooms();
 }
 
-function toggleChat() {
+function chatToggleChat() {
   document.body.classList.toggle('chat-open');
 }
 
-function initializeChat() {
+function chatInitialize() {
   // 햄버거 메뉴 토글 기능 추가
-  document.getElementById('hamburger-menu').addEventListener('click', toggleChat);
+  document.getElementById('chat-hamburger-menu').addEventListener('click', chatToggleChat);
 
-  document.getElementById('create-room-btn').addEventListener('click', showCreateRoomView);
-  document.getElementById('create-room-submit').addEventListener('click', createRoom);
-  document.getElementById('invite-user-btn').addEventListener('click', showInviteModal);
-  document.getElementById('send-button').addEventListener('click', sendMessage);
-  document.getElementById('send-invite').addEventListener('click', inviteUser);
-  document.getElementById('cancel-invite').addEventListener('click', hideInviteModal);
-  document.querySelectorAll('.back-btn').forEach(btn => {
-    btn.addEventListener('click', goBack);
+  document.getElementById('chat-create-room-btn').addEventListener('click', chatShowCreateRoomView);
+  document.getElementById('chat-create-room-submit').addEventListener('click', chatCreateRoom);
+  document.getElementById('chat-invite-user-btn').addEventListener('click', chatShowInviteModal);
+  document.getElementById('chat-send-button').addEventListener('click', chatSendMessage);
+  document.getElementById('chat-send-invite').addEventListener('click', chatInviteUser);
+  document.getElementById('chat-cancel-invite').addEventListener('click', chatHideInviteModal);
+  document.querySelectorAll('.chat-frag-back-btn').forEach(btn => {
+    btn.addEventListener('click', chatGoBack);
   });
-  document.getElementById('leave-room-btn').addEventListener('click', leaveRoom);
+  document.getElementById('chat-leave-room-btn').addEventListener('click', chatLeaveRoom);
 
-  document.getElementById('user-input').addEventListener('keypress', function (e) {
+  document.getElementById('chat-user-input').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
-      sendMessage();
+      chatSendMessage();
     }
   });
 
   // 모달 외부 클릭 시 닫기
   window.addEventListener('click', function (event) {
-    let modal = document.getElementById('invite-modal');
+    let modal = document.getElementById('chat-invite-modal');
     if (event.target === modal) {
-      hideInviteModal();
+      chatHideInviteModal();
     }
   });
 
   // 초기 연결 및 방 목록 로드
-  connect();
-  loadRooms();
-  hideInviteModal(); // 초기에 모달이 표시되지 않도록 함
+  chatConnect();
+  chatLoadRooms();
+  chatHideInviteModal(); // 초기에 모달이 표시되지 않도록 함
 }
 
 // DOM이 로드된 후 초기화 함수 실행
-document.addEventListener('DOMContentLoaded', initializeChat);
+document.addEventListener('DOMContentLoaded', chatInitialize);
