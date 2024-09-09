@@ -9,7 +9,8 @@ $(document).ready(function() {
             nickname: $("#nickname").val(),
             name: $("#username").val(),
             // 비밀번호가 입력된 경우에만 설정, 아니면 null
-            password: password.length > 0 ? password : undefined
+            password: password.length > 0 ? password : undefined,
+            solvedacUserName: $("#solvedacUsername").val() // username을 설정
         };
 
         console.log("User DTO:", userDto);
@@ -90,3 +91,56 @@ function checkDuplicateNickname(event) {
     }
 
 }
+
+/* --------------- SolvedAC username 유효성 체크 --------------- */
+
+let solvedUserNameValid = null; // 폼 제출시 username 유효성 체크를 확인하고 제출하기 위한 변수
+
+function checkEditSolvedacUsername(event) {
+    event.preventDefault();
+    // solvedAC Username 입력 필드 값 가져오기
+    const username = document.getElementById('solvedacUsername').value;
+    const messageElement = document.getElementById('solvedac-message');
+    // 입력된 값이 없을 경우 메시지 출력
+    if (!username) {
+        messageElement.textContent = '사용자 이름을 입력하세요.';
+        messageElement.style.color = 'red';
+        return;
+    }
+    const checkUrl = '/algoy/validate-username?username=' + username;
+// fetch API를 사용하여 서버에 GET 요청 보내기
+    //유효성 검사(isValid)가 true 인지 false 인지에 따라 기능 구현
+    fetch(checkUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.isValid) {
+                solvedUserNameValid = true;
+                messageElement.textContent = '사용자 이름이 유효합니다.';
+                messageElement.style.color = 'green';
+                document.getElementById('solvedacUsername').dataset.valid = 'true'; // 유효성 상태 저장
+            } else {
+                solvedUserNameValid = false;
+                messageElement.textContent = '유효하지 않은 사용자 이름입니다.';
+                messageElement.style.color = 'red';
+                document.getElementById('solvedacUsername').value = ''; // 유효하지 않은 경우 빈칸으로
+                document.getElementById('solvedacUsername').dataset.valid = 'false'; // 유효성 상태 저장
+            }
+        })
+        .catch(error => {
+            console.log('오류', error);
+            //console.error('오류가 발생했습니다:', error);
+            messageElement.textContent = '서버 오류가 발생했습니다.';
+            messageElement.style.color = 'red';
+        });
+}
+
+
+document.querySelector('form').addEventListener('button', function (event) {
+
+// 폼 제출(회원정보 수정 버튼 클릭) 시 solvedAC username 유효성 검사하지 않은채 text가 존재했을 경우 폼 제출 제한
+    if (solvedUserNameValid == false || (document.getElementById('solvedacUsername').value.length != 0 && solvedUserNameValid != true )){
+        event.preventDefault();
+        alert('빈칸 혹은 유효한 username을 입력하세요');
+    }
+
+});

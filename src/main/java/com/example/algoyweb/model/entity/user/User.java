@@ -132,6 +132,7 @@ public class User {
 		if (userDto.getIsDeleted() != null) {
 			this.isDeleted = userDto.getIsDeleted();
 		}
+
 		this.updatedAt = LocalDateTime.now();
 	}
 

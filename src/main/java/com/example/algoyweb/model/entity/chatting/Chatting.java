@@ -30,10 +30,14 @@ public class Chatting {
   private String content;
 
   @Column(nullable = false)
+  private String nickname;
+
+  @Column(nullable = false)
   private LocalDateTime createdAt;
 
   @PrePersist
   public void prePersist() {
     this.createdAt = LocalDateTime.now();
+    this.nickname = user.getNickname();
   }
 }

@@ -3,8 +3,10 @@ package com.example.algoyweb.controller.chatting;
 import com.example.algoyweb.model.dto.chatting.ChattingDto;
 import com.example.algoyweb.model.dto.chatting.JoinRoomRequest;
 import com.example.algoyweb.model.dto.chatting.LeaveRoomRequest;
+import com.example.algoyweb.model.dto.chatting.MessageRequest;
 import com.example.algoyweb.service.chatting.ChattingService;
 import jakarta.validation.Valid;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -18,25 +20,30 @@ public class ChattingWebSocketController {
   private final ChattingService chattingService;
   private final SimpMessagingTemplate messagingTemplate;
 
-  @MessageMapping("/algoy/chat/sendMessage")
-  public void sendMessage(@Valid @Payload ChattingDto chattingDto) {
-    ChattingDto savedMessage = chattingService.saveAndSendMessage(chattingDto);
-    messagingTemplate.convertAndSend("/topic/room/" + chattingDto.getRoomId(), savedMessage);
+  @MessageMapping("/chat/sendMessage")
+  public void sendMessage(@Payload MessageRequest messageRequest, Principal principal) {
+    ChattingDto chattingDto = chattingService.processAndSaveMessage(
+        messageRequest.getContent(),
+        messageRequest.getRoomId(),
+        principal.getName()
+    );
+
+    messagingTemplate.convertAndSend("/topic/room/" + chattingDto.getRoomId(), chattingDto);
   }
 
   @MessageMapping("/algoy/chat/joinRoom")
   public void joinRoom(@Valid @Payload JoinRoomRequest joinRequest) {
-    chattingService.joinRoom(joinRequest.getRoomId(), joinRequest.getUserId());
+    String nickname = chattingService.joinRoom(joinRequest.getRoomId(), joinRequest.getUsername());
     messagingTemplate.convertAndSend(
         "/topic/room/" + joinRequest.getRoomId(),
-        "User " + joinRequest.getUserId() + " joined the room");
+        nickname + " joined the room");
   }
 
   @MessageMapping("/algoy/chat/leaveRoom")
   public void leaveRoom(@Valid @Payload LeaveRoomRequest leaveRequest) {
-    chattingService.leaveRoom(leaveRequest.getRoomId(), leaveRequest.getUserId());
+    String nickname = chattingService.leaveRoom(leaveRequest.getRoomId(), leaveRequest.getUsername());
     messagingTemplate.convertAndSend(
         "/topic/room/" + leaveRequest.getRoomId(),
-        "User " + leaveRequest.getUserId() + " left the room");
+        nickname + " left the room");
   }
 }
