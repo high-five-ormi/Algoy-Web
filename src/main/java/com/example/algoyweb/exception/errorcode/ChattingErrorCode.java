@@ -1,6 +1,5 @@
-package com.example.algoyweb.exception.chatting;
+package com.example.algoyweb.exception.errorcode;
 
-import com.example.algoyweb.exception.errorcode.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public enum ChattingErrorCode implements ErrorCode {

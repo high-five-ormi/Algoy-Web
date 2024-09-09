@@ -1,7 +1,7 @@
 package com.example.algoyweb.service.chatting;
 
 import com.example.algoyweb.exception.CustomException;
-import com.example.algoyweb.exception.chatting.ChattingErrorCode;
+import com.example.algoyweb.exception.errorcode.ChattingErrorCode;
 import com.example.algoyweb.model.dto.chatting.ChattingDto;
 import com.example.algoyweb.model.dto.chatting.ChattingRoomDto;
 import com.example.algoyweb.model.entity.chatting.Chatting;
