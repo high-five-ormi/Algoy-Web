@@ -1,4 +1,4 @@
-.chat-frag body, .chat-frag html {
+.chat-frag-body, .chat-frag-html {
   height: 100%;
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -267,16 +267,16 @@ body.chat-open .chat-frag-hamburger span:nth-child(3) {
   width: 120px;
 }
 
-#chat-send-invite {
+#chat-frag-send-invite {
   background-color: #1e88e5;
   color: white;
 }
 
-#chat-cancel-invite {
+#chat-frag-cancel-invite {
   background-color: #f0f2f5;
   color: #333;
 }
 
-#chat-cancel-invite:hover {
+#chat-frag-cancel-invite:hover {
   background-color: #e0e0e0;
 }
