@@ -76,7 +76,7 @@ public class UserService implements UserDetailsService {
 			.nickname(userDto.getNickname())
 			.email(userDto.getEmail())
 			.password(passwordEncoder.encode(userDto.getPassword())) // 비밀번호 암호화
-			.solvedacUserName(userDto.getSolvedacUserName())    // solvedAC username 저장(유효성을 확인하는 로직 필요)
+			.solvedacUserName(userDto.getSolvedacUserName()) // solvedAC username 저장(유효성을 확인하는 로직 필요)
 			.role(Role.NORMAL)
 			.isDeleted(false)
 			.createdAt(LocalDateTime.now())
@@ -342,14 +342,14 @@ public class UserService implements UserDetailsService {
 			banExpiration = LocalDateTime.now().plusDays(15);
 		}
 
-		// 유저의 정지
+		// 유저 정지
 		user.updateRole(Role.BANNED);
-		// 유저의 정지 횟수를 1 증가시킴
+		// 유저의 정지 횟수 1 증가
 		user.increaseBanCount();
+		// 정지 사유 입력
+		user.updateBanReason(banReason);
 		// 계산된 정지 만료일을 유저 객체에 설정
 		user.updateBanExpiration(banExpiration);
-		// 밴 정지 사유 입력
-		user.updateBanReason(banReason);
 
 		userRepository.save(user); // 변경된 유저 정보를 DB에 저장
 	}
@@ -361,8 +361,8 @@ public class UserService implements UserDetailsService {
 		// 권한이 BANNED인 경우 NORMAL로 변경
 		if (user.getRole() == Role.BANNED) {
 			user.updateRole(Role.NORMAL);
-			user.updateBanExpiration(null); // 밴 만료 시간 초기화
 			user.updateBanReason(null);
+			user.updateBanExpiration(null); // 밴 만료 시간 초기화
 			userRepository.save(user);
 		}
 	}
@@ -407,8 +407,8 @@ public class UserService implements UserDetailsService {
 				if (user.getBanExpiration() != null && LocalDateTime.now().isAfter(user.getBanExpiration())) {
 					// 정지 만료 시간이 지났으면 정지 해제
 					user.updateRole(Role.NORMAL);
-					user.updateBanExpiration(null);
 					user.updateBanReason(null);
+					user.updateBanExpiration(null);
 					userRepository.save(user);
 				} else {
 					log.debug("아직 정지 기간이 만료되지 않았습니다.");

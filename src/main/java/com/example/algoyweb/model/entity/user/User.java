@@ -60,13 +60,13 @@ public class User {
 	private LocalDateTime deletedAt;
 
 	@Column(name = "ban_count", nullable = false)
-	private Integer banCount = 0; // 정지 횟수: 초기 값은 0
-
-	@Column(name = "ban_expiration")
-	private LocalDateTime banExpiration; // 정지 유효시간 (만료 시간)
+	private int banCount = 0; // 정지 횟수: 초기 값은 0
 
 	@Column(name = "ban_reason")
 	private String banReason; // 정지 사유
+
+	@Column(name = "ban_expiration")
+	private LocalDateTime banExpiration; // 정지 유효시간 (만료 시간)
 
 	@OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<Planner> plannerList;
