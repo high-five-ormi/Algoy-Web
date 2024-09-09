@@ -262,6 +262,10 @@ function backToRoomList() {
   loadRooms();
 }
 
+function toggleChat() {
+  document.body.classList.toggle('chat-open');
+}
+
 function initializeChat() {
   document.getElementById('create-room-btn').addEventListener('click',
       showCreateRoomView);
@@ -278,7 +282,7 @@ function initializeChat() {
   });
   document.getElementById('leave-room-btn').addEventListener('click',
       leaveRoom);
-
+  document.getElementById('hamburger-menu').addEventListener('click', toggleChat);
   document.getElementById('user-input').addEventListener('keypress',
       function (e) {
         if (e.key === 'Enter') {
