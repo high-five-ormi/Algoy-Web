@@ -41,7 +41,7 @@ public class ChattingController {
   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
   public ResponseEntity<ChattingRoomDto> createRoom(@Valid @RequestBody CreateRoomRequest request, Authentication authentication) {
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-    return ResponseEntity.ok(chattingService.createRoom(request.getName(), userDetails.getUsername()));
+    return ResponseEntity.ok(chattingService.createRoom(request.getName(), userDetails.getUsername(), request.getInvitees()));
   }
 
   @PostMapping("/room/{roomId}/join")
@@ -68,6 +68,16 @@ public class ChattingController {
       Authentication authentication) {
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
     chattingService.inviteUserByNickname(roomId, userDetails.getUsername(), inviteRequest.getNickname());
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/room/{roomId}/invite")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
+  public ResponseEntity<Void> inviteUserToRoom(
+      @PathVariable String roomId,
+      @RequestBody InviteRequest inviteRequest,
+      Authentication authentication) {
+    chattingService.inviteUserToRoom(roomId, authentication.getName(), inviteRequest.getNickname());
     return ResponseEntity.ok().build();
   }
 }

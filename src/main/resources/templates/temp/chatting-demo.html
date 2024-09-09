@@ -9,47 +9,61 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
-<div id="chat-sidebar">
-  <div id="chat-container">
-    <!-- 채팅방 목록 화면 -->
-    <div id="room-list-view">
-      <div class="chat-header">
-        <h1>Chat Rooms</h1>
-        <button id="create-room-btn">+</button>
-      </div>
-      <div id="room-list"></div>
+<div id="chat-container">
+  <!-- 채팅방 목록 화면 -->
+  <div id="room-list-view">
+    <div class="chat-header">
+      <h1>Chat Rooms</h1>
+      <button id="create-room-btn">+</button>
     </div>
+    <div id="room-list"></div>
+  </div>
 
-    <!-- 채팅방 생성 화면 -->
-    <div id="create-room-view" class="hidden">
-      <div class="chat-header">
-        <button class="back-btn">&lt;</button>
-        <h1>Create Room</h1>
-      </div>
-      <div class="content">
-        <input type="text" id="room-name" placeholder="Room Name">
-        <input type="text" id="invite-users" placeholder="Invite Users (comma-separated nicknames)">
-        <button id="create-room-submit">Create</button>
-      </div>
+  <!-- 채팅방 화면 -->
+  <div id="chat-room-view" class="hidden">
+    <div class="chat-header">
+      <button class="back-btn">&lt;</button>
+      <h1 id="room-name-header"></h1>
+      <button id="leave-room-btn">Leave</button>
+      <button id="invite-user-btn">Invite</button>
     </div>
-
-    <!-- 채팅방 화면 -->
-    <div id="chat-room-view" class="hidden">
-      <div class="chat-header">
-        <button class="back-btn">&lt;</button>
-        <h1 id="room-name-header"></h1>
-        <button id="leave-room-btn">Leave</button>
-      </div>
+    <div id="messages-container">
       <div id="messages"></div>
-      <div class="input-area">
-        <input type="text" id="user-input" placeholder="Type your message...">
-        <button id="send-button">
-          <img src="/img/send_icon.png" alt="Send">
-        </button>
+    </div>
+    <div class="input-area">
+      <input type="text" id="user-input" placeholder="Type your message...">
+      <button id="send-button">
+        <img src="/img/send_icon.png" alt="Send">
+      </button>
+    </div>
+  </div>
+
+  <!-- 채팅방 생성 화면 -->
+  <div id="create-room-view" class="hidden">
+    <div class="chat-header">
+      <button class="back-btn">&lt;</button>
+      <h1>Create Room</h1>
+    </div>
+    <div class="content">
+      <input type="text" id="room-name" placeholder="Room Name">
+      <input type="text" id="invite-users" placeholder="Invite Users (comma-separated nicknames)">
+      <button id="create-room-submit">Create</button>
+    </div>
+  </div>
+
+  <!-- 초대 모달 -->
+  <div id="invite-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Invite User</h2>
+      <input type="text" id="invite-nickname" placeholder="Enter nickname to invite">
+      <div class="modal-buttons">
+        <button id="send-invite">Send Invite</button>
+        <button id="cancel-invite">Cancel</button>
       </div>
     </div>
   </div>
 </div>
+
 <script src="/js/chatting/chatting.js"></script>
 </body>
 </html>
