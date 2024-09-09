@@ -40,8 +40,15 @@ body, html {
   background: none;
   border: none;
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.chat-header button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 #room-list, #messages {
@@ -54,6 +61,7 @@ body, html {
   padding: 10px;
   border-bottom: 1px solid #eee;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 #room-list .room-item:hover {
@@ -73,6 +81,7 @@ body, html {
   background-color: #1e88e5;
   color: white;
   align-self: flex-end;
+  margin-left: auto;
 }
 
 .message.received {
@@ -88,7 +97,7 @@ body, html {
   align-items: center;
 }
 
-#user-input, #room-name, #invite-users {
+#user-input, #room-name, #invite-users, #invite-nickname {
   flex: 1;
   padding: 10px 15px;
   border: 1px solid #ddd;
@@ -109,6 +118,11 @@ body, html {
   justify-content: center;
   align-items: center;
   padding: 0;
+  transition: background-color 0.3s;
+}
+
+#send-button:hover, #create-room-submit:hover {
+  background-color: #1565c0;
 }
 
 #send-button img {
@@ -135,4 +149,72 @@ body, html {
   height: auto;
   padding: 10px;
   color: white;
+}
+
+/* Modal styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 350px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal h2 {
+  margin-top: 0;
+  color: #1e88e5;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+#send-invite {
+  background-color: #1e88e5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 120px;
+}
+
+#send-invite:hover {
+  background-color: #1565c0;
+}
+
+#cancel-invite {
+  background-color: #f0f2f5;
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#cancel-invite:hover {
+  background-color: #e0e0e0;
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,13 +48,22 @@
           <img src="/img/send_icon.png" alt="Send">
         </button>
       </div>
-      <div id="invite-form" class="hidden">
-        <input type="text" id="invite-nickname" placeholder="Enter nickname to invite">
-        <button onclick="inviteUser()">Send Invite</button>
-      </div>
     </div>
   </div>
 </div>
+
+<!-- 초대 모달 -->
+<div id="invite-modal" class="modal hidden">
+  <div class="modal-content">
+    <h2>Invite User</h2>
+    <input type="text" id="invite-nickname" placeholder="Enter nickname to invite">
+    <div class="modal-buttons">
+      <button id="send-invite">Invite</button>
+      <button id="cancel-invite">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <script src="/js/chatting/chatting.js"></script>
 </body>
 </html>

@@ -175,15 +175,20 @@ function showChatRoomView(roomId) {
   currentView = 'chat-room';
 }
 
-function showInviteForm() {
-  document.getElementById('invite-form').classList.remove('hidden');
+function showInviteModal() {
+  document.getElementById('invite-modal').classList.remove('hidden');
+}
+
+function hideInviteModal() {
+  document.getElementById('invite-modal').classList.add('hidden');
+  document.getElementById('invite-nickname').value = '';
 }
 
 function hideAllViews() {
   ['room-list-view', 'create-room-view', 'chat-room-view'].forEach(id => {
     document.getElementById(id).classList.add('hidden');
   });
-  document.getElementById('invite-form').classList.add('hidden');
+  hideInviteModal();
 }
 
 function inviteUser() {
@@ -208,8 +213,7 @@ function inviteUser() {
       return response.json().then(err => { throw err; });
     }
     alert(`${inviteeNickname} has been invited to the room.`);
-    document.getElementById('invite-nickname').value = '';
-    document.getElementById('invite-form').classList.add('hidden');
+    hideInviteModal();
   })
   .catch(error => {
     console.error('Error inviting user:', error);
@@ -228,8 +232,10 @@ function goBack() {
 function initializeChat() {
   document.getElementById('create-room-btn').addEventListener('click', showCreateRoomView);
   document.getElementById('create-room-submit').addEventListener('click', createRoom);
-  document.getElementById('invite-user-btn').addEventListener('click', showInviteForm);
+  document.getElementById('invite-user-btn').addEventListener('click', showInviteModal);
   document.getElementById('send-button').addEventListener('click', sendMessage);
+  document.getElementById('send-invite').addEventListener('click', inviteUser);
+  document.getElementById('cancel-invite').addEventListener('click', hideInviteModal);
   document.querySelectorAll('.back-btn').forEach(btn => {
     btn.addEventListener('click', goBack);
   });
@@ -240,9 +246,18 @@ function initializeChat() {
       sendMessage();
     }
   });
+
+  // 모달 외부 클릭 시 닫기
+  window.addEventListener('click', function(event) {
+    let modal = document.getElementById('invite-modal');
+    if (event.target === modal) {
+      hideInviteModal();
+    }
+  });
 }
 
 window.onload = function() {
   connect();
   initializeChat();
+  hideInviteModal(); // 초기에 모달이 표시되지 않도록 함
 };
