@@ -12,6 +12,7 @@ import com.example.algoyweb.repository.chatting.ChattingRoomRepository;
 import com.example.algoyweb.repository.user.UserRepository;
 import com.example.algoyweb.util.chatting.ChattingConvertUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class ChattingService {
 
   private final ChattingRepository chattingRepository;
@@ -34,7 +36,7 @@ public class ChattingService {
   @Transactional(readOnly = true)
   public List<ChattingRoomDto> getUserRooms(String username) {
     User user = getUserByUsername(username);
-    List<ChattingRoom> rooms = chattingRoomRepository.findByParticipantsContaining(user.getUserId());
+    List<ChattingRoom> rooms = chattingRoomRepository.findByUserIdInParticipantsOrOwnerId(user.getUserId());
     return rooms.stream().map(ChattingConvertUtil::convertToDto).collect(Collectors.toList());
   }
 
@@ -55,32 +57,31 @@ public class ChattingService {
       throw new CustomException(ChattingErrorCode.NO_INVITEES);
     }
 
-    List<User> invitees = new ArrayList<>();
-    for (String nickname : inviteeNicknames) {
-      if (nickname.equals(owner.getNickname())) {
-        throw new CustomException(ChattingErrorCode.SELF_INVITATION_NOT_ALLOWED);
-      }
-      User invitee = userRepository.findByNickname(nickname);
-      if (invitee == null) {
-        throw new CustomException(ChattingErrorCode.USER_NOT_FOUND);
-      }
-      invitees.add(invitee);
-    }
-
     ChattingRoom chattingRoom = ChattingRoom.builder()
         .roomId("room-" + System.currentTimeMillis())
         .name(roomName)
         .owner(owner)
-        .participants(new ArrayList<>(List.of(owner.getUserId())))
+        .participants(new ArrayList<>())
         .createdAt(LocalDateTime.now())
         .updatedAt(LocalDateTime.now())
         .build();
 
-    for (User invitee : invitees) {
-      chattingRoom.addParticipant(invitee.getUserId());
+    // 방장을 참가자로 추가
+    chattingRoom.addParticipant(owner.getUserId());
+    log.info("Owner added as participant: {}", owner.getUserId());
+
+    for (String nickname : inviteeNicknames) {
+      if (!nickname.equals(owner.getNickname())) {
+        User invitee = userRepository.findByNickname(nickname);
+        if (invitee != null) {
+          chattingRoom.addParticipant(invitee.getUserId());
+          log.info("Invitee added as participant: {}", invitee.getUserId());
+        }
+      }
     }
 
     ChattingRoom savedRoom = chattingRoomRepository.save(chattingRoom);
+    log.info("Chatting room created: {}", savedRoom.getRoomId());
     return ChattingConvertUtil.convertToDto(savedRoom);
   }
 
