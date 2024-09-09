@@ -44,7 +44,7 @@
       var backendUrl = chatbotElement.dataset.backendUrl;
       console.log("Backend URL from data attribute:", backendUrl);
       if (backendUrl) {
-        const chatbot = new ChatbotComponent(backendUrl);
+        new BotFragChatbotComponent(backendUrl);
       } else {
         console.error("Backend URL is not set properly");
       }

@@ -1,20 +1,11 @@
-/**
- * @author JSW
- *
- * 사용자가 입력한 메시지를 서버에 전송하고, 서버로부터 실시간으로 응답을 받아 화면에 표시하는 기능을 수행합니다. (SSE 연결)
- * 메시지 전송 시 HTML 특수 문자를 이스케이프 처리하고, 서버 응답을 마크다운 형식으로 렌더링하는 기능도 합니다.
- */
-
 class BotFragChatbotComponent {
-  // 생성자 함수: backendUrl을 받아서 멤버 변수로 저장하고, init 메서드를 호출하여 초기화 작업을 수행
   constructor(backendUrl) {
     this.backendUrl = backendUrl;
-    this.currentEventSource = null; // 현재 SSE 연결을 관리하는 변수
-    this.isResponding = false; // AI가 응답 중인지 여부를 추적
-    this.init(); // 초기화 함수 호출
+    this.currentEventSource = null;
+    this.isResponding = false;
+    this.init();
   }
 
-  // 초기화 함수: DOM 요소를 찾고, 이벤트 리스너를 설정하는 역할
   init() {
     this.hamburgerMenu = document.getElementById('bot-frag-hamburger-menu');
     this.chatSidebar = document.getElementById('bot-frag-sidebar');
@@ -22,42 +13,46 @@ class BotFragChatbotComponent {
     this.userInput = document.getElementById('bot-frag-user-input');
     this.sendButton = document.getElementById('bot-frag-send-button');
 
-    // 햄버거 메뉴를 클릭할 때 챗봇을 토글
-    this.hamburgerMenu.addEventListener('click', () => this.toggleChatbot());
+    if (this.hamburgerMenu) {
+      this.hamburgerMenu.addEventListener('click', () => this.toggleChatbot());
+    } else {
+      console.error("Hamburger menu element not found for bot component");
+    }
 
-    // Enter 키를 누르면서 AI가 응답 중이 아닐 때 메시지 전송
-    this.userInput.addEventListener('keypress', (event) => {
-      if (event.key === 'Enter' && !this.isResponding) this.sendMessage();
-    });
+    if (this.userInput) {
+      this.userInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter' && !this.isResponding) this.sendMessage();
+      });
+    }
 
-    // 전송 버튼 클릭 시 메시지 전송 (AI가 응답 중이 아닐 때만)
-    this.sendButton.addEventListener('click', () => {
-      if (!this.isResponding) this.sendMessage();
-    });
+    if (this.sendButton) {
+      this.sendButton.addEventListener('click', () => {
+        if (!this.isResponding) this.sendMessage();
+      });
+    }
 
-    // 이전 대화 내용을 세션 스토리지에서 불러옴
     this.loadConversation();
-    this.scrollToBottom(); // 대화 불러온 후 스크롤을 맨 아래로 이동
+    this.scrollToBottom();
 
-    // 창 크기 변경 시 스크롤을 맨 아래로 조정
     window.addEventListener('resize', () => this.scrollToBottom());
   }
 
-  // 채팅창을 열거나 닫는 기능
   toggleChatbot() {
     document.body.classList.toggle('bot-frag-open');
-    // 챗봇이 열렸을 때 스크롤을 맨 아래로 이동
+    if (this.chatSidebar) {
+      this.chatSidebar.style.right = document.body.classList.contains('bot-frag-open') ? '0' : '-500px';
+    }
     if (document.body.classList.contains('bot-frag-open')) {
-      setTimeout(() => this.scrollToBottom(), 300); // 애니메이션 완료 후 스크롤
+      setTimeout(() => this.scrollToBottom(), 300);
     }
   }
 
-  // 스크롤을 메시지 영역의 맨 아래로 이동하는 함수
   scrollToBottom() {
-    this.messages.scrollTop = this.messages.scrollHeight;
+    if (this.messages) {
+      this.messages.scrollTop = this.messages.scrollHeight;
+    }
   }
 
-  // HTML 특수문자를 이스케이프 처리하여 XSS 방지
   escapeHtml(unsafe) {
     return unsafe
     .replace(/&/g, "&amp;")
@@ -67,136 +62,143 @@ class BotFragChatbotComponent {
     .replace(/'/g, "&#039;");
   }
 
-  // 현재 대화를 세션 스토리지에 저장
   saveConversation() {
     sessionStorage.setItem('bot-frag-conversation', this.messages.innerHTML);
   }
 
-  // 세션 스토리지에서 대화를 불러와 화면에 렌더링
   loadConversation() {
     const savedConversation = sessionStorage.getItem('bot-frag-conversation');
-    if (savedConversation) {
+    if (savedConversation && this.messages) {
       this.messages.innerHTML = savedConversation;
-      // 코드 블록에 대한 하이라이팅 적용
       this.messages.querySelectorAll('pre code').forEach((block) => {
         hljs.highlightBlock(block);
       });
-      this.scrollToBottom(); // 대화 로드 후 스크롤을 맨 아래로 이동
+      this.scrollToBottom();
     }
   }
 
-  // 대화 내용을 지우고 세션 스토리지에서 삭제
   clearConversation() {
     sessionStorage.removeItem('bot-frag-conversation');
-    this.messages.innerHTML = '';
+    if (this.messages) {
+      this.messages.innerHTML = '';
+    }
   }
 
-  // 사용자 입력을 비활성화하는 함수
   disableUserInput() {
-    this.sendButton.disabled = true; // 전송 버튼 비활성화
-    this.isResponding = true; // AI 응답 중 상태로 변경
+    if (this.sendButton) {
+      this.sendButton.disabled = true;
+    }
+    this.isResponding = true;
   }
 
-  // 사용자 입력을 활성화하는 함수
   enableUserInput() {
-    this.sendButton.disabled = false; // 전송 버튼 활성화
-    this.isResponding = false; // AI 응답 완료 상태로 변경
+    if (this.sendButton) {
+      this.sendButton.disabled = false;
+    }
+    this.isResponding = false;
   }
 
-  // 사용자가 입력한 메시지를 서버에 전송하고 응답을 처리하는 함수
   sendMessage() {
-    const message = this.userInput.value.trim(); // 입력한 메시지에서 공백 제거
-    if (!message) return; // 입력이 비어있으면 종료
-    this.userInput.value = ''; // 입력 필드 초기화
+    const message = this.userInput.value.trim();
+    if (!message) return;
+    this.userInput.value = '';
 
-    // 기존 SSE 연결이 있으면 종료
     if (this.currentEventSource) {
       this.currentEventSource.close();
     }
 
-    // 사용자의 메시지를 화면에 추가 (HTML 이스케이프 처리 후)
     const escapedMessage = this.escapeHtml(message);
     this.messages.insertAdjacentHTML('beforeend', `<p><strong>You:</strong> ${escapedMessage}</p>`);
-    this.scrollToBottom(); // 메시지 추가 후 스크롤
+    this.scrollToBottom();
 
-    // AI 응답을 받을 요소 생성
     const aiResponseElement = document.createElement('div');
     aiResponseElement.className = 'bot-frag-ai-message';
     aiResponseElement.innerHTML = '<strong>AI:</strong> <span class="bot-frag-loading">Thinking...</span>';
     this.messages.appendChild(aiResponseElement);
-    this.scrollToBottom(); // AI 응답 요소 추가 후 스크롤
+    this.scrollToBottom();
 
-    this.disableUserInput(); // 사용자의 입력을 비활성화
+    this.disableUserInput();
 
-    // SSE를 통해 서버로 메시지 전송
     this.currentEventSource = new EventSource(`${this.backendUrl}/ai/api/chat/stream?content=${encodeURIComponent(message)}`);
-    let lastResponse = ''; // 마지막으로 받은 응답을 저장할 변수
+    let lastResponse = '';
 
-    // 서버로부터 메시지를 실시간으로 받음
     this.currentEventSource.onmessage = (event) => {
       try {
-        const jsonResponse = JSON.parse(event.data); // 서버로부터 받은 데이터를 JSON으로 파싱
+        const jsonResponse = JSON.parse(event.data);
         if (jsonResponse && jsonResponse.data && jsonResponse.data.content) {
-          lastResponse = jsonResponse.data.content; // 마지막 응답 내용 저장
-          let parsedMarkdown = marked.parse(lastResponse); // 응답을 마크다운 형식으로 파싱
-          // 코드 블록을 감싸는 추가 스타일 적용
+          lastResponse = jsonResponse.data.content;
+          let parsedMarkdown = marked.parse(lastResponse);
           parsedMarkdown = parsedMarkdown.replace(/<pre><code([^>]*)>/g, '<div class="bot-frag-code-block-wrapper"><pre><code$1>');
           parsedMarkdown = parsedMarkdown.replace(/<\/code><\/pre>/g, '</code></pre></div>');
           aiResponseElement.innerHTML = `<strong>AI:</strong> <div class="bot-frag-markdown-body">${parsedMarkdown}</div>`;
-          // 코드 블록 하이라이팅
           aiResponseElement.querySelectorAll('pre code').forEach((block) => {
             hljs.highlightBlock(block);
           });
-          this.saveConversation(); // 대화 저장
-          this.scrollToBottom(); // 메시지 추가 후 스크롤
+          this.saveConversation();
+          this.scrollToBottom();
         }
       } catch (error) {
         console.error('Error processing response:', error, 'Raw data:', event.data);
       }
     };
 
-    // SSE 오류 발생 시 처리
     this.currentEventSource.onerror = (event) => {
       console.error('EventSource failed:', event);
       this.currentEventSource.close();
-      this.enableUserInput(); // 사용자 입력 활성화
+      this.enableUserInput();
       if (lastResponse) {
-        // 마지막 응답이 있을 경우 마크다운 파싱 및 렌더링
         let parsedMarkdown = marked.parse(lastResponse);
         parsedMarkdown = parsedMarkdown.replace(/<pre><code([^>]*)>/g, '<div class="bot-frag-code-block-wrapper"><pre><code$1>');
         parsedMarkdown = parsedMarkdown.replace(/<\/code><\/pre>/g, '</code></pre></div>');
         aiResponseElement.innerHTML = `<strong>AI:</strong> <div class="bot-frag-markdown-body">${parsedMarkdown}</div>`;
       } else {
-        aiResponseElement.querySelector('.bot-frag-loading').textContent = 'Error occurred. Please try again.'; // 오류 메시지 표시
+        aiResponseElement.querySelector('.bot-frag-loading').textContent = 'Error occurred. Please try again.';
       }
-      this.saveConversation(); // 대화 저장
-      this.scrollToBottom(); // 스크롤 이동
+      this.saveConversation();
+      this.scrollToBottom();
     };
 
-    // SSE 연결이 종료되었을 때 처리
     this.currentEventSource.onclose = () => {
-      this.enableUserInput(); // 사용자 입력 활성화
+      this.enableUserInput();
       if (lastResponse) {
-        // 마지막 응답이 있을 경우 마크다운 파싱 및 렌더링
         let parsedMarkdown = marked.parse(lastResponse);
         parsedMarkdown = parsedMarkdown.replace(/<pre><code([^>]*)>/g, '<div class="bot-frag-code-block-wrapper"><pre><code$1>');
         parsedMarkdown = parsedMarkdown.replace(/<\/code><\/pre>/g, '</code></pre></div>');
         aiResponseElement.innerHTML = `<strong>AI:</strong> <div class="bot-frag-markdown-body">${parsedMarkdown}</div>`;
       }
-      this.saveConversation(); // 대화 저장
-      this.scrollToBottom(); // 스크롤 이동
+      this.saveConversation();
+      this.scrollToBottom();
     };
   }
 }
 
-// 챗봇 컴포넌트 초기화
+// 전역 변수로 인스턴스 저장
+let botFragChatbotInstance = null;
+
 document.addEventListener('DOMContentLoaded', function() {
   const chatbotElement = document.getElementById('bot-frag-component');
-  const backendUrl = chatbotElement.dataset.backendUrl;
-  console.log("Backend URL from data attribute:", backendUrl);
-  if (backendUrl) {
-    new BotFragChatbotComponent(backendUrl);
+  if (chatbotElement) {
+    const backendUrl = chatbotElement.dataset.backendUrl;
+    if (backendUrl) {
+      botFragChatbotInstance = new BotFragChatbotComponent(backendUrl);
+    } else {
+      console.error("Backend URL is not set properly");
+    }
   } else {
-    console.error("Backend URL is not set properly");
+    console.error("Chatbot component element not found");
+  }
+
+  // 햄버거 메뉴 이벤트 리스너 추가
+  const hamburgerMenu = document.getElementById('bot-frag-hamburger-menu');
+  if (hamburgerMenu) {
+    hamburgerMenu.addEventListener('click', function() {
+      if (botFragChatbotInstance) {
+        botFragChatbotInstance.toggleChatbot();
+      } else {
+        console.error("Chatbot instance not initialized");
+      }
+    });
+  } else {
+    console.error("Hamburger menu element not found");
   }
 });

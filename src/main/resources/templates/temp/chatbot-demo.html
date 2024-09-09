@@ -42,9 +42,6 @@
   </section>
 </main>
 
-<!-- 여기에 채팅 프래그먼트 삽입 -->
-<div th:replace="~{fragments/chatting :: chat}"></div>
-
 <!-- 챗봇 컴포넌트 포함 -->
 <div th:replace="~{fragments/chatbot :: chatbot(backendUrl=${backendUrl})}"></div>
 
