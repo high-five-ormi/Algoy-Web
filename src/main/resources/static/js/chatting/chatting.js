@@ -6,8 +6,7 @@ let currentView = 'room-list';
 function connect() {
   const socket = new SockJS('/algoy/chat-websocket');
   stompClient = Stomp.over(socket);
-  stompClient.connect({}, function(frame) {
-    console.log('Connected: ' + frame);
+  stompClient.connect({}, function() {
     loadRooms();
     fetchCurrentUserInfo();
   }, function(error) {
@@ -86,11 +85,12 @@ function joinRoom(roomId) {
     stompClient.unsubscribe(currentRoomId);
   }
   fetch(`/algoy/api/chat/room/${roomId}/join`, { method: 'POST' })
-  .then(() => {
-    currentRoomId = roomId;
-    showChatRoomView(roomId);
-    loadMessages(roomId);
-    stompClient.subscribe(`/topic/room/${roomId}`, onMessageReceived, {id: currentRoomId});
+  .then(response => response.json())
+  .then(roomDto => {
+    currentRoomId = roomDto.roomId;
+    showChatRoomView(roomDto.name);
+    loadMessages(roomDto.roomId);
+    stompClient.subscribe(`/topic/room/${roomDto.roomId}`, onMessageReceived, {id: currentRoomId});
   })
   .catch(error => console.error('Error joining room:', error));
 }
@@ -175,10 +175,10 @@ function showCreateRoomView() {
   currentView = 'create-room';
 }
 
-function showChatRoomView(roomId) {
+function showChatRoomView(roomName) {
   hideAllViews();
   document.getElementById('chat-room-view').classList.remove('hidden');
-  document.getElementById('room-name-header').textContent = `Room: ${roomId}`;
+  document.getElementById('room-name-header').textContent = roomName;
   currentView = 'chat-room';
 }
 

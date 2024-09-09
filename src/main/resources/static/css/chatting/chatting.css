@@ -30,6 +30,13 @@ body, html {
 .chat-header h1 {
   margin: 0;
   font-size: 18px;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.chat-header-buttons {
+  display: flex;
+  gap: 10px;
 }
 
 .chat-header button {
