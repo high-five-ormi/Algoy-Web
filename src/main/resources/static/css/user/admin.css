@@ -59,14 +59,42 @@ button {
     border-radius: 4px;
 }
 
-button.admin-btn {
+.admin-btn {
     background-color: #4CAF50;
 }
 
-button.ban-btn {
+.ban-btn {
     background-color: #f44336;
 }
 
-button.lift-btn {
+.lift-btn {
     background-color: #008CBA;
+}
+
+#modal {
+    width: 500px;
+    height: 200px;
+
+    display: none;
+    position: fixed;
+    /* calc()을 쓸 때 +, -는 좌우 공백 필요. 일관성을 위해 *와 / 에도 공백 추가하는 게 좋다 */
+    top: calc(50% - 200px);
+    left: calc(50% - 250px);
+    z-index: 1;
+
+    border-radius: 20px;
+    box-shadow: 0 0 30px 0 #00000033;
+    background-color: ivory;
+}
+
+#modal h2 {
+    margin-bottom: 10px;
+}
+
+#modal form button {
+    background-color: #008CBA;
+}
+
+#modal form button:last-child {
+    background-color: #5a6268;
 }

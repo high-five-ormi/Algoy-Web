@@ -10,16 +10,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.algoyweb.service.user.UserPermissionService;
 import com.example.algoyweb.service.user.UserService;
 
 @Controller
 @RequestMapping("/algoy")
 public class AdminController {
 	private final UserService userService;
+	private final UserPermissionService userPermissionService;
 
 	@Autowired
-	public AdminController(UserService userService) {
+	public AdminController(UserService userService, UserPermissionService userPermissionService) {
 		this.userService = userService;
+		this.userPermissionService = userPermissionService;
 	}
 
 	/**
@@ -31,7 +34,7 @@ public class AdminController {
 	 */
 	@GetMapping("/admin")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN')") // 관리자만 접근 허용
-	public String showAdminPage(Model model, RedirectAttributes redirectAttributes) {
+	public String showAdminPage(Model model) {
 		model.addAttribute("users", userService.getAllUsers());
 
 		return "user/admin";
@@ -42,17 +45,19 @@ public class AdminController {
 	 *
 	 * @param userId 역할을 변경할 사용자의 ID
 	 * @param action 수행할 작업. 가능한 값: "admin" (관리자 승격), "ban" (사용자 밴), "lift" (밴 해제)
-	 * @return 관리자 페이지로 리다이렉트할 URL
+	 * @param banReason 유저의 밴 사유 (필수값 아님)
+	 * @return 관리자 페이지로 리다이렉트 할 URL
 	 */
 	@PostMapping("/admin/role-control")
-	public String changeUserRole(@RequestParam("userId") Long userId, @RequestParam("action") String action) {
+	public String changeUserRole(@RequestParam("userId") Long userId, @RequestParam("action") String action,
+		@RequestParam(value = "banReason", required = false) String banReason) {
 		// 유저 권한 변경 로직
 		if ("admin".equals(action)) { // 관리자 승격
-			userService.promoteToAdmin(userId);
+			userPermissionService.promoteToAdmin(userId);
 		} else if ("ban".equals(action)) { // 유저 밴
-			userService.banUser(userId);
+			userPermissionService.banUser(userId, banReason);
 		} else if ("lift".equals(action)) { // 유저 밴 해제
-			userService.liftBan(userId);
+			userPermissionService.liftBan(userId);
 		}
 
 		return "redirect:/algoy/admin";
