@@ -1,13 +1,13 @@
-#chatbot-component {
+.bot-frag-component {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-#chat-sidebar {
+.bot-frag-sidebar {
   position: fixed;
   right: -500px;
-  top: 300px; /* 헤더에 맞게 조절 */
+  top: 300px;
   width: 400px;
-  height: calc(100vh - 350px); /* 높이 조절 */
+  height: calc(100vh - 350px);
   background-color: white;
   transition: right 0.3s ease;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
@@ -15,13 +15,13 @@
   margin-right: 100px;
 }
 
-#chat-container {
+.bot-frag-container {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.chat-header {
+.bot-frag-header {
   background-color: #1e88e5;
   color: white;
   padding: 15px;
@@ -29,7 +29,7 @@
   align-items: center;
 }
 
-.chat-header .avatar {
+.bot-frag-avatar {
   width: 40px;
   height: 40px;
   background-color: white;
@@ -41,18 +41,18 @@
   overflow: hidden;
 }
 
-.chat-header .avatar img {
+.bot-frag-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.chat-header h1 {
+.bot-frag-header h1 {
   margin: 0;
   font-size: 18px;
 }
 
-#messages {
+.bot-frag-messages {
   flex: 1;
   overflow-y: auto;
   padding: 20px;
@@ -61,7 +61,7 @@
   scroll-behavior: smooth;
 }
 
-.ai-message, #messages p {
+.bot-frag-ai-message, .bot-frag-messages p {
   max-width: 80%;
   margin-bottom: 15px;
   padding: 10px 15px;
@@ -70,31 +70,31 @@
   line-height: 1.4;
 }
 
-#messages p:nth-child(even) {
+.bot-frag-messages p:nth-child(even) {
   background-color: #e6e6e6;
   color: #333;
   align-self: flex-end;
 }
 
-#messages p:nth-child(odd) {
+.bot-frag-messages p:nth-child(odd) {
   background-color: #1e88e5;
   color: white;
   align-self: flex-start;
 }
 
-.ai-message {
+.bot-frag-ai-message {
   background-color: #f0f0f0;
   align-self: flex-end;
 }
 
-.input-area {
+.bot-frag-input-area {
   padding: 15px;
   background-color: #f0f2f5;
   display: flex;
   align-items: center;
 }
 
-#user-input {
+.bot-frag-user-input {
   flex: 1;
   padding: 10px 15px;
   border: none;
@@ -103,7 +103,7 @@
   outline: none;
 }
 
-#send-button {
+.bot-frag-send-button {
   background-color: #1e88e5;
   border: none;
   border-radius: 50%;
@@ -118,19 +118,19 @@
   transition: background-color 0.3s ease;
 }
 
-#send-button:disabled {
+.bot-frag-send-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-#send-button img {
+.bot-frag-send-button img {
   width: 60%;
   height: 60%;
 }
 
-#hamburger-menu {
+.bot-frag-hamburger-menu {
   position: fixed;
-  top: 800px; /* 헤더에 맞게 조절 */
+  top: 800px;
   right: 30px;
   cursor: pointer;
   z-index: 1001;
@@ -145,7 +145,7 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-#hamburger-menu span {
+.bot-frag-hamburger-menu span {
   display: block;
   width: 25px;
   height: 3px;
@@ -154,23 +154,23 @@
   transition: 0.4s;
 }
 
-body.chatbot-open #chat-sidebar {
+body.bot-frag-open .bot-frag-sidebar {
   right: 0;
 }
 
-body.chatbot-open #hamburger-menu span:nth-child(1) {
+body.bot-frag-open .bot-frag-hamburger-menu span:nth-child(1) {
   transform: rotate(-45deg) translate(-5px, 6px);
 }
 
-body.chatbot-open #hamburger-menu span:nth-child(2) {
+body.bot-frag-open .bot-frag-hamburger-menu span:nth-child(2) {
   opacity: 0;
 }
 
-body.chatbot-open #hamburger-menu span:nth-child(3) {
+body.bot-frag-open .bot-frag-hamburger-menu span:nth-child(3) {
   transform: rotate(45deg) translate(-5px, -6px);
 }
 
-.code-block-wrapper {
+.bot-frag-code-block-wrapper {
   background-color: #f0f0f0;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -179,16 +179,16 @@ body.chatbot-open #hamburger-menu span:nth-child(3) {
   overflow-x: auto;
 }
 
-.markdown-body {
+.bot-frag-markdown-body {
   font-size: 14px;
   line-height: 1.6;
 }
 
-.markdown-body p {
+.bot-frag-markdown-body p {
   margin-bottom: 10px;
 }
 
-.markdown-body pre {
+.bot-frag-markdown-body pre {
   background-color: #f6f8fa;
   border-radius: 3px;
   font-size: 85%;
