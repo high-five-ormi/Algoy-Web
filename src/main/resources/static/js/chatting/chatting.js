@@ -113,7 +113,8 @@ function loadMessages(roomId) {
   .then(data => {
     const chatMessages = document.getElementById('messages');
     chatMessages.innerHTML = '';
-    data.content.forEach(message => {
+    // 메시지를 역순으로 표시
+    data.content.reverse().forEach(message => {
       displayMessage(message);
     });
   })
@@ -140,20 +141,26 @@ function onMessageReceived(payload) {
 function displayMessage(message) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message');
-  if (message.userId === currentUserId) {
+
+  if (message.nickname === currentUserNickname) {
     messageElement.classList.add('sent');
   } else {
     messageElement.classList.add('received');
   }
+
   const time = new Date(message.createdAt).toLocaleString();
   messageElement.innerHTML = `
         <strong>${message.nickname}</strong><br>
         ${message.content}<br>
         <small>${time}</small>
     `;
+
   const messagesContainer = document.getElementById('messages');
   messagesContainer.appendChild(messageElement);
-  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+  // 스크롤을 최신 메시지로 이동
+  const scrollContainer = document.getElementById('messages-container');
+  scrollContainer.scrollTop = scrollContainer.scrollHeight;
 }
 
 function showRoomListView() {
