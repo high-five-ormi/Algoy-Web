@@ -1,7 +1,7 @@
 package com.example.algoyweb.service.chatting;
 
 import com.example.algoyweb.exception.CustomException;
-import com.example.algoyweb.exception.chatting.ChattingErrorCode;
+import com.example.algoyweb.exception.errorcode.ChattingErrorCode;
 import com.example.algoyweb.model.dto.chatting.ChattingDto;
 import com.example.algoyweb.model.dto.chatting.ChattingRoomDto;
 import com.example.algoyweb.model.entity.chatting.Chatting;
@@ -12,9 +12,9 @@ import com.example.algoyweb.repository.chatting.ChattingRoomRepository;
 import com.example.algoyweb.repository.user.UserRepository;
 import com.example.algoyweb.util.chatting.ChattingConvertUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@Slf4j
 public class ChattingService {
 
   private final ChattingRepository chattingRepository;
   private final ChattingRoomRepository chattingRoomRepository;
   private final UserRepository userRepository;
+  private final SimpMessagingTemplate messagingTemplate;
 
   @Transactional(readOnly = true)
   public List<ChattingRoomDto> getUserRooms(String username) {
@@ -61,46 +61,66 @@ public class ChattingService {
         .roomId("room-" + System.currentTimeMillis())
         .name(roomName)
         .owner(owner)
-        .participants(new ArrayList<>())
+        .participants(new ArrayList<>(List.of(owner.getUserId())))
         .createdAt(LocalDateTime.now())
         .updatedAt(LocalDateTime.now())
         .build();
-
-    // 방장을 참가자로 추가
-    chattingRoom.addParticipant(owner.getUserId());
-    log.info("Owner added as participant: {}", owner.getUserId());
 
     for (String nickname : inviteeNicknames) {
       if (!nickname.equals(owner.getNickname())) {
         User invitee = userRepository.findByNickname(nickname);
         if (invitee != null) {
           chattingRoom.addParticipant(invitee.getUserId());
-          log.info("Invitee added as participant: {}", invitee.getUserId());
         }
       }
     }
 
     ChattingRoom savedRoom = chattingRoomRepository.save(chattingRoom);
-    log.info("Chatting room created: {}", savedRoom.getRoomId());
     return ChattingConvertUtil.convertToDto(savedRoom);
   }
 
-  public String joinRoom(String roomId, String username) {
+  public ChattingRoomDto joinRoom(String roomId, String username) {
     User user = getUserByUsername(username);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
     if (!room.getParticipants().contains(user.getUserId())) {
       room.addParticipant(user.getUserId());
-      chattingRoomRepository.save(room);
+      room = chattingRoomRepository.save(room);
     }
-    return user.getNickname();
+    sendSystemMessage(roomId, username + "님이 입장하셨습니다.");
+    return ChattingConvertUtil.convertToDto(room);
   }
 
-  public String leaveRoom(String roomId, String username) {
+  public ChattingRoomDto leaveRoom(String roomId, String username) {
     User user = getUserByUsername(username);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
+
+    if (!room.isParticipant(user.getUserId())) {
+      throw new CustomException(ChattingErrorCode.USER_NOT_IN_ROOM);
+    }
+
     room.removeParticipant(user.getUserId());
-    chattingRoomRepository.save(room);
-    return user.getNickname();
+
+    // 방장이 나가는 경우
+    if (room.getOwner().getUserId().equals(user.getUserId())) {
+      if (!room.isEmpty()) {
+        // 다른 참가자를 방장으로 지정
+        User newOwner = userRepository.findById(room.getParticipants().get(0))
+            .orElseThrow(() -> new CustomException(ChattingErrorCode.USER_NOT_FOUND));
+        room.changeOwner(newOwner);
+      } else {
+        // 마지막 참가자가 나가는 경우 방 삭제
+        chattingRoomRepository.delete(room);
+        sendSystemMessage(roomId, username + "님이 퇴장하셨습니다.");
+        return ChattingRoomDto.builder()
+            .roomId(roomId)
+            .deleted(true)
+            .build(); // 방이 삭제되었음을 나타내는 특별한 DTO 반환
+      }
+    }
+
+    room = chattingRoomRepository.save(room);
+    sendSystemMessage(roomId, username + "님이 퇴장하셨습니다.");
+    return ChattingConvertUtil.convertToDto(room);
   }
 
   public void inviteUserByNickname(String roomId, String inviterUsername, String inviteeNickname) {
@@ -126,57 +146,43 @@ public class ChattingService {
 
     room.addParticipant(invitee.getUserId());
     chattingRoomRepository.save(room);
-  }
 
-  public void inviteUserToRoom(String roomId, String inviterUsername, String inviteeNickname) {
-    User inviter = getUserByUsername(inviterUsername);
-    ChattingRoom room = getChattingRoomByRoomId(roomId);
-
-    if (!room.getParticipants().contains(inviter.getUserId())) {
-      throw new CustomException(ChattingErrorCode.USER_NOT_IN_ROOM);
-    }
-
-    if (inviter.getNickname().equals(inviteeNickname)) {
-      throw new CustomException(ChattingErrorCode.SELF_INVITATION_NOT_ALLOWED);
-    }
-
-    User invitee = userRepository.findByNickname(inviteeNickname);
-    if (invitee == null) {
-      throw new CustomException(ChattingErrorCode.USER_NOT_FOUND);
-    }
-
-    if (room.getParticipants().contains(invitee.getUserId())) {
-      throw new CustomException(ChattingErrorCode.USER_ALREADY_IN_ROOM);
-    }
-
-    room.addParticipant(invitee.getUserId());
-    chattingRoomRepository.save(room);
+    // 초대 메시지 전송
+    sendSystemMessage(roomId, inviteeNickname + "님이 초대되었습니다.");
   }
 
   public ChattingDto processAndSaveMessage(String content, String roomId, String username) {
-    try {
-      User user = getUserByUsername(username);
-      ChattingRoom room = getChattingRoomByRoomId(roomId);
+    User user = getUserByUsername(username);
+    ChattingRoom room = getChattingRoomByRoomId(roomId);
 
-      if (!room.getParticipants().contains(user.getUserId())) {
-        throw new CustomException(ChattingErrorCode.USER_NOT_IN_ROOM);
-      }
-
-      ChattingDto chattingDto = ChattingDto.builder()
-          .userId(user.getUserId())
-          .roomId(roomId)
-          .content(content)
-          .nickname(user.getNickname())
-          .createdAt(LocalDateTime.now())
-          .build();
-
-      Chatting chatting = ChattingConvertUtil.convertToEntity(chattingDto, user);
-      chattingRepository.save(chatting);
-
-      return chattingDto;
-    } catch (Exception e) {
-      throw new CustomException(ChattingErrorCode.MESSAGE_PROCESSING_ERROR);
+    if (!room.getParticipants().contains(user.getUserId())) {
+      throw new CustomException(ChattingErrorCode.USER_NOT_IN_ROOM);
     }
+
+    ChattingDto chattingDto = ChattingDto.builder()
+        .userId(user.getUserId())
+        .roomId(roomId)
+        .content(content)
+        .nickname(user.getNickname())
+        .createdAt(LocalDateTime.now())
+        .build();
+
+    Chatting chatting = ChattingConvertUtil.convertToEntity(chattingDto, user);
+    chattingRepository.save(chatting);
+
+    return chattingDto;
+  }
+
+  private void sendSystemMessage(String roomId, String messageContent) {
+    ChattingDto systemMessage = ChattingDto.builder()
+        .userId(null)
+        .roomId(roomId)
+        .content(messageContent)
+        .nickname("System")
+        .createdAt(LocalDateTime.now())
+        .build();
+
+    messagingTemplate.convertAndSend("/topic/room/" + roomId, systemMessage);
   }
 
   private User getUserByUsername(String username) {

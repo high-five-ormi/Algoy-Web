@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Fragment</title>
+</head>
+<body>
+<!-- 채팅 컴포넌트 프래그먼트 -->
+<div th:fragment="chat">
+  <div id="chat-component" class="chat-frag">
+    <div id="chat-hamburger-menu" class="chat-frag-hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <div id="chat-sidebar" class="chat-frag-sidebar">
+      <div id="chat-container" class="chat-frag-container">
+        <!-- 채팅방 목록 화면 -->
+        <div id="chat-room-list-view" class="chat-frag-view">
+          <div class="chat-frag-header">
+            <h1>Chat Rooms</h1>
+            <button id="chat-create-room-btn" class="chat-frag-btn">+</button>
+          </div>
+          <div id="chat-room-list" class="chat-frag-room-list"></div>
+        </div>
+
+        <!-- 채팅방 화면 -->
+        <div id="chat-room-view" class="chat-frag-view chat-frag-hidden">
+          <div class="chat-frag-header">
+            <button class="chat-frag-back-btn">&lt;</button>
+            <h1 id="chat-room-name-header">Room Name</h1>
+            <div class="chat-frag-header-buttons">
+              <button id="chat-leave-room-btn" class="chat-frag-btn">Leave</button>
+              <button id="chat-invite-user-btn" class="chat-frag-btn">Invite</button>
+            </div>
+          </div>
+          <div id="chat-messages-container" class="chat-frag-messages-container">
+            <div id="chat-messages" class="chat-frag-messages"></div>
+          </div>
+          <div class="chat-frag-input-area">
+            <input type="text" id="chat-user-input" class="chat-frag-input" placeholder="Type your message...">
+            <button id="chat-send-button" class="chat-frag-send-btn">
+              <img src="/img/send_icon.png" alt="Send">
+            </button>
+          </div>
+        </div>
+
+        <!-- 채팅방 생성 화면 -->
+        <div id="chat-create-room-view" class="chat-frag-view chat-frag-hidden">
+          <div class="chat-frag-header">
+            <button class="chat-frag-back-btn">&lt;</button>
+            <h1>Create Room</h1>
+          </div>
+          <div class="chat-frag-content">
+            <input type="text" id="chat-room-name" class="chat-frag-input" placeholder="Room Name">
+            <input type="text" id="chat-invite-users" class="chat-frag-input" placeholder="Invite Users (comma-separated nicknames)">
+            <button id="chat-create-room-submit" class="chat-frag-btn">Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 초대 모달 -->
+    <div id="chat-invite-modal" class="chat-frag-modal chat-frag-hidden">
+      <div class="chat-frag-modal-content">
+        <h2>Invite User</h2>
+        <input type="text" id="chat-invite-nickname" class="chat-frag-input" placeholder="Enter nickname to invite">
+        <div class="chat-frag-modal-buttons">
+          <button id="chat-send-invite" class="chat-frag-btn">Send Invite</button>
+          <button id="chat-cancel-invite" class="chat-frag-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 채팅 스타일시트 -->
+  <link rel="stylesheet" th:href="@{/css/fragments/chatting.css}">
+
+  <!-- 채팅 스크립트 -->
+  <script th:src="@{/js/fragments/chatting.js}"></script>
+</div>
+</body>
+</html>

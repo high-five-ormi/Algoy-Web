@@ -58,4 +58,19 @@ public class ChattingRoom {
   public void removeParticipant(Long userId) {
     participants.remove(userId);
   }
+
+  public void changeOwner(User newOwner) {
+    if (!this.participants.contains(newOwner.getUserId())) {
+      throw new IllegalArgumentException("New owner must be a participant of the room");
+    }
+    this.owner = newOwner;
+  }
+
+  public boolean isParticipant(Long userId) {
+    return this.participants.contains(userId);
+  }
+
+  public boolean isEmpty() {
+    return this.participants.isEmpty();
+  }
 }
