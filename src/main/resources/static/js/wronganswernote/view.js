@@ -5,19 +5,18 @@ document.addEventListener('DOMContentLoaded', function () {
   const cancelCode = document.getElementById('cancelCode');
   const codeInput = document.getElementById('codeInput');
   const sampleCodeContainer = document.querySelector('.sample-code-container');
-  const noteDetails = document.querySelector('.note-details');
   const editCodeModal = document.getElementById('editCodeModal');
   const editCodeInput = document.getElementById('editCodeInput');
   const submitEditCode = document.getElementById('submitEditCode');
   const cancelEditCode = document.getElementById('cancelEditCode');
+  const noteDetails = document.querySelector('.note-details');
 
-  let currentCodeId = null; // 현재 수정 중인 코드 ID
-
+  let currentCodeId = null;
   const noteId = document.querySelector('.edit-btn')?.getAttribute('data-note-id');
   const apiBaseUrl = '/api/codes';
 
+  // 페이지 로드 시 기존 코드 블록 가져오기
   if (noteId) {
-    // 페이지 로드 시 기존 코드 블록을 가져옵니다.
     fetch(`${apiBaseUrl}/${noteId}`)
     .then(response => response.json())
     .then(data => {
@@ -26,28 +25,28 @@ document.addEventListener('DOMContentLoaded', function () {
           addCodeBlock(code);
         });
       } else {
-        console.error('Failed to load codes.');
+        console.error('코드 로드에 실패했습니다.');
       }
     })
-    .catch(error => console.error('Error loading codes:', error));
+    .catch(error => console.error('코드 로드 중 오류 발생:', error));
   }
 
-  // 모달 열기
+  // 코드 추가 모달 열기
   if (addCodeButton && codeModal) {
     addCodeButton.addEventListener('click', function () {
       codeModal.style.display = 'flex';
     });
   }
 
-  // 모달 닫기 (취소 버튼)
+  // 코드 추가 모달 닫기 (취소 버튼)
   if (cancelCode && codeModal && codeInput) {
     cancelCode.addEventListener('click', function () {
       codeModal.style.display = 'none';
-      codeInput.value = ''; // 입력 필드 초기화
+      codeInput.value = '';
     });
   }
 
-  // 코드 추가 (추가 버튼)
+  // 코드 추가
   if (submitCode && codeInput && sampleCodeContainer && noteId) {
     submitCode.addEventListener('click', function () {
       const codeContent = codeInput.value.trim();
@@ -64,17 +63,17 @@ document.addEventListener('DOMContentLoaded', function () {
           if (data.success) {
             addCodeBlock(data.code);
             codeModal.style.display = 'none';
-            codeInput.value = ''; // 입력 필드 초기화
+            codeInput.value = '';
           } else {
-            console.error('Failed to add code.');
+            console.error('코드 추가에 실패했습니다.');
           }
         })
-        .catch(error => console.error('Error adding code:', error));
+        .catch(error => console.error('코드 추가 중 오류 발생:', error));
       }
     });
   }
 
-  // 코드 블록 추가
+  // 코드 블록 추가 함수
   function addCodeBlock(code) {
     const codeBlock = document.createElement('div');
     codeBlock.classList.add('sample-code');
@@ -87,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
     sampleCodeContainer.appendChild(codeBlock);
   }
 
-  // 코드 블록 수정 버튼 클릭 시
+  // 코드 수정 및 삭제 버튼 클릭 이벤트
   if (sampleCodeContainer) {
     sampleCodeContainer.addEventListener('click', function (event) {
       if (event.target.classList.contains('edit-code-btn')) {
@@ -114,22 +113,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('삭제에 실패했습니다.');
               }
             })
-            .catch(error => console.error('Error deleting code:', error));
+            .catch(error => console.error('코드 삭제 중 오류 발생:', error));
           }
         }
       }
     });
   }
 
-  // 수정 모달 닫기 (취소 버튼)
+  // 코드 수정 모달 닫기 (취소 버튼)
   if (cancelEditCode && editCodeModal && editCodeInput) {
     cancelEditCode.addEventListener('click', function () {
       editCodeModal.style.display = 'none';
-      editCodeInput.value = ''; // 입력 필드 초기화
+      editCodeInput.value = '';
     });
   }
 
-  // 코드 수정 (수정 버튼)
+  // 코드 수정
   if (submitEditCode && editCodeInput) {
     submitEditCode.addEventListener('click', function () {
       const codeContent = editCodeInput.value.trim();
@@ -147,17 +146,17 @@ document.addEventListener('DOMContentLoaded', function () {
             const codeBlock = sampleCodeContainer.querySelector(`.edit-code-btn[data-code-id="${currentCodeId}"]`).closest('.sample-code');
             codeBlock.querySelector('code').textContent = data.code.codeContent;
             editCodeModal.style.display = 'none';
-            editCodeInput.value = ''; // 입력 필드 초기화
+            editCodeInput.value = '';
           } else {
-            console.error('Failed to edit code.');
+            console.error('코드 수정에 실패했습니다.');
           }
         })
-        .catch(error => console.error('Error editing code:', error));
+        .catch(error => console.error('코드 수정 중 오류 발생:', error));
       }
     });
   }
 
-  // 수정 및 삭제 버튼 클릭 시
+  // 노트 수정 및 삭제 버튼 클릭 이벤트
   if (noteDetails) {
     noteDetails.addEventListener('click', function (event) {
       if (event.target.classList.contains('edit-btn')) {
@@ -176,12 +175,12 @@ document.addEventListener('DOMContentLoaded', function () {
           })
           .then(response => {
             if (response.ok) {
-              window.location.href = '/algoy/commit'; // 삭제 후 리다이렉션
+              window.location.href = '/algoy/commit';
             } else {
               alert('삭제에 실패했습니다.');
             }
           })
-          .catch(error => console.error('Error:', error));
+          .catch(error => console.error('오류 발생:', error));
         }
       }
     });

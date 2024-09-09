@@ -235,6 +235,11 @@ nav a:hover {
   margin-bottom: 10px;
 }
 
+/* 콘텐츠 내 텍스트 스타일: 줄바꿈 유지 */
+.content p {
+  white-space: pre-wrap; /* 줄바꿈 유지 */
+}
+
 /* 샘플 코드 컨테이너 스타일: 마진 */
 .sample-code-container {
   margin-bottom: 20px;
@@ -278,11 +283,11 @@ nav a:hover {
 /* 삭제 버튼 스타일: 색상 및 hover 시 색상 변화 */
 .delete-code-btn {
   right: 15px;
-  background: #ff4d4d;
+  background: #ff1a1a;
 }
 
 .delete-code-btn:hover {
-  background: #ff1a1a;
+  background: #ff4d4d;
 }
 
 /* 수정 버튼 스타일: 색상 및 hover 시 색상 변화 */
@@ -357,6 +362,40 @@ nav a:hover {
   position: relative;
 }
 
+/* 수정 모달창 버튼 스타일 */
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px; /* 버튼 사이 간격 */
+  margin-top: 10px;
+}
+
+.submit-btn, .cancel-btn {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.submit-btn {
+  background-color: #007bff; /* 파란색 */
+  color: #fff;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3; /* hover 시 색상 */
+}
+
+.cancel-btn {
+  background-color: #ff4d4d; /* 빨간색 */
+  color: #fff;
+}
+
+.cancel-btn:hover {
+  background-color: #ff1a1a; /* hover 시 색상 */
+}
+
 /* 텍스트 영역 스타일: 크기, 패딩, 폰트 크기 */
 textarea {
   width: 100%;
@@ -392,5 +431,36 @@ textarea {
 }
 
 #cancelCode:hover {
-  background-color: #ff1a1a;
+  background-color: #ff4d4d;
+}
+
+/* 수정 버튼 스타일 */
+.note-details .edit-btn {
+  background-color: #007bff; /* 파란색 */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.note-details .edit-btn:hover {
+  background-color: #0056b3; /* hover 시 색상 */
+}
+
+/* 삭제 버튼 스타일 */
+.note-details .delete-btn {
+  background-color: #ff1a1a; /* 빨간색 */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 0; /* 필요에 따라 추가 마진 조정 */
+}
+
+.note-details .delete-btn:hover {
+  background-color: #ff4d4d; /* hover 시 색상 */
 }

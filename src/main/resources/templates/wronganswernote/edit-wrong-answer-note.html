@@ -42,6 +42,7 @@
     <h1>게시글 수정</h1>
     <form id="noteForm" th:action="@{/algoy/commit/{id}/edit(id=${note.id})}" method="post" enctype="multipart/form-data">
       <input type="hidden" name="_method" value="POST">
+
       <label for="title">제목</label>
       <input type="text" id="title" name="title" placeholder="제목을 입력하세요" class="input-field" th:value="${note.title}" required><br/>
 
@@ -59,6 +60,13 @@
         <div>
           <label for="quizLevel">레벨</label>
           <input type="text" id="quizLevel" name="quizLevel" placeholder="레벨을 입력하세요" class="input-field" th:value="${note.quizLevel}" required>
+        </div>
+        <div>
+          <label for="isSolved">풀이 여부</label>
+          <select id="isSolved" name="isSolved" class="input-field" required>
+            <option value="true" th:selected="${note.isSolved} == true">Solved</option>
+            <option value="false" th:selected="${note.isSolved} == false">Unsolved</option>
+          </select>
         </div>
       </div>
 

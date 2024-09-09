@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>오답노트 상세 페이지</title>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap"
-        rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/wronganswernote/view-wrong-answer-note.css">
 </head>
 <body>
@@ -67,24 +66,20 @@
         </div>
         <div class="detail-item">
           <strong>풀이 여부</strong>
-          <p th:text="${note.isSolved}">0</p>
-          <label>
-            <input type="checkbox" th:checked="${note.isSolved}" class="solved-toggle"/>
-            <span
-                th:text="${note.isSolved != null ? (note.isSolved ? 'Solved' : 'Unsovled') : '풀이 미완료'}"></span>
-          </label>
+          <p th:text="${note.isSolved ? 'Solved' : 'Unsolved'}">Solved</p>
         </div>
       </div>
 
       <div class="content">
         <h3>내용</h3>
-        <p th:utext="${note.content}">내용내용내용내용내용내용내용내용</p>
-        <!-- 내용 부분에 이미지 추가 -->
+        <!-- 이미지 섹션을 내용 텍스트 위로 이동 -->
         <div class="note-image-container">
           <div th:each="url : ${note.imageUrls}">
-            <img th:src="@{/uploads/{url}(url=${url})}" alt="노트 이미지" class="note-image"/>
+            <img th:src="@{${url}}" alt="노트 이미지" class="note-image"/>
           </div>
         </div>
+        <!-- 텍스트 내용이 이미지 아래에 오도록 배치 -->
+        <p th:utext="${note.content}">내용내용내용내용내용내용내용내용</p>
       </div>
 
       <!-- 코드 추가 섹션 -->
@@ -116,8 +111,10 @@
 <div class="modal" id="editCodeModal">
   <div class="modal-content">
     <textarea id="editCodeInput" placeholder="수정할 코드를 입력하세요"></textarea>
-    <button id="submitEditCode">수정</button>
-    <button id="cancelEditCode" class="cancel-btn">취소</button>
+    <div class="modal-buttons">
+      <button id="submitEditCode" class="submit-btn">수정</button>
+      <button id="cancelEditCode" class="cancel-btn">취소</button>
+    </div>
   </div>
 </div>
 

@@ -213,18 +213,24 @@ main {
 /* 입력 필드 스타일 */
 .input-field,
 .textarea-field {
-  height: 67px;
   width: 100%;
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #EDF0F2;
   padding: 10px;
   margin-top: 5px;
+  box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 조정 */
+}
+
+.input-field {
+  height: 67px;
 }
 
 .textarea-field {
   height: 150px;
-  background-color: #EDF0F2;
+  /* 줄바꿈과 공백 처리 */
+  white-space: pre-wrap;
+  word-wrap: break-word; /* 단어가 너무 길 때 줄바꿈 */
 }
 
 /* 버튼 스타일 */

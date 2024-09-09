@@ -55,17 +55,29 @@ fileInput.addEventListener('change', (e) => {
   addFiles(e.target.files);
 });
 
-// 폼 제출 시 빈 필드 확인
-document.getElementById('noteForm').addEventListener('submit', (event) => {
-  const title = document.getElementById('title').value.trim();
-  const link = document.getElementById('link').value.trim();
-  const quizSite = document.getElementById('quizSite').value.trim();
-  const quizType = document.getElementById('quizType').value.trim();
-  const quizLevel = document.getElementById('quizLevel').value.trim();
-  const content = document.getElementById('content').value.trim();
+// 폼 제출 처리
+document.getElementById('noteForm').addEventListener('submit',
+    async (event) => {
+      event.preventDefault(); // 기본 폼 제출 막기
 
-  if (!title || !link || !quizSite || !quizType || !quizLevel || !content) {
-    event.preventDefault(); // 폼 제출 막기
-    alert('모든 필드를 채워주세요.'); // 사용자에게 알림
-  }
-});
+      const formData = new FormData(event.target);
+
+      try {
+        const response = await fetch('/algoy/commit/create', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (response.ok) {
+          // 성공적으로 게시글이 작성되면 리스트 페이지로 리다이렉트
+          window.location.href = '/algoy/commit';
+        } else {
+          // 에러 처리
+          const errorMessage = await response.text();
+          alert(`게시글 작성에 실패했습니다: ${errorMessage}`);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('서버와의 통신 중 오류가 발생했습니다.');
+      }
+    });

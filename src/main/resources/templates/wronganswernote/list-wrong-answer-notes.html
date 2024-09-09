@@ -60,11 +60,16 @@
   </section>
 
   <div class="pagination">
-    <a th:href="@{/algoy/commit(page=${currentPage - 1}, size=${size})}" th:if="${currentPage > 0}">&laquo; 이전</a>
-    <span th:each="page : ${#numbers.sequence(0, totalPages - 1)}">
-      <a th:href="@{/algoy/commit(page=${page}, size=${size})}" th:text="${page + 1}" th:class="${page == currentPage ? 'active' : ''}"></a>
+    <!-- 이전 그룹 버튼: 현재 그룹의 첫 페이지가 0보다 클 경우 표시 -->
+    <a th:href="@{/algoy/commit(page=${startPage - 10}, size=${size})}" th:if="${startPage > 0}">&laquo; 이전 </a>
+
+    <!-- 페이지 버튼을 10개 단위로 그룹화하여 표시 -->
+    <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <a th:href="@{/algoy/commit(page=${i}, size=${size})}" th:text="${i + 1}" th:class="${i == currentPage ? 'active' : ''}"></a>
     </span>
-    <a th:href="@{/algoy/commit(page=${currentPage + 1}, size=${size})}" th:if="${currentPage < totalPages - 1}">다음 &raquo;</a>
+
+    <!-- 다음 그룹 버튼: 현재 그룹의 마지막 페이지가 전체 페이지 수보다 작은 경우 표시 -->
+    <a th:href="@{/algoy/commit(page=${endPage + 1}, size=${size})}" th:if="${endPage < totalPages - 1}">다음  &raquo;</a>
   </div>
 </main>
 
