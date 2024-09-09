@@ -12,7 +12,6 @@ import com.example.algoyweb.repository.chatting.ChattingRoomRepository;
 import com.example.algoyweb.repository.user.UserRepository;
 import com.example.algoyweb.util.chatting.ChattingConvertUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@Slf4j
 public class ChattingService {
 
   private final ChattingRepository chattingRepository;
@@ -61,46 +59,40 @@ public class ChattingService {
         .roomId("room-" + System.currentTimeMillis())
         .name(roomName)
         .owner(owner)
-        .participants(new ArrayList<>())
+        .participants(new ArrayList<>(List.of(owner.getUserId())))
         .createdAt(LocalDateTime.now())
         .updatedAt(LocalDateTime.now())
         .build();
-
-    // 방장을 참가자로 추가
-    chattingRoom.addParticipant(owner.getUserId());
-    log.info("Owner added as participant: {}", owner.getUserId());
 
     for (String nickname : inviteeNicknames) {
       if (!nickname.equals(owner.getNickname())) {
         User invitee = userRepository.findByNickname(nickname);
         if (invitee != null) {
           chattingRoom.addParticipant(invitee.getUserId());
-          log.info("Invitee added as participant: {}", invitee.getUserId());
         }
       }
     }
 
     ChattingRoom savedRoom = chattingRoomRepository.save(chattingRoom);
-    log.info("Chatting room created: {}", savedRoom.getRoomId());
     return ChattingConvertUtil.convertToDto(savedRoom);
   }
 
-  public String joinRoom(String roomId, String username) {
+  public ChattingRoomDto joinRoom(String roomId, String username) {
     User user = getUserByUsername(username);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
     if (!room.getParticipants().contains(user.getUserId())) {
       room.addParticipant(user.getUserId());
-      chattingRoomRepository.save(room);
+      room = chattingRoomRepository.save(room);
     }
-    return user.getNickname();
+    return ChattingConvertUtil.convertToDto(room);
   }
 
-  public String leaveRoom(String roomId, String username) {
+  public ChattingRoomDto leaveRoom(String roomId, String username) {
     User user = getUserByUsername(username);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
     room.removeParticipant(user.getUserId());
-    chattingRoomRepository.save(room);
-    return user.getNickname();
+    room = chattingRoomRepository.save(room);
+    return ChattingConvertUtil.convertToDto(room);
   }
 
   public void inviteUserByNickname(String roomId, String inviterUsername, String inviteeNickname) {
@@ -128,55 +120,26 @@ public class ChattingService {
     chattingRoomRepository.save(room);
   }
 
-  public void inviteUserToRoom(String roomId, String inviterUsername, String inviteeNickname) {
-    User inviter = getUserByUsername(inviterUsername);
+  public ChattingDto processAndSaveMessage(String content, String roomId, String username) {
+    User user = getUserByUsername(username);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
 
-    if (!room.getParticipants().contains(inviter.getUserId())) {
+    if (!room.getParticipants().contains(user.getUserId())) {
       throw new CustomException(ChattingErrorCode.USER_NOT_IN_ROOM);
     }
 
-    if (inviter.getNickname().equals(inviteeNickname)) {
-      throw new CustomException(ChattingErrorCode.SELF_INVITATION_NOT_ALLOWED);
-    }
+    ChattingDto chattingDto = ChattingDto.builder()
+        .userId(user.getUserId())
+        .roomId(roomId)
+        .content(content)
+        .nickname(user.getNickname())
+        .createdAt(LocalDateTime.now())
+        .build();
 
-    User invitee = userRepository.findByNickname(inviteeNickname);
-    if (invitee == null) {
-      throw new CustomException(ChattingErrorCode.USER_NOT_FOUND);
-    }
+    Chatting chatting = ChattingConvertUtil.convertToEntity(chattingDto, user);
+    chattingRepository.save(chatting);
 
-    if (room.getParticipants().contains(invitee.getUserId())) {
-      throw new CustomException(ChattingErrorCode.USER_ALREADY_IN_ROOM);
-    }
-
-    room.addParticipant(invitee.getUserId());
-    chattingRoomRepository.save(room);
-  }
-
-  public ChattingDto processAndSaveMessage(String content, String roomId, String username) {
-    try {
-      User user = getUserByUsername(username);
-      ChattingRoom room = getChattingRoomByRoomId(roomId);
-
-      if (!room.getParticipants().contains(user.getUserId())) {
-        throw new CustomException(ChattingErrorCode.USER_NOT_IN_ROOM);
-      }
-
-      ChattingDto chattingDto = ChattingDto.builder()
-          .userId(user.getUserId())
-          .roomId(roomId)
-          .content(content)
-          .nickname(user.getNickname())
-          .createdAt(LocalDateTime.now())
-          .build();
-
-      Chatting chatting = ChattingConvertUtil.convertToEntity(chattingDto, user);
-      chattingRepository.save(chatting);
-
-      return chattingDto;
-    } catch (Exception e) {
-      throw new CustomException(ChattingErrorCode.MESSAGE_PROCESSING_ERROR);
-    }
+    return chattingDto;
   }
 
   private User getUserByUsername(String username) {
