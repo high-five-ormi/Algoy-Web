@@ -1,6 +1,7 @@
 let stompClient = null;
 let currentRoomId = null;
 let currentUserNickname = null;
+let currentView = 'room-list';
 
 function connect() {
   const socket = new SockJS('/algoy/chat-websocket');
@@ -8,7 +9,6 @@ function connect() {
   stompClient.connect({}, function(frame) {
     console.log('Connected: ' + frame);
     loadRooms();
-    // 여기서 현재 사용자의 정보를 가져오는 API를 호출하고 currentUserNickname을 설정해야 합니다.
     fetchCurrentUserInfo();
   }, function(error) {
     console.error('STOMP error:', error);
@@ -16,7 +16,6 @@ function connect() {
   });
 }
 
-// 현재 사용자 정보를 가져오는 함수
 function fetchCurrentUserInfo() {
   fetch('/algoy/api/user/current')
   .then(response => response.json())
@@ -42,22 +41,6 @@ function loadRooms() {
   })
   .catch(error => console.error('Error loading rooms:', error));
 }
-
-function showView(viewId) {
-  ['room-list-view', 'create-room-view', 'chat-room-view'].forEach(id => {
-    document.getElementById(id).classList.add('hidden');
-  });
-  document.getElementById(viewId).classList.remove('hidden');
-}
-
-document.getElementById('create-room-btn').onclick = () => showView('create-room-view');
-document.querySelectorAll('.back-btn').forEach(btn => {
-  btn.onclick = () => showView('room-list-view');
-});
-
-document.getElementById('create-room-submit').onclick = createRoom;
-document.getElementById('leave-room-btn').onclick = leaveRoom;
-document.getElementById('send-button').onclick = sendMessage;
 
 function createRoom() {
   const roomName = document.getElementById('room-name').value.trim();
@@ -105,8 +88,7 @@ function joinRoom(roomId) {
   fetch(`/algoy/api/chat/room/${roomId}/join`, { method: 'POST' })
   .then(() => {
     currentRoomId = roomId;
-    showView('chat-room-view');
-    document.getElementById('room-name-header').textContent = `Room: ${roomId}`;
+    showChatRoomView(roomId);
     loadMessages(roomId);
     stompClient.subscribe(`/topic/room/${roomId}`, onMessageReceived, {id: currentRoomId});
   })
@@ -118,7 +100,7 @@ function leaveRoom() {
     fetch(`/algoy/api/chat/room/${currentRoomId}/leave`, { method: 'POST' })
     .then(() => {
       stompClient.unsubscribe(currentRoomId);
-      showView('room-list-view');
+      showRoomListView();
       currentRoomId = null;
     })
     .catch(error => console.error('Error leaving room:', error));
@@ -174,14 +156,93 @@ function displayMessage(message) {
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-// 엔터 키로 메시지 전송
-document.getElementById('user-input').addEventListener('keypress', function(e) {
-  if (e.key === 'Enter') {
-    sendMessage();
+function showRoomListView() {
+  hideAllViews();
+  document.getElementById('room-list-view').classList.remove('hidden');
+  currentView = 'room-list';
+}
+
+function showCreateRoomView() {
+  hideAllViews();
+  document.getElementById('create-room-view').classList.remove('hidden');
+  currentView = 'create-room';
+}
+
+function showChatRoomView(roomId) {
+  hideAllViews();
+  document.getElementById('chat-room-view').classList.remove('hidden');
+  document.getElementById('room-name-header').textContent = `Room: ${roomId}`;
+  currentView = 'chat-room';
+}
+
+function showInviteForm() {
+  document.getElementById('invite-form').classList.remove('hidden');
+}
+
+function hideAllViews() {
+  ['room-list-view', 'create-room-view', 'chat-room-view'].forEach(id => {
+    document.getElementById(id).classList.add('hidden');
+  });
+  document.getElementById('invite-form').classList.add('hidden');
+}
+
+function inviteUser() {
+  const inviteeNickname = document.getElementById('invite-nickname').value.trim();
+  if (!inviteeNickname) {
+    alert('Please enter a nickname to invite.');
+    return;
   }
-});
+
+  if (inviteeNickname === currentUserNickname) {
+    alert('You cannot invite yourself.');
+    return;
+  }
+
+  fetch(`/algoy/api/chat/room/${currentRoomId}/invite`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nickname: inviteeNickname })
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(err => { throw err; });
+    }
+    alert(`${inviteeNickname} has been invited to the room.`);
+    document.getElementById('invite-nickname').value = '';
+    document.getElementById('invite-form').classList.add('hidden');
+  })
+  .catch(error => {
+    console.error('Error inviting user:', error);
+    alert('Failed to invite user: ' + error.message);
+  });
+}
+
+function goBack() {
+  if (currentView === 'chat-room') {
+    leaveRoom();
+  } else if (currentView === 'create-room') {
+    showRoomListView();
+  }
+}
+
+function initializeChat() {
+  document.getElementById('create-room-btn').addEventListener('click', showCreateRoomView);
+  document.getElementById('create-room-submit').addEventListener('click', createRoom);
+  document.getElementById('invite-user-btn').addEventListener('click', showInviteForm);
+  document.getElementById('send-button').addEventListener('click', sendMessage);
+  document.querySelectorAll('.back-btn').forEach(btn => {
+    btn.addEventListener('click', goBack);
+  });
+  document.getElementById('leave-room-btn').addEventListener('click', leaveRoom);
+
+  document.getElementById('user-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+}
 
 window.onload = function() {
   connect();
-  fetchCurrentUserInfo();
+  initializeChat();
 };

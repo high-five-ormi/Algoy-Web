@@ -127,6 +127,31 @@ public class ChattingService {
     chattingRoomRepository.save(room);
   }
 
+  public void inviteUserToRoom(String roomId, String inviterUsername, String inviteeNickname) {
+    User inviter = getUserByUsername(inviterUsername);
+    ChattingRoom room = getChattingRoomByRoomId(roomId);
+
+    if (!room.getParticipants().contains(inviter.getUserId())) {
+      throw new CustomException(ChattingErrorCode.USER_NOT_IN_ROOM);
+    }
+
+    if (inviter.getNickname().equals(inviteeNickname)) {
+      throw new CustomException(ChattingErrorCode.SELF_INVITATION_NOT_ALLOWED);
+    }
+
+    User invitee = userRepository.findByNickname(inviteeNickname);
+    if (invitee == null) {
+      throw new CustomException(ChattingErrorCode.USER_NOT_FOUND);
+    }
+
+    if (room.getParticipants().contains(invitee.getUserId())) {
+      throw new CustomException(ChattingErrorCode.USER_ALREADY_IN_ROOM);
+    }
+
+    room.addParticipant(invitee.getUserId());
+    chattingRoomRepository.save(room);
+  }
+
   public ChattingDto processAndSaveMessage(String content, String roomId, String username) {
     try {
       User user = getUserByUsername(username);

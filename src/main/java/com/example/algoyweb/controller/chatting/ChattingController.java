@@ -70,4 +70,14 @@ public class ChattingController {
     chattingService.inviteUserByNickname(roomId, userDetails.getUsername(), inviteRequest.getNickname());
     return ResponseEntity.ok().build();
   }
+
+  @PostMapping("/room/{roomId}/invite")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
+  public ResponseEntity<Void> inviteUserToRoom(
+      @PathVariable String roomId,
+      @RequestBody InviteRequest inviteRequest,
+      Authentication authentication) {
+    chattingService.inviteUserToRoom(roomId, authentication.getName(), inviteRequest.getNickname());
+    return ResponseEntity.ok().build();
+  }
 }
