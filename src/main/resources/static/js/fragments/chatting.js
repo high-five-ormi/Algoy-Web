@@ -43,8 +43,7 @@ function loadRooms() {
 
 function createRoom() {
   const roomName = document.getElementById('room-name').value.trim();
-  const inviteUsers = document.getElementById('invite-users').value.split(
-      ',').map(s => s.trim()).filter(s => s !== '');
+  const inviteUsers = document.getElementById('invite-users').value.split(',').map(s => s.trim()).filter(s => s !== '');
 
   if (!roomName) {
     alert('방 이름을 입력해주세요.');
@@ -93,8 +92,7 @@ function joinRoom(roomId) {
     currentRoomId = roomDto.roomId;
     showChatRoomView(roomDto.name);
     loadMessages(roomDto.roomId);
-    stompClient.subscribe(`/topic/room/${roomDto.roomId}`, onMessageReceived,
-        {id: currentRoomId});
+    stompClient.subscribe(`/topic/room/${roomDto.roomId}`, onMessageReceived, {id: currentRoomId});
   })
   .catch(error => console.error('Error joining room:', error));
 }
@@ -144,8 +142,7 @@ function sendMessage() {
       roomId: currentRoomId,
       content: messageContent,
     };
-    stompClient.send("/algoy/chat/sendMessage", {},
-        JSON.stringify(chatMessage));
+    stompClient.send("/algoy/chat/sendMessage", {}, JSON.stringify(chatMessage));
     document.getElementById('user-input').value = '';
   }
 }
@@ -267,28 +264,25 @@ function toggleChat() {
 }
 
 function initializeChat() {
-  document.getElementById('create-room-btn').addEventListener('click',
-      showCreateRoomView);
-  document.getElementById('create-room-submit').addEventListener('click',
-      createRoom);
-  document.getElementById('invite-user-btn').addEventListener('click',
-      showInviteModal);
+  // 햄버거 메뉴 토글 기능 추가
+  document.getElementById('hamburger-menu').addEventListener('click', toggleChat);
+
+  document.getElementById('create-room-btn').addEventListener('click', showCreateRoomView);
+  document.getElementById('create-room-submit').addEventListener('click', createRoom);
+  document.getElementById('invite-user-btn').addEventListener('click', showInviteModal);
   document.getElementById('send-button').addEventListener('click', sendMessage);
   document.getElementById('send-invite').addEventListener('click', inviteUser);
-  document.getElementById('cancel-invite').addEventListener('click',
-      hideInviteModal);
+  document.getElementById('cancel-invite').addEventListener('click', hideInviteModal);
   document.querySelectorAll('.back-btn').forEach(btn => {
     btn.addEventListener('click', goBack);
   });
-  document.getElementById('leave-room-btn').addEventListener('click',
-      leaveRoom);
-  document.getElementById('hamburger-menu').addEventListener('click', toggleChat);
-  document.getElementById('user-input').addEventListener('keypress',
-      function (e) {
-        if (e.key === 'Enter') {
-          sendMessage();
-        }
-      });
+  document.getElementById('leave-room-btn').addEventListener('click', leaveRoom);
+
+  document.getElementById('user-input').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
 
   // 모달 외부 클릭 시 닫기
   window.addEventListener('click', function (event) {
@@ -297,10 +291,12 @@ function initializeChat() {
       hideInviteModal();
     }
   });
+
+  // 초기 연결 및 방 목록 로드
+  connect();
+  loadRooms();
+  hideInviteModal(); // 초기에 모달이 표시되지 않도록 함
 }
 
-window.onload = function () {
-  connect();
-  initializeChat();
-  hideInviteModal(); // 초기에 모달이 표시되지 않도록 함
-};
+// DOM이 로드된 후 초기화 함수 실행
+document.addEventListener('DOMContentLoaded', initializeChat);
