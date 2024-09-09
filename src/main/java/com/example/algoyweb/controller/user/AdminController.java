@@ -34,7 +34,7 @@ public class AdminController {
 	 */
 	@GetMapping("/admin")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN')") // 관리자만 접근 허용
-	public String showAdminPage(Model model, RedirectAttributes redirectAttributes) {
+	public String showAdminPage(Model model) {
 		model.addAttribute("users", userService.getAllUsers());
 
 		return "user/admin";
