@@ -332,7 +332,7 @@ public class UserService implements UserDetailsService {
 		}
 
 		if (user.getRole() == Role.ADMIN) { // 관리자는 정지 불가
-			return;
+			throw new IllegalStateException("관리자는 정지할 수 없습니다." + user.getRole());
 		}
 
 		int banCount = user.getBanCount(); // 해당 유저의 현재 정지 횟수
