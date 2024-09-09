@@ -1,4 +1,4 @@
-package com.example.algoyweb.model.dto.user;
+package com.example.algoyweb.service.user;
 
 import java.time.LocalDateTime;
 import java.util.List;
