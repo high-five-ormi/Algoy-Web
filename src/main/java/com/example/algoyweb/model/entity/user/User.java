@@ -64,6 +64,9 @@ public class User {
 	@Column(name = "ban_expiration")
 	private LocalDateTime banExpiration; // 정지 유효시간 (만료 시간)
 
+	@Column(name = "ban_reason")
+	private String banReason; // 정지 사유
+
 	@OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<Planner> plannerList;
 
@@ -151,5 +154,9 @@ public class User {
 
 	public void updateBanExpiration(LocalDateTime expirationTime) {
 		this.banExpiration = expirationTime;
+	}
+
+	public void updateBanReason(String banReason) {
+		this.banReason = banReason;
 	}
 }

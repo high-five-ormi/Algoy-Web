@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.repository.user.UserRepository;
+
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
@@ -75,7 +76,7 @@ public class UserService implements UserDetailsService {
 			.nickname(userDto.getNickname())
 			.email(userDto.getEmail())
 			.password(passwordEncoder.encode(userDto.getPassword())) // 비밀번호 암호화
-				.solvedacUserName(userDto.getSolvedacUserName())	//solvedAC username 저장(유효성을 확인하는 로직 필요)
+			.solvedacUserName(userDto.getSolvedacUserName())    // solvedAC username 저장(유효성을 확인하는 로직 필요)
 			.role(Role.NORMAL)
 			.isDeleted(false)
 			.createdAt(LocalDateTime.now())
@@ -316,7 +317,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	// 유저 밴
-	public void banUser(Long userId) {
+	public void banUser(Long userId, String banReason) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
 		// 유저가 정지 상태인지 확인 후, 정지 상태인 경우 예외 던지기
@@ -347,6 +348,8 @@ public class UserService implements UserDetailsService {
 		user.increaseBanCount();
 		// 계산된 정지 만료일을 유저 객체에 설정
 		user.updateBanExpiration(banExpiration);
+		// 밴 정지 사유 입력
+		user.updateBanReason(banReason);
 
 		userRepository.save(user); // 변경된 유저 정보를 DB에 저장
 	}
@@ -363,7 +366,6 @@ public class UserService implements UserDetailsService {
 		}
 	}
 
-
 	/**
 	 * SolvedAC username 유효성 확인
 	 *
@@ -372,10 +374,10 @@ public class UserService implements UserDetailsService {
 	 * js에서 구현했을때 CORS에러로 인해 서버에서 로직을 처리함.
 	 */
 
-	public boolean isUsernameValid(String solvedacUsername){
+	public boolean isUsernameValid(String solvedacUsername) {
 		String SOLVEDAC_USERNAME_VALID = "https://solved.ac/api/v3/user/show?handle=";
 
-		try{
+		try {
 			RestTemplate restTemplate = new RestTemplate();
 			String apiUrl = SOLVEDAC_USERNAME_VALID + solvedacUsername;
 
@@ -383,13 +385,12 @@ public class UserService implements UserDetailsService {
 			// username이 존재하면 true 반환
 			return response.getStatusCode().is2xxSuccessful();
 
-		}catch (Exception e) {
+		} catch (Exception e) {
 			// 존재하지 않는다면 false 반환
 			return false;
 		}
 
 	}
-
 
 	@Scheduled(fixedRate = 60000) // 이전 작업 시작 후 1분마다 실행
 	// @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
