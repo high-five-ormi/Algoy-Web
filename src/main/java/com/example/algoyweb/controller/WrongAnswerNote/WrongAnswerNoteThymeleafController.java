@@ -1,20 +1,12 @@
 package com.example.algoyweb.controller.WrongAnswerNote;
 
-import com.example.algoyweb.model.dto.WrongAnswerNote.ImageDTO;
 import com.example.algoyweb.model.dto.WrongAnswerNote.WrongAnswerNoteDTO;
-import com.example.algoyweb.service.WrongAnswerNote.ImageService;
 import com.example.algoyweb.service.WrongAnswerNote.WrongAnswerNoteService;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/algoy/commit")
@@ -22,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class WrongAnswerNoteThymeleafController {
 
     private final WrongAnswerNoteService service;
-    private final ImageService imageService;
 
     // 페이지네이션을 적용한 목록 조회
     @GetMapping
@@ -70,25 +61,9 @@ public class WrongAnswerNoteThymeleafController {
 
     // 오답노트 생성
     @PostMapping("/create")
-    public String createWrongAnswerNote(
-        @ModelAttribute WrongAnswerNoteDTO dto,
-        @RequestParam(value = "images", required = false) List<MultipartFile> imageFiles)
-        throws IOException {
-
-        System.out.println("DTO: " + dto);
-
+    public String createWrongAnswerNote(@ModelAttribute WrongAnswerNoteDTO dto) {
         WrongAnswerNoteDTO savedNote = service.save(dto);
-        Long noteId = savedNote.getId();
-
-        if (imageFiles != null && !imageFiles.isEmpty()) {
-            List<String> imageUrls = new ArrayList<>();
-            for (MultipartFile file : imageFiles) {
-                ImageDTO imageDTO = imageService.uploadImage(file);
-                imageUrls.add(imageDTO.getImgUrl());
-            }
-            service.linkImagesToNote(noteId, imageUrls);
-        }
-        return "redirect:/algoy/commit/" + noteId;
+        return "redirect:/algoy/commit/" + savedNote.getId();
     }
 
     // 오답노트 수정 폼
@@ -98,22 +73,10 @@ public class WrongAnswerNoteThymeleafController {
         return "wronganswernote/edit-wrong-answer-note";
     }
 
-    // 오답노트 수정 및 이미지 처리
+    // 오답노트 수정
     @PostMapping("/{id}/edit")
-    public String editWrongAnswerNote(
-        @PathVariable Long id,
-        @ModelAttribute WrongAnswerNoteDTO dto,
-        @RequestParam(value = "images", required = false) List<MultipartFile> imageFiles)
-        throws IOException {
+    public String editWrongAnswerNote(@PathVariable Long id, @ModelAttribute WrongAnswerNoteDTO dto) {
         service.update(id, dto);
-        if (imageFiles != null) {
-            List<String> imageUrls = new ArrayList<>();
-            for (MultipartFile file : imageFiles) {
-                ImageDTO imageDTO = imageService.uploadImage(file);
-                imageUrls.add(imageDTO.getImgUrl());
-            }
-            service.linkImagesToNote(id, imageUrls);
-        }
         return "redirect:/algoy/commit/" + id;
     }
 }

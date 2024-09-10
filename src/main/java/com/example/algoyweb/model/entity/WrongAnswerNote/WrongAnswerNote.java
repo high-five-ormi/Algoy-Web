@@ -53,10 +53,6 @@ public class WrongAnswerNote {
     private Boolean isSolved;
 
     @OneToMany(mappedBy = "wrongAnswerNote", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Image> images;
-
-    @OneToMany(mappedBy = "wrongAnswerNote", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Code> codes = new ArrayList<>();
 
     @PrePersist
