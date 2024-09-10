@@ -80,6 +80,7 @@ public class AllenService {
             System.out.println(responseList);
 
             //변경사항을 저장한다.
+            saveResponse(algoyUserName, responseList);
 
             return ResponseEntity.ok("성공");
 
@@ -88,7 +89,7 @@ public class AllenService {
         }
     }
 
-    //호출한 정보를 리스트에 넣는다 (현재 사용하지 않음)
+    //호출한 정보를 리스트에 넣는다 (5가지 문제 추천)
     public List<String> convertJsonToListString(String jsonResponse){
         //Gson 객체 생성
         Gson gson = new Gson();
