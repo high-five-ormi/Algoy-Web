@@ -44,47 +44,55 @@
             <h2>ALAN'S PICK</h2>
             <p>코딩테스트를 위한 AI 추천 문제 풀고 취뽀하자!</p>
 
-            <!-- Allen's Pick 결과 또는 초기 메시지 표시 -->
-            <div id="allen-response" class="allen-response">
-                <!-- 백준 username을 입력하시면 앨런이 문제를 추천해줘요! -->
-            </div>
-
-            <!-- 사용자 입력 필드와 Go 버튼 -->
-            <div class="pick-input-group">
-                <input type="text" id="solvedacusername" class="pick-input" placeholder="Enter solvedac username">
-                <button onclick="getAllenResponse()" class="pick-button">Go</button>
+            <!-- 문제를 표시할 부분 -->
+            <div id="allen-response" class="allen-response" th:text="${problem != null} ? ${problem} : '백준 username을 입력하시면 앨런이 문제를 추천해줘요!'">
             </div>
         </div>
+<!--        <div class="alans-pick">-->
+<!--            <h2>ALAN'S PICK</h2>-->
+<!--            <p>코딩테스트를 위한 AI 추천 문제 풀고 취뽀하자!</p>-->
+
+<!--            &lt;!&ndash; Allen's Pick 결과 또는 초기 메시지 표시 &ndash;&gt;-->
+<!--            <div id="allen-response" class="allen-response">-->
+<!--                &lt;!&ndash; 백준 username을 입력하시면 앨런이 문제를 추천해줘요! &ndash;&gt;-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; 사용자 입력 필드와 Go 버튼 &ndash;&gt;-->
+<!--            <div class="pick-input-group">-->
+<!--                <input type="text" id="solvedacusername" class="pick-input" placeholder="Enter solvedac username">-->
+<!--                <button onclick="getAllenResponse()" class="pick-button">Go</button>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 </div>
 
 <!-- 챗봇 컴포넌트 포함 -->
 <div th:replace="~{fragments/chatbot :: chatbot(backendUrl=${backendUrl})}"></div>
 
-<script>
+<!--<script>-->
 
-    // Allen's Pick API 호출 함수
-    function getAllenResponse() {
-        const solvedacusername = document.getElementById("solvedacusername").value;
+<!--    // Allen's Pick API 호출 함수-->
+<!--    function getAllenResponse() {-->
+<!--        const solvedacusername = document.getElementById("solvedacusername").value;-->
 
-        // solvedacusername이 입력되었는지 확인
-        if (!solvedacusername) {
-            document.getElementById("allen-response").innerText = "solvedac username을 입력해주세요.";
-            return;
-        }
+<!--        // solvedacusername이 입력되었는지 확인-->
+<!--        if (!solvedacusername) {-->
+<!--            document.getElementById("allen-response").innerText = "solvedac username을 입력해주세요.";-->
+<!--            return;-->
+<!--        }-->
 
-        // AJAX 요청
-        fetch(`/algoy/allen/solvedac?solvedacusername=${solvedacusername}&algoyusername=exampleUser`)  // exampleUser는 실제 algoyusername으로 대체
-            .then(response => response.text())
-            .then(data => {
-                // 받은 데이터를 화면에 표시
-                document.getElementById("allen-response").innerText = data;
-            })
-            .catch(error => {
-                document.getElementById("allen-response").innerText = "Error: " + error;
-            });
-    }
-</script>
+<!--        // AJAX 요청-->
+<!--        fetch(`/algoy/allen/solvedac?solvedacusername=${solvedacusername}&algoyusername=exampleUser`)  // exampleUser는 실제 algoyusername으로 대체-->
+<!--            .then(response => response.text())-->
+<!--            .then(data => {-->
+<!--                // 받은 데이터를 화면에 표시-->
+<!--                document.getElementById("allen-response").innerText = data;-->
+<!--            })-->
+<!--            .catch(error => {-->
+<!--                document.getElementById("allen-response").innerText = "Error: " + error;-->
+<!--            });-->
+<!--    }-->
+<!--</script>-->
 
 <style>
     .alans-pick {

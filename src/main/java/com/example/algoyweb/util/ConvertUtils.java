@@ -10,8 +10,6 @@ import com.example.algoyweb.model.entity.study.Study;
 import com.example.algoyweb.model.entity.user.User;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Optional;
 
 public class ConvertUtils {
 

@@ -1,7 +1,7 @@
 package com.example.algoyweb.service.allen;
 
 import com.example.algoyweb.model.dto.allen.SolvedACJsonResponse;
-import com.example.algoyweb.model.entity.allen.SolvedACResponse;
+import com.example.algoyweb.model.entity.allen.SolvedACResponseEntity;
 import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.repository.allen.SolvedACResponseRepository;
 import com.example.algoyweb.repository.user.UserRepository;
@@ -22,6 +22,13 @@ import java.util.Map;
 @Service
 public class AllenService {
 
+    //사용자가 푼 문제 중 문제 수준이 높은 상위 100 문제를 가져오는 api
+    @Value("${solvedac.url}")
+    String solvedAcApi;
+
+    @Value("${askallen.url}")
+    String askAllenUrl;
+
     private final HttpURLConnectionEx httpEx;
     private final SolvedACResponseRepository solvedACResponseRepository;
     private final UserRepository userRepository;
@@ -34,14 +41,22 @@ public class AllenService {
 
     }
 
+    /**
+     * home 화면에 출력할 문제 리스트에서 추출
+     *
+     * @author 조아라
+     * @return void
+     * 추천받는 문제 5개(List)를 DB에 저장하는 메서드
+     */
     @Transactional
     public void saveResponse(String username, List<String> responseList) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        SolvedACResponse solvedACResponseEntity = solvedACResponseRepository.findByUserUsername(username)
-                .orElse(SolvedACResponse.builder()
+        SolvedACResponseEntity solvedACResponseEntity = solvedACResponseRepository.findByUserUsername(username)
+                .orElse(SolvedACResponseEntity.builder()
                         .user(user)
+                        .userEmail(user.getEmail())
                         .response(responseList)
                         .updatedAt(LocalDateTime.now())
                         .build());
@@ -51,14 +66,15 @@ public class AllenService {
     }
 
 
-    //사용자가 푼 문제 중 문제 수준이 높은 상위 100 문제를 가져오는 api
-    @Value("${solvedac.url}")
-    String solvedAcApi;
+    /**
+     * SolvedAC username을 기반으로 앨런AI에게 문제 추천을 요청한다(5문제)
+     *
+     * @author 조아라
+     * @return String
+     * 앨런AI에게 질문하기 위해 username 정보를 RESTFUL API를 통해 전송한다
+     * AI(8082) 애플리케이션에 API 통신한다
+     */
 
-    @Value("${askallen.url}")
-    String askAllenUrl;
-
-    //userName을 이용하여 sovledAC API를 통해 푼 문제 정보를 호출한다. (5개 문제)
     public ResponseEntity<String> sovledacCall(String algoyUserName, String solvedACUserName) throws Exception {
 
         String requestUrl = askAllenUrl + "/response?algoyusername=" + algoyUserName + "&solvedacusername=" + solvedACUserName;
@@ -89,6 +105,13 @@ public class AllenService {
         }
     }
 
+    /**
+     * (5문제)
+     *
+     * @author 조아라
+     * @return String
+     *
+     */
     //호출한 정보를 리스트에 넣는다 (5가지 문제 추천)
     public List<String> convertJsonToListString(String jsonResponse){
         //Gson 객체 생성

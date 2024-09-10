@@ -1,22 +1,20 @@
 package com.example.algoyweb.service.user;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 
 import com.example.algoyweb.exception.CustomException;
 import com.example.algoyweb.exception.errorcode.UserErrorCode;
+import com.example.algoyweb.model.entity.allen.SolvedACResponseEntity;
 import com.example.algoyweb.model.entity.user.Role;
+import com.example.algoyweb.repository.allen.SolvedACResponseRepository;
 import com.example.algoyweb.util.ConvertUtils;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
@@ -38,10 +36,13 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class UserService implements UserDetailsService {
+	private final SolvedACResponseRepository solvedACResponseRepository;
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder; // Spring Security의 PasswordEncoder 사용
 
-	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	@Autowired
+	public UserService(SolvedACResponseRepository solvedACResponseRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+		this.solvedACResponseRepository = solvedACResponseRepository;
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 	}
@@ -349,5 +350,61 @@ public class UserService implements UserDetailsService {
 			return false;
 		}
 
+	}
+
+	/**
+	 * home 화면에 출력할 문제 리스트에서 추출
+	 *
+	 * @author 조아라
+	 * @return 추천 문제 String 반환
+	 * 리스트에 저장된 문제들 중 랜덤으로 한 문제를 화면에 출력
+	 */
+    public String getRandomProblemsByUsername(String userEmail) {
+		// SolvedACResponseEntity에서 사용자 문제 리스트 가져오기
+		Optional<SolvedACResponseEntity> optionalResponseEntity = solvedACResponseRepository.findByUserEmail(userEmail);
+
+		if (optionalResponseEntity.isPresent()) {
+			SolvedACResponseEntity responseEntity = optionalResponseEntity.get();
+			List<String> recommendedProblems = responseEntity.getResponse();
+			String problemToShow = getRandomProblem(recommendedProblems);
+			return problemToShow;
+		} else {
+			return null;
+		}
+
+	}
+
+	/**
+	 * home 화면에 출력할 문제 리스트에서 추출
+	 *
+	 * @author 조아라
+	 * @return 추천 문제 String 반환
+	 * 랜덤으로 한 문제 고르는 메서드
+	 */
+	private String getRandomProblem(List<String> problems){
+		if (problems == null || problems.isEmpty()) {
+			return "추천 문제를 가져올 수 없습니다."; // 문제가 없을 때의 처리
+		}
+		Random random = new Random();
+		return problems.get(random.nextInt(problems.size()));
+	}
+
+	/**
+	 * SolvedAC 문제 추천 리스트 있는지 확인
+	 *
+	 * @author 조아라
+	 * @return 추천받은 문제 리스트가 있는지 확인하는 boolean
+	 * 홈 화면 호출을 위한 체크
+	 */
+	public Boolean checkSolvedACUserNameByUsername(String userEmail) {
+		// User 엔티티에서 solvedACUserName을 사용하여 추천 문제 리스트 가져오기
+		Optional<SolvedACResponseEntity> optionalResponseEntity = solvedACResponseRepository.findByUserEmail(userEmail);
+
+		// 사용자가 SolvedAC 문제 추천 리스트를 가지고 있지 않은 경우
+		if (optionalResponseEntity.isEmpty()) {
+			return false; // 또는 null을 반환하여 처리
+		}else{
+			return true;
+		}
 	}
 }
