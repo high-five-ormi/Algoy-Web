@@ -42,7 +42,7 @@
       </h2>
       <div class="note-content" th:utext="${note.content}"></div>
       <div class="note-details">
-        <span><strong>링크:</strong> <a th:href="${note.link}" th:text="${note.link}" class="note-link"></a></span>
+        <span><strong>링크:</strong> <span th:text="${note.link}" class="note-link"></span></span>
       </div>
       <div class="note-details">
         <span><strong>출제 사이트:</strong> <span th:text="${note.quizSite}"></span></span>

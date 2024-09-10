@@ -98,19 +98,6 @@ main {
   background-color: #f0f0f0;
 }
 
-/* 이미지 선택 드롭존 */
-#drop-zone {
-  padding: 20px;
-  border: 2px dashed #ccc;
-  border-radius: 5px;
-  text-align: center;
-  margin-top: 10px;
-}
-
-#drop-zone.dragover {
-  border-color: #007aff;
-}
-
 .form-buttons {
   display: flex;
   justify-content: space-between;
