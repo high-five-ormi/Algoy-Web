@@ -4,6 +4,8 @@ import com.example.algoyweb.model.dto.WrongAnswerNote.WrongAnswerNoteDTO;
 import com.example.algoyweb.model.entity.WrongAnswerNote.WrongAnswerNote;
 import com.example.algoyweb.repository.WrongAnswerNote.WrongAnswerNoteRepository;
 import com.example.algoyweb.util.WrongAnswerNote.WrongAnswerNoteConvertUtil;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -63,5 +65,12 @@ public class WrongAnswerNoteService {
         note.setIsSolved(isSolved);
         WrongAnswerNote updatedNote = wrongAnswerNoteRepository.save(note);
         return WrongAnswerNoteConvertUtil.convertToDto(updatedNote);
+    }
+
+    // 검색 기능 추가: 제목이나 내용에 특정 키워드를 포함한 오답노트 검색
+    public List<WrongAnswerNoteDTO> search(String query) {
+        return wrongAnswerNoteRepository.findByTitleContainingIgnoreCase(query).stream()
+            .map(WrongAnswerNoteConvertUtil::convertToDto)
+            .collect(Collectors.toList());
     }
 }

@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ['bold', 'italic', 'underline'],
         [{ 'color': [] }, { 'background': [] }],
         [{ 'align': [] }],
-        ['image'],
         [{ 'list': 'ordered' }, { 'list': 'bullet' }]
       ]
     }
