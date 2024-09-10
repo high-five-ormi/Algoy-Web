@@ -127,3 +127,12 @@ $(document).ready(function() {
         }
     });
 });
+
+
+$('.search-button').click(function() {
+    let keyword = $('.search-input').val(); // 검색어 입력받기
+    if (keyword) {
+        localStorage.setItem('searchKeyword', keyword); // 검색어를 localStorage에 저장
+        window.location.href = '/algoy/planner/main'; // 페이지 이동
+    }
+});

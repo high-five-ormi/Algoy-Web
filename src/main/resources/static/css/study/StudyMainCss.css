@@ -1,0 +1,212 @@
+body {
+    margin :0;
+}
+
+button {
+    cursor: pointer;
+}
+
+#calendar-header {
+    max-width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    margin-left:80px;
+    margin-right: 80px;
+    padding-left: 40px;
+    padding-right: 40px;
+    height: 65px;
+    position: relative;
+}
+
+#calendar-header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: gray;
+}
+
+
+a {
+    text-decoration-line: none;
+    color: black;
+    font-weight: bold;
+}
+
+.calendar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#btn-calendar {
+    background-color: #007bff;
+    width: 84px;
+    height: 40px;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#btn-calendar:hover {
+    background-color: #0056b3;
+}
+
+
+/* 컨테이너 스타일 */
+#study-list-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));  /* 카드가 화면 크기에 맞춰 자동 정렬 */
+    gap: 20px;  /* 카드 간격 */
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 개별 스터디 카드 */
+.study-card {
+    background-color: #ffffff;  /* 흰색 배경 */
+    border-radius: 10px;  /* 둥근 모서리 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* 약간의 그림자 효과 */
+    padding: 20px;
+    transition: transform 0.2s ease;  /* 카드 호버 시 약간의 확대 */
+}
+
+.study-card:hover {
+    transform: translateY(-5px);  /* 호버 시 위로 살짝 이동 */
+}
+
+/* 스터디 상태 (모집중, 완료 등) */
+.status {
+    width: 70px;
+    height: 30px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.status button {
+    width: 70px;
+    height: 30px;
+}
+
+.ING {
+    background-color: #FECF4D;  /* 모집중 상태일 때 노란색 */
+    color: #333;
+}
+
+.DONE {
+    background-color: #F47560;  /* 완료 상태일 때 주황색 */
+    color: white;
+}
+
+.STOP {
+    background-color: #A1A1A1;  /* 멈춘 상태일 때 회색 */
+    color: white;
+}
+
+/* 스터디 제목 */
+.study-card h3 {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* 스터디 작성자 정보 */
+.study-card p {
+    font-size: 0.9em;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+/* 언어 태그 */
+.language-tag {
+    display: inline-block;
+    background-color: #E0F7FA;
+    width: 70px;
+    height: 30px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    margin-right: 10px;
+}
+
+.language-tag button {
+    width: 70px;
+    height: 30px;
+}
+
+/* 참가자 수 */
+.participant-count {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 0.9em;
+    color: #333;
+}
+
+#study-list-container button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: #00796B;
+}
+
+
+/* 페이지네이션 스타일 */
+#pagination {
+    margin-top: 20px;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+}
+
+.page-button {
+    cursor: pointer;
+    padding: 10px;
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+    background-color: #ddd;
+    border-radius: 5px;
+}
+
+.active-page {
+    padding: 10px;
+    margin: 5px;
+    width: 20px;
+    height: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+}
+
+
+footer {
+    background-color: #e8e8e8;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    margin-top: 200px;
+    justify-content: space-around;
+}
+
+ul {
+    list-style: none;
+}
+
+#footer-logo {
+    width: 70px;
+    height: 70px;
+}

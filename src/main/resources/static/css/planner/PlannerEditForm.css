@@ -52,6 +52,10 @@ a {
     cursor: pointer;
 }
 
+header input {
+    border: none;
+}
+
 .save-container {
     margin-top: 20px;
     margin-left:240px;
@@ -139,4 +143,23 @@ input[type="radio"] {
     border: 1px solid #ddd;
     border-radius: 4px;
     box-sizing: border-box;
+}
+
+
+footer {
+    background-color: #e8e8e8;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    margin-top: 200px;
+    justify-content: space-around;
+}
+
+ul {
+    list-style: none;
+}
+
+#footer-logo {
+    width: 70px;
+    height: 70px;
 }

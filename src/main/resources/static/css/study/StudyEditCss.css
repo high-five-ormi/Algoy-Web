@@ -8,7 +8,6 @@ a {
     font-weight: bold;
 }
 
-
 #calendar-header {
     max-width: 100%;
     display: flex;
@@ -84,7 +83,7 @@ label {
     color: #333;
 }
 
-input[type="text"], textarea, input[type="date"] {
+input[type="text"], textarea, input[type="date"], input[type="number"] {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -110,11 +109,7 @@ input[type="radio"] {
     margin-right: 5px;
 }
 
-header input {
-    border: none;
-}
-
-.btn-create {
+.btn-update {
     background-color: #007bff;
     color: #fff;
     padding: 10px 20px;
@@ -125,25 +120,8 @@ header input {
     margin-bottom: 100px;
 }
 
-.btn-create:hover {
+.btn-update:hover {
     background-color: #0056b3;
-}
-
-#site-dropdown {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
-    margin-top: 5px;
-}
-
-#etc-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
 }
 
 

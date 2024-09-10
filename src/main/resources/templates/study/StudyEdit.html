@@ -2,9 +2,9 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>플래너</title>
+    <title>스터디 수정</title>
     <!-- 외부 CSS 파일 연결 -->
-    <link rel="stylesheet" href="/css/planner/PlannerEditForm.css">
+    <link rel="stylesheet" href="/css/study/StudyEditCss.css">
     <link rel="stylesheet" href="/css/header.css">
     <!-- jQuery 라이브러리 로드 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -37,11 +37,11 @@
     </div>
 </div>
 
-<!-- 플랜 수정 폼 컨테이너 -->
+<!-- 스터디 수정 폼 컨테이너 -->
 <div class="save-container">
     <!-- 페이지 제목 -->
-    <h1>플랜 수정</h1>
-    <!-- 플랜 수정 폼 -->
+    <h1>스터디 수정</h1>
+    <!-- 스터디 수정 폼 -->
     <form>
         <!-- 제목 입력 필드 -->
         <div class="form-group">
@@ -53,47 +53,24 @@
             <label for="content">Content</label>
             <textarea id="content" rows="5"></textarea>
         </div>
-        <!-- 링크 입력 필드 -->
-        <div class="form-group">
-            <label for="link">Link</label>
-            <input type="text" id="link" placeholder="링크를 입력해 주세요">
-        </div>
         <!-- 상태 선택 필드 -->
         <div class="form-group">
             <label>Status</label>
             <div class="radio-group">
-                <label><input type="radio" name="status" value="TODO" checked> 준비 중</label>
-                <label><input type="radio" name="status" value="IN_PROGRESS"> 진행 중</label>
-                <label><input type="radio" name="status" value="DONE"> 완료</label>
+                <label><input type="radio" name="status" value="ING" checked> 모집 중</label>
+                <label><input type="radio" name="status" value="DONE"> 모집 완료</label>
+                <label><input type="radio" name="status" value="STOP"> 중지</label>
             </div>
         </div>
-        <!-- 문제 이름 입력 필드 -->
+        <!-- 최대 모집 인원 입력 필드 -->
         <div class="form-group">
-            <label for="question">Question</label>
-            <input type="text" id="question" placeholder="문제 이름을 입력해주세요">
+            <label for="max-participant">최대 모집 인원</label>
+            <input type="number" id="max-participant" placeholder="최대 인원 수를 입력해주세요">
         </div>
-        <!-- 사이트 선택 필드 -->
+        <!-- 언어 입력 필드 -->
         <div class="form-group">
-            <label for="site-dropdown">Site</label>
-            <select id="site-dropdown">
-                <option value="BOJ">백준</option>
-                <option value="PGS">프로그래머스</option>
-                <option value="SWEA">SW Expert Academy</option>
-                <option value="ETC">ETC</option>
-            </select>
-            <!-- 기타 사이트 입력 필드 (필요 시 표시됨) -->
-            <label for="etc-input"></label>
-            <input type="text" id="etc-input" placeholder="기타 사이트 이름을 입력해 주세요" style="display:none; margin-top:10px;">
-        </div>
-        <!-- 시작 날짜 입력 필드 -->
-        <div class="form-group">
-            <label for="start-date">Start date</label>
-            <input type="date" id="start-date">
-        </div>
-        <!-- 종료 날짜 입력 필드 -->
-        <div class="form-group">
-            <label for="end-date">End date</label>
-            <input type="date" id="end-date">
+            <label for="language">언어</label>
+            <input type="text" id="language" placeholder="언어 이름을 입력해주세요">
         </div>
         <!-- 제출 버튼 -->
         <button class="btn-update">Submit</button>
@@ -104,7 +81,7 @@
 <div th:replace="~{fragments/chatbot :: chatbot(backendUrl=${backendUrl})}"></div>
 </body>
 <!-- 외부 JavaScript 파일 연결 -->
-<script src="/js/planner/EditFormJs.js"></script>
+<script src="/js/study/StudyEditJs.js"></script>
 <footer>
     <div id="our_information">
         <ul>

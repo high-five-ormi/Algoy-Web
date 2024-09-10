@@ -17,6 +17,9 @@ public class Participant {
     @Id
     private Long id;
 
+    @Column(nullable = false)
+    private Long userId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Comment comment;
 
@@ -30,6 +33,7 @@ public class Participant {
 
     public void connectComment(Comment findComment) {
         this.comment = findComment;
+        this.userId = findComment.getUser().getUserId();
         findComment.connectParticipants(this);
     }
 }
