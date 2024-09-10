@@ -10,9 +10,10 @@ import java.util.List;
 @Builder
 @Getter
 @AllArgsConstructor
-public class SolvedACResponse {
+public class SolvedACResponseDto {
     private Long id;  // 엔티티의 ID
-    private String algoyUsername;
+    private String userId;
+    private String userEmail;
     private List<String> response;
     private LocalDateTime updatedAt;
 }
