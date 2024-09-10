@@ -30,6 +30,14 @@ public class UserController {
 	 * @param model 뷰에 데이터를 전달하기 위한 Model 객체 (근데 여기서 model이 꼭 필요한지 모르겠어요)
 	 * @return 로그인 폼 뷰의 이름 (html)
 	 */
+	/**
+	 * 로그인시 solvedac 정보 기반으로 ai에게 문제 추천받기
+	 *
+	 * @author 조아라
+	 * @param user 유저 로그인 정보
+	 * @param session HttpSession 객체
+	 * @return 홈화면으로 리다이렉트
+	 */
 	@GetMapping("/login")
 	public String showLoginForm(Model model) {
 		// 새로운 UserDto 객체를 생성 후, "userDto"라는 이름으로 Model에 추가
