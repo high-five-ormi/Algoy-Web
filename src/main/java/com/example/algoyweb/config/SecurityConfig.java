@@ -1,11 +1,8 @@
 package com.example.algoyweb.config;
 
-import com.example.algoyweb.controller.user.UserAuthenticationSuccessHandler;
+import com.example.algoyweb.util.user.UserAuthenticationSuccessHandler;
 import com.example.algoyweb.service.allen.AllenService;
 import com.example.algoyweb.service.user.UserService;
-import com.example.algoyweb.util.user.CustomAuthenticationSuccessHandler;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -39,11 +36,6 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 		this.allenService = allenService;
 	}
 
-//	public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, @Lazy UserService userService) {
-//		this.customOAuth2UserService = customOAuth2UserService;
-//		this.userService = userService;
-//	}
-
 	@Bean
 	// 비밀번호 인코더 빈을 생성하는 메서드
 	public PasswordEncoder passwordEncoder() {
@@ -61,9 +53,10 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 			.authorizeHttpRequests((requests) -> requests
 				.requestMatchers("/").permitAll()
 				.requestMatchers("/algoy").permitAll()
-				.requestMatchers("/algoy/home", "/algoy/home?continue").permitAll()
+				.requestMatchers("/algoy/home/**").permitAll()
 				.requestMatchers("/algoy/login").permitAll()
 				.requestMatchers("/algoy/sign").permitAll()
+				.requestMatchers("/algoy/user/nickname").permitAll()
 				.requestMatchers("/algoy/validate-username").permitAll() // solvedAC username 유효성 검사를 위해 추가 by 조아라
 				.requestMatchers("/algoy/find-password").permitAll()
 				.requestMatchers("/algoy/set-password").permitAll()
@@ -81,7 +74,7 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 				.successForwardUrl("/algoy/home")
 				.defaultSuccessUrl("/algoy/home")
 					//.successHandler(customAuthenticationSuccessHandler)
-				.successHandler(loginSuccessHandler())
+				.successHandler(userAuthenticationSuccessHandler())
 				.failureUrl("/algoy/login?error=true"))
 			.logout(logout -> logout
 				.logoutUrl("/algoy/logout")
@@ -105,8 +98,8 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 	}
 
 	@Bean
-	public UserAuthenticationSuccessHandler loginSuccessHandler() {
-		//return new CustomAuthenticationSuccessHandler(userService);
+	public UserAuthenticationSuccessHandler userAuthenticationSuccessHandler() {
 		return new UserAuthenticationSuccessHandler(userService, allenService);
 	}
+
 }
