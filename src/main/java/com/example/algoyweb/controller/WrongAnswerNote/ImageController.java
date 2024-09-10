@@ -20,19 +20,19 @@ public class ImageController {
 
     // 이미지 업로드
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<ImageDTO> uploadImage(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("파일을 선택해주세요.");
+            logger.warn("빈 파일이 업로드 시도됨");
+            return ResponseEntity.badRequest().body(null);
         }
 
         try {
             ImageDTO imageDTO = imageService.uploadImage(file);
             logger.info("이미지 업로드 성공: URL = {}", imageDTO.getImgUrl());
-
-            return ResponseEntity.ok("이미지가 성공적으로 업로드되었습니다. URL: " + imageDTO.getImgUrl());
+            return ResponseEntity.ok(imageDTO);
         } catch (Exception e) {
             logger.error("이미지 업로드 중 서버 오류 발생", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

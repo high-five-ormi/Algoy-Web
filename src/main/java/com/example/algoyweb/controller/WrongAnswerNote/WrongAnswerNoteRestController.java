@@ -1,17 +1,13 @@
 package com.example.algoyweb.controller.WrongAnswerNote;
 
-import com.example.algoyweb.model.dto.WrongAnswerNote.ImageDTO;
 import com.example.algoyweb.model.dto.WrongAnswerNote.WrongAnswerNoteDTO;
-import com.example.algoyweb.service.WrongAnswerNote.ImageService;
 import com.example.algoyweb.service.WrongAnswerNote.WrongAnswerNoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +17,6 @@ import java.util.Optional;
 public class WrongAnswerNoteRestController {
 
     private final WrongAnswerNoteService service;
-    private final ImageService imageService;
 
     // 페이지네이션을 지원하는 오답노트 목록 조회
     @GetMapping
@@ -40,8 +35,17 @@ public class WrongAnswerNoteRestController {
 
     // 오답노트 생성
     @PostMapping
-    public ResponseEntity<WrongAnswerNoteDTO> createWrongAnswerNote(@RequestBody WrongAnswerNoteDTO dto) {
+    public ResponseEntity<WrongAnswerNoteDTO> createWrongAnswerNote(
+        @RequestBody WrongAnswerNoteDTO dto) {
+        // 게시글을 먼저 저장
         WrongAnswerNoteDTO savedNote = service.save(dto);
+        Long noteId = savedNote.getId();
+
+        // 이미지가 있는 경우, 이미지와 게시글을 연결
+        if (dto.getImageUrls() != null && !dto.getImageUrls().isEmpty()) {
+            service.linkImagesToNote(noteId, dto.getImageUrls());
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(savedNote);
     }
 
@@ -57,13 +61,6 @@ public class WrongAnswerNoteRestController {
     public ResponseEntity<Void> linkImagesToNote(@PathVariable Long id, @RequestBody List<String> imageUrls) {
         service.linkImagesToNote(id, imageUrls);
         return ResponseEntity.ok().build();
-    }
-
-    // 이미지 업로드
-    @PostMapping("/upload-image")
-    public ResponseEntity<ImageDTO> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
-        ImageDTO imageDTO = imageService.uploadImage(file);
-        return ResponseEntity.ok(imageDTO);
     }
 
     // 오답노트 삭제

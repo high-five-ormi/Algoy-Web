@@ -23,10 +23,20 @@ public class WrongAnswerNote {
     private Long id;
 
     private Long userId;
+
+    @Column(length = 50)
     private String title;
+
+    @Column(length = 2083)
     private String link;
+
+    @Column(name = "quiz_site", length = 50)
     private String quizSite;
+
+    @Column(name = "quiz_type", length = 50)
     private String quizType;
+
+    @Column(name = "quiz_level", length = 50)
     private String quizLevel;
 
     @Column(name = "created_at", updatable = false)
@@ -35,7 +45,11 @@ public class WrongAnswerNote {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
+
+    @Column(name = "is_solved")
     private Boolean isSolved;
 
     @OneToMany(mappedBy = "wrongAnswerNote", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -48,7 +62,6 @@ public class WrongAnswerNote {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        isSolved = false; // 기본값 설정
     }
 
     @PreUpdate
