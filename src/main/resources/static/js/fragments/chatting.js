@@ -97,7 +97,21 @@ const chatFrag = {
     })
     .catch(error => {
       console.error('Error creating room:', error);
-      alert('방 생성 중 오류가 발생했습니다: ' + error.message);
+      let errorMessage;
+      switch(error.code) {
+        case 'INVALID_ROOM_NAME':
+          errorMessage = '유효하지 않은 방 이름입니다.';
+          break;
+        case 'NO_INVITEES':
+          errorMessage = '초대할 사용자가 없습니다.';
+          break;
+        case 'INVALID_INVITEES':
+          errorMessage = '유효한 초대 대상자가 없습니다.';
+          break;
+        default:
+          errorMessage = '방 생성 중 오류가 발생했습니다: ' + (error.message || '알 수 없는 오류');
+      }
+      alert(errorMessage);
     });
   },
 
@@ -258,7 +272,7 @@ const chatFrag = {
   inviteUser: function() {
     const inviteeNickname = document.getElementById('chat-frag-invite-nickname').value.trim();
     if (!inviteeNickname) {
-      alert('Please enter a nickname to invite.');
+      alert('초대하려는 사용자의 닉네임을 입력해주세요.');
       return;
     }
 
@@ -274,12 +288,29 @@ const chatFrag = {
       return response.json();
     })
     .then(data => {
-      alert(data.message || '초대에 성공하였습니다.');
+      alert('초대에 성공하였습니다.');
       this.hideInviteModal();
     })
     .catch(error => {
       console.error('Error inviting user:', error);
-      alert('Failed to invite user: ' + (error.error || 'Unknown error'));
+      let errorMessage;
+      switch(error.code) {
+        case 'USER_NOT_FOUND':
+          errorMessage = '초대하려는 사용자가 존재하지 않습니다.';
+          break;
+        case 'NOT_ROOM_OWNER':
+          errorMessage = '채팅방 소유자만 초대할 수 있습니다.';
+          break;
+        case 'USER_ALREADY_IN_ROOM':
+          errorMessage = '사용자가 이미 채팅방에 참여하고 있습니다.';
+          break;
+        case 'SELF_INVITATION_NOT_ALLOWED':
+          errorMessage = '자기 자신을 초대할 수 없습니다.';
+          break;
+        default:
+          errorMessage = '사용자 초대 중 오류가 발생했습니다: ' + (error.message || '알 수 없는 오류');
+      }
+      alert(errorMessage);
     });
   },
 

@@ -26,7 +26,9 @@ public enum ChattingErrorCode implements ErrorCode {
 	// 초대할 사용자가 없는 경우
 	NO_INVITEES(HttpStatus.BAD_REQUEST, "초대할 사용자가 없습니다."),
 	// 메시지가 너무 긴 경우
-	MESSAGE_TOO_LONG(HttpStatus.BAD_REQUEST, "메시지가 너무 깁니다.");
+	MESSAGE_TOO_LONG(HttpStatus.BAD_REQUEST, "메시지가 너무 깁니다."),
+	// 초대할 대상이 존재 하지 않는 경우
+	INVALID_INVITEES(HttpStatus.BAD_REQUEST, "일부 초대 대상자가 존재하지 않습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;

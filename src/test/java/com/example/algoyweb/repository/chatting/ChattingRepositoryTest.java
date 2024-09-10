@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 /**
  * @author JSW
@@ -119,33 +120,37 @@ class ChattingRepositoryTest {
   @Test
   public void testFindByRoomIdOrderByCreatedAtDesc_WithMultipleMessagesAndPaging() {
     // Given
-    User user =
-        User.builder()
-            .username("multiUser")
-            .nickname("multiNickname")
-            .email("multiuser@example.com")
-            .password("password123")
-            .role(Role.NORMAL)
-            .isDeleted(false)
-            .createdAt(LocalDateTime.now())
-            .build();
+    User user = User.builder()
+        .username("multiUser")
+        .nickname("multiNickname")
+        .email("multiuser@example.com")
+        .password("password123")
+        .role(Role.NORMAL)
+        .isDeleted(false)
+        .createdAt(LocalDateTime.now())
+        .build();
     userRepository.save(user);
 
+    String roomId = "multiRoom";
     for (int i = 1; i <= 5; i++) {
-      Chatting chatting =
-          Chatting.builder().content("메시지 " + i).roomId("multiRoom").user(user).build();
+      Chatting chatting = Chatting.builder()
+          .content("메시지 " + i)
+          .roomId(roomId)
+          .user(user)
+          .createdAt(LocalDateTime.now())
+          .build();
       chattingRepository.save(chatting);
     }
 
-    Pageable pageable = PageRequest.of(0, 2);
+    Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "createdAt"));
 
     // When
-    Page<Chatting> chatMessagesPage =
-        chattingRepository.findByRoomIdOrderByCreatedAtDesc("multiRoom", pageable);
+    Page<Chatting> chatMessagesPage = chattingRepository.findByRoomIdOrderByCreatedAtDesc(roomId, pageable);
 
     // Then
     assertThat(chatMessagesPage.getTotalElements()).isEqualTo(5);
     assertThat(chatMessagesPage.getNumberOfElements()).isEqualTo(2);
+    assertThat(chatMessagesPage.getContent()).hasSize(2);
     assertThat(chatMessagesPage.getContent().get(0).getContent()).isEqualTo("메시지 5");
     assertThat(chatMessagesPage.getContent().get(1).getContent()).isEqualTo("메시지 4");
   }
