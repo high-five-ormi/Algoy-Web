@@ -2,7 +2,7 @@ server:
   port: 8081
 
 ai-backend:
-  url: ${AI_BACKEND_URL}
+  url: https://kdt-api-function.azurewebsites.net/api/v1/question?content=
 
 solvedac:
   url: https://solved.ac/api/v3/user/top_100?handle=
@@ -28,10 +28,10 @@ spring:
         enabled: true
 
   datasource:
-    url: ${DATASOURCE_URL}
+    url: jdbc:mysql://localhost:3306/algoy?serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${DATASOURCE_USERNAME}
-    password: ${DATASOURCE_PASSWORD}
+    username: root
+    password: 1234
 
   jpa:
     hibernate:
@@ -53,3 +53,5 @@ spring:
             scope:
               - email
               - profile
+upload:
+  directory: uploads  # 업로드 파일이 저장될 경로
