@@ -52,4 +52,5 @@ public class UserAuthenticationSuccessHandler implements AuthenticationSuccessHa
         String redirectUrl = user.getIsDeleted() ? "/algoy/user/restore" : "/algoy/home";
         response.sendRedirect(redirectUrl);
     }
+
 }

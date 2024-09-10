@@ -13,119 +13,6 @@ body {
   line-height: 1.6;
 }
 
-/* 헤더 스타일 설정: 배경색, 높이, 최대 너비, 자동 마진, 패딩, 테두리 */
-header {
-  background-color: #e6eff8;
-  height: 190px;
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 15px 20px;
-  position: relative;
-  border-bottom: 2px solid #d1d9e3;
-}
-
-/* 로고의 위치 및 크기 설정 */
-.logo {
-  position: absolute;
-  top: -3px;
-  left: 20px;
-}
-
-.logo img {
-  width: 197px;
-  height: 197px;
-}
-
-/* 내비게이션 스타일 설정: 위치, 폰트 패밀리 */
-nav {
-  font-family: Manrope, 'sans-serif';
-  position: absolute;
-  top: 130px;
-  left: 240px;
-}
-
-/* 내비게이션 링크 스타일: 텍스트 색상, 간격, 폰트 굵기 */
-nav a {
-  margin-right: 20px;
-  color: #121417;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 20px;
-}
-
-/* 내비게이션 링크 hover 시 색상 변화 */
-nav a:hover {
-  color: #007bff;
-}
-
-/* 사용자 액션 버튼 섹션 스타일: 위치 및 정렬 */
-.user-actions {
-  position: absolute;
-  bottom: 29px;
-  right: 20px;
-  display: flex;
-  align-items: center;
-}
-
-/* 검색 바 스타일: 위치 및 간격 */
-.search-bar {
-  position: relative;
-  margin-right: 20px;
-}
-
-/* 검색 입력창 스타일: 크기, 패딩, 테두리, 폰트 크기 */
-.search-bar input[type="text"] {
-  height: 40px;
-  width: 325px;
-  padding: 8px 35px 8px 8px;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  font-size: 14px;
-}
-
-/* 검색 아이콘의 위치 설정 */
-.search-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
-
-/* 사용자 액션 버튼 스타일: 크기, 색상, 폰트 스타일 */
-.user-actions button {
-  width: 84px;
-  height: 40px;
-  border: none;
-  background-color: #ffffff;
-  color: #121417;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  margin-left: 8px;
-}
-
-/* 로그아웃 버튼 컨테이너 스타일: 크기, 배경색 */
-.logout-container {
-  width: 40px;
-  height: 40px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-left: 8px;
-}
-
-/* 로그아웃 아이콘 크기 설정 */
-.logout-icon {
-  width: 20px;
-  height: 20px;
-}
-
 /* note-header 섹션 스타일: 배경색, 크기, 마진, 패딩, 테두리 */
 .note-header {
   background-color: #ffffff;
@@ -341,7 +228,7 @@ nav a:hover {
 }
 
 /* 모달 기본 스타일: 전체 화면, 배경, 중앙 정렬 */
-.modal {
+.code-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -354,7 +241,7 @@ nav a:hover {
 }
 
 /* 모달 내용 스타일: 배경색, 패딩, 테두리 */
-.modal-content {
+.code-modal-content {
   background: #fff;
   padding: 20px;
   border-radius: 8px;
@@ -363,7 +250,7 @@ nav a:hover {
 }
 
 /* 수정 모달창 버튼 스타일 */
-.modal-buttons {
+.code-modal-buttons {
   display: flex;
   justify-content: flex-end;
   gap: 10px; /* 버튼 사이 간격 */

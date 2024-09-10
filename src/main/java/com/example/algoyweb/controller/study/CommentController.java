@@ -21,11 +21,16 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/comment/gets")
-    public ResponseEntity<List<CommentDto>> getComments(@RequestParam Long studyId, @AuthenticationPrincipal Optional<UserDetails> userDetails) {
+    public ResponseEntity<List<CommentDto>> getComments(@RequestParam Long studyId, @AuthenticationPrincipal UserDetails userDetails) {
 
-        List<CommentDto> commentDtoList = commentService.getComments(studyId, userDetails.orElse(null).getUsername());
+        List<CommentDto> comments;
 
-        return ResponseEntity.status(HttpStatus.OK).body(commentDtoList);
+        if(userDetails != null) {
+            comments = commentService.getComments(studyId, userDetails.getUsername());
+        } else {
+            comments = commentService.getComments(studyId);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(comments);
     }
 
     @PostMapping("/comment/non-reply")
@@ -88,5 +93,25 @@ public class CommentController {
         commentService.deleteParticipant(commentId, studyId, userDetails.getUsername());
 
         return ResponseEntity.status(HttpStatus.OK).body("스터디 삭제 성공");
+    }
+
+    @GetMapping("/comment/find-part")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
+    public ResponseEntity<Boolean> findComment(@RequestParam Long commentId,
+                                              @RequestParam Long studyId) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.findParticipant(commentId, studyId));
+    }
+
+    @GetMapping("/comment/find-user")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_NORMAL')")
+    public ResponseEntity<Boolean> findUser(@AuthenticationPrincipal UserDetails userDetails,
+                                            @RequestParam Long studyId) {
+
+        if(userDetails == null){
+            return ResponseEntity.status(HttpStatus.OK).body(false);
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(commentService.findStudyAndUser(userDetails.getUsername(), studyId));
+        }
     }
 }

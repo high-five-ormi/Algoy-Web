@@ -23,6 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author JSW
+ *
+ * 채팅 기능을 관리하는 서비스 클래스입니다.
+ */
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -33,6 +38,12 @@ public class ChattingService {
   private final UserRepository userRepository;
   private final SimpMessagingTemplate messagingTemplate;
 
+  /**
+   * 주어진 사용자의 모든 채팅방을 조회합니다.
+   *
+   * @param username 사용자의 username
+   * @return 사용자의 채팅방을 나타내는 ChattingRoomDto 객체 리스트
+   */
   @Transactional(readOnly = true)
   public List<ChattingRoomDto> getUserRooms(String username) {
     User user = getUserByUsername(username);
@@ -40,12 +51,27 @@ public class ChattingService {
     return rooms.stream().map(ChattingConvertUtil::convertToDto).collect(Collectors.toList());
   }
 
+  /**
+   * 특정 채팅방의 메시지를 조회합니다.
+   *
+   * @param roomId 채팅방 ID
+   * @param pageable 페이지네이션 정보
+   * @return 해당 방의 메시지를 나타내는 ChattingDto 객체의 Page
+   */
   @Transactional(readOnly = true)
   public Page<ChattingDto> getRoomMessages(String roomId, Pageable pageable) {
     Page<Chatting> messages = chattingRepository.findByRoomIdOrderByCreatedAtDesc(roomId, pageable);
     return messages.map(ChattingConvertUtil::convertToDto);
   }
 
+  /**
+   * 새로운 채팅방을 생성합니다.
+   *
+   * @param roomName 새 방의 이름
+   * @param ownerUsername 방 소유자의 username
+   * @param inviteeNicknames 방에 초대할 사용자들의 닉네임 리스트
+   * @return 새로 생성된 방을 나타내는 ChattingRoomDto 객체
+   */
   public ChattingRoomDto createRoom(String roomName, String ownerUsername, List<String> inviteeNicknames) {
     User owner = getUserByUsername(ownerUsername);
 
@@ -79,6 +105,13 @@ public class ChattingService {
     return ChattingConvertUtil.convertToDto(savedRoom);
   }
 
+  /**
+   * 사용자를 채팅방에 참여시킵니다.
+   *
+   * @param roomId 참여할 방의 ID
+   * @param username 참여하는 사용자의 username
+   * @return 업데이트된 방을 나타내는 ChattingRoomDto 객체
+   */
   public ChattingRoomDto joinRoom(String roomId, String username) {
     User user = getUserByUsername(username);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
@@ -90,6 +123,13 @@ public class ChattingService {
     return ChattingConvertUtil.convertToDto(room);
   }
 
+  /**
+   * 사용자를 채팅방에서 퇴장시킵니다.
+   *
+   * @param roomId 퇴장할 방의 ID
+   * @param username 퇴장하는 사용자의 username
+   * @return 업데이트된 방을 나타내는 ChattingRoomDto 객체
+   */
   public ChattingRoomDto leaveRoom(String roomId, String username) {
     User user = getUserByUsername(username);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
@@ -123,6 +163,13 @@ public class ChattingService {
     return ChattingConvertUtil.convertToDto(room);
   }
 
+  /**
+   * 닉네임으로 사용자를 채팅방에 초대합니다.
+   *
+   * @param roomId 초대할 방의 ID
+   * @param inviterUsername 초대하는 사용자의 username
+   * @param inviteeNickname 초대받는 사용자의 닉네임
+   */
   public void inviteUserByNickname(String roomId, String inviterUsername, String inviteeNickname) {
     User inviter = getUserByUsername(inviterUsername);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
@@ -151,7 +198,19 @@ public class ChattingService {
     sendSystemMessage(roomId, inviteeNickname + "님이 초대되었습니다.");
   }
 
+  /**
+   * 메시지를 처리하고 저장합니다.
+   *
+   * @param content 메시지 내용
+   * @param roomId 메시지를 보낼 방의 ID
+   * @param username 메시지를 보내는 사용자의 username
+   * @return 저장된 메시지를 나타내는 ChattingDto 객체
+   */
   public ChattingDto processAndSaveMessage(String content, String roomId, String username) {
+    if (content.length() > 1000) {
+      throw new CustomException(ChattingErrorCode.MESSAGE_TOO_LONG);
+    }
+
     User user = getUserByUsername(username);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
 
@@ -173,6 +232,12 @@ public class ChattingService {
     return chattingDto;
   }
 
+  /**
+   * 시스템 메시지를 전송합니다.
+   *
+   * @param roomId 메시지를 보낼 방의 ID
+   * @param messageContent 메시지 내용
+   */
   private void sendSystemMessage(String roomId, String messageContent) {
     ChattingDto systemMessage = ChattingDto.builder()
         .userId(null)
@@ -185,10 +250,22 @@ public class ChattingService {
     messagingTemplate.convertAndSend("/topic/room/" + roomId, systemMessage);
   }
 
+  /**
+   * username으로 User 객체를 조회합니다.
+   *
+   * @param username 조회할 사용자의 username
+   * @return 조회된 User 객체
+   */
   private User getUserByUsername(String username) {
     return userRepository.findByEmail(username);
   }
 
+  /**
+   * roomId로 ChattingRoom 객체를 조회합니다.
+   *
+   * @param roomId 조회할 방의 ID
+   * @return 조회된 ChattingRoom 객체
+   */
   private ChattingRoom getChattingRoomByRoomId(String roomId) {
     return chattingRoomRepository.findByRoomId(roomId)
         .orElseThrow(() -> new CustomException(ChattingErrorCode.ROOM_NOT_FOUND));

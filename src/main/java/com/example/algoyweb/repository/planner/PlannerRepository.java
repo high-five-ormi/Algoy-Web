@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface PlannerRepository extends JpaRepository<Planner, Long> {
@@ -18,7 +17,7 @@ public interface PlannerRepository extends JpaRepository<Planner, Long> {
     @Query("select p from Planner p where p.user.email = :username")
     List<Planner> findByUserEmail(String username);
 
-    @Query("select p from Planner p where p.title like concat('%', :keyword, '%') " +
-            "or p.questionName like concat('%', :keyword, '%') ")
-    List<Planner> findByKeyword(String keyword);
+    @Query("select p from Planner p where p.user.userId = :userId and (p.title like concat('%', :keyword, '%') " +
+            "or p.questionName like concat('%', :keyword, '%')) ")
+    List<Planner> findByKeyword(String keyword, Long userId);
 }

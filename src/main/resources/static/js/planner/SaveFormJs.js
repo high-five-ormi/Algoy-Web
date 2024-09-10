@@ -110,7 +110,7 @@ $('.btn-create').on('click', function (event) {
         dataType: 'json',
         data: JSON.stringify(plannerDto),
         success: function (response) {
-            location.href = "/algoy/planner/calender"
+            location.href = "/algoy/planner/main"
         },
         error: function (error) {
             alert('등록에 실패했습니다.');
@@ -126,4 +126,13 @@ $(document).ready(function() {
             $('#etc-input').hide();
         }
     });
+});
+
+
+$('.search-button').click(function() {
+    let keyword = $('.search-input').val(); // 검색어 입력받기
+    if (keyword) {
+        localStorage.setItem('searchKeyword', keyword); // 검색어를 localStorage에 저장
+        window.location.href = '/algoy/planner/main'; // 페이지 이동
+    }
 });

@@ -35,9 +35,10 @@ public class Study {
     private Status status;
 
     @Column(nullable = false)
+    private Integer maxParticipant;
+
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

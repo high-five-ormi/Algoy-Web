@@ -4,32 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>오답노트 작성</title>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap"
+        rel="stylesheet">
   <link rel="stylesheet" href="/css/wronganswernote/create-wrong-answer-note.css">
   <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <!-- jQuery 라이브러리의 압축된 버전을 CDN을 통해 불러와 현재 HTML 문서에서 사용할 수 있습니다. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!-- 웹 페이지에서 마크다운으로 작성된 내용을 HTML로 변환하여 보여주는 역할을 합니다. -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- 웹 애플리케이션의 보안을 강화하고, 사용자 생성 콘텐츠를 안전하게 처리하는 역할을 합니다. (XSS 방지용) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js"></script>
+  <!-- 웹 페이지 내의 코드를 시각적으로 매력적으로 표현하여 사용자 경험을 향상시키는 역할을 합니다. -->
+  <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <!-- highlight.js 라이브러리와 함께 사용되어 웹 페이지 내의 코드 블록에 시각적인 스타일을 적용하는 역할을 합니다. -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
 </head>
 <body>
 <header>
-  <div class="logo">
-    <img src="/img/algoy-1.png" alt="ALGoy Logo">
-  </div>
-  <nav>
-    <a href="/algoy/commit">오답 노트</a>
-    <a href="#">플래너</a>
-  </nav>
-  <div class="user-actions">
-    <div class="search-bar">
-      <input type="text" placeholder="Search">
-      <img src="/img/search-glasses.png" alt="Search Icon" class="search-icon">
-    </div>
-    <button class="logout">Logout</button>
-    <div class="logout-container">
-      <div class="logout-icon-wrapper">
-        <img src="/img/user-icon.png" alt="User Icon" class="logout-icon">
-      </div>
-    </div>
-  </div>
+  <div th:replace="fragments/header :: header"></div>
+  <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
 </header>
+<div th:replace="fragments/modal :: modal"></div>
+<link rel="stylesheet" th:href="@{/css/fragments/modal.css}">
 
 <div class="note-header">
   <div class="title-section">
@@ -43,22 +41,27 @@
     <h1>게시글 작성</h1>
     <form id="noteForm" method="post" enctype="multipart/form-data">
       <label for="title">제목</label>
-      <input type="text" id="title" name="title" placeholder="제목을 입력하세요" class="input-field" required><br/>
+      <input type="text" id="title" name="title" placeholder="제목을 입력하세요" class="input-field"
+             required><br/>
 
       <label for="link">문제 링크</label>
-      <input type="text" id="link" name="link" placeholder="문제 링크를 입력하세요" class="input-field" required><br/>
+      <input type="text" id="link" name="link" placeholder="문제 링크를 입력하세요" class="input-field"
+             required><br/>
 
       <label for="quizSite">문제 사이트</label>
-      <input type="text" id="quizSite" name="quizSite" placeholder="문제 사이트를 입력하세요" class="input-field" required><br/>
+      <input type="text" id="quizSite" name="quizSite" placeholder="문제 사이트를 입력하세요"
+             class="input-field" required><br/>
 
       <div class="flex-container">
         <div>
           <label for="quizType">유형</label>
-          <input type="text" id="quizType" name="quizType" placeholder="유형을 입력하세요" class="input-field" required>
+          <input type="text" id="quizType" name="quizType" placeholder="유형을 입력하세요"
+                 class="input-field" required>
         </div>
         <div>
           <label for="quizLevel">레벨</label>
-          <input type="text" id="quizLevel" name="quizLevel" placeholder="레벨을 입력하세요" class="input-field" required>
+          <input type="text" id="quizLevel" name="quizLevel" placeholder="레벨을 입력하세요"
+                 class="input-field" required>
         </div>
         <div>
           <label for="isSolved">풀이 여부</label>
@@ -76,12 +79,17 @@
       <input type="file" id="files" style="display: none;" accept="image/*">
 
       <div class="form-buttons">
-        <button type="submit">게시</button>
+        <button type="submit" class="custom-button">게시</button>
         <a href="/algoy/commit">
-          <button type="button">취소</button>
+          <button type="button" class="custom-button">취소</button>
         </a>
       </div>
     </form>
+
+    <div id="image-previews" style="margin-top: 20px;"></div>
+
+    <!-- 챗봇 컴포넌트 포함 -->
+    <div th:replace="~{fragments/chatbot :: chatbot(backendUrl=${backendUrl})}"></div>
   </main>
 </div>
 

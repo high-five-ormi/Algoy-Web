@@ -94,6 +94,7 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 							response.sendRedirect("/algoy/home");
 						}));
 
+
 		return http.build();
 	}
 

@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
           [{ indent: '-1' }, { indent: '+1' }],
           [{ color: [] }, { background: [] }],
           [{ align: [] }],
-          ['image'],
           ['clean']
         ],
         handlers: {

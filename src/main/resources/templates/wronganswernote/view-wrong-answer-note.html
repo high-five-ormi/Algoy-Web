@@ -21,26 +21,11 @@
 </head>
 <body>
 <header>
-  <div class="logo">
-    <img src="/img/algoy-1.png" alt="ALGoy Logo">
-  </div>
-  <nav>
-    <a href="/algoy/commit">오답 노트</a>
-    <a href="#">플래너</a>
-  </nav>
-  <div class="user-actions">
-    <div class="search-bar">
-      <input type="text" id="searchInput" name="search" placeholder="Search">
-      <img src="/img/search-glasses.png" alt="Search Icon" class="search-icon">
-    </div>
-    <button class="logout">Logout</button>
-    <div class="logout-container">
-      <div class="logout-icon-wrapper">
-        <img src="/img/user-icon.png" alt="User Icon" class="logout-icon">
-      </div>
-    </div>
-  </div>
+  <div th:replace="fragments/header :: header"></div>
+  <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
 </header>
+<div th:replace="fragments/modal :: modal"></div>
+<link rel="stylesheet" th:href="@{/css/fragments/modal.css}">
 
 <!-- 노트 헤더 섹션 -->
 <div class="note-header">
@@ -61,7 +46,7 @@
     <div class="problem-info">
       <div class="problem-site">
         <strong>문제 링크</strong>
-        <p><a th:href="${note.link}" th:text="${note.link}">문제 링크</a></p>
+        <p><a th:href="${note.link}" th:text="${note.link}" target="_blank">문제 링크</a></p>
       </div>
       <div class="problem-details">
         <div class="detail-item">
@@ -80,33 +65,33 @@
           <strong>풀이 여부</strong>
           <p th:text="${note.isSolved ? 'Solved' : 'Unsolved'}">Solved</p>
         </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <h3>내용</h3>
+      <!-- 이미지 섹션을 내용 텍스트 위로 이동 -->
+      <div class="note-image-container">
+        <div th:each="url : ${note.imageUrls}">
+          <img th:src="@{${url}}" alt="노트 이미지" class="note-image"/>
         </div>
       </div>
+      <!-- 텍스트 내용이 이미지 아래에 오도록 배치 -->
+      <p th:utext="${note.content}">내용내용내용내용내용내용내용내용</p>
+    </div>
 
-      <div class="content">
-        <h3>내용</h3>
-        <!-- 이미지 섹션을 내용 텍스트 위로 이동 -->
-        <div class="note-image-container">
-          <div th:each="url : ${note.imageUrls}">
-            <img th:src="@{${url}}" alt="노트 이미지" class="note-image"/>
-          </div>
-        </div>
-        <!-- 텍스트 내용이 이미지 아래에 오도록 배치 -->
-        <p th:utext="${note.content}">내용내용내용내용내용내용내용내용</p>
-      </div>
+    <!-- 코드 추가 섹션 -->
+    <div class="sample-code-container">
+      <!-- 코드 블록이 여기에 추가됨 -->
+    </div>
 
-      <!-- 코드 추가 섹션 -->
-      <div class="sample-code-container">
-        <!-- 코드 블록이 여기에 추가됨 -->
+    <div class="code-action-container">
+      <button id="add-code-button">코드 추가</button>
+      <div class="action-buttons">
+        <button class="edit-btn" th:data-note-id="${note.id}">수정</button>
+        <button class="delete-btn" th:data-note-id="${note.id}">삭제</button>
       </div>
-
-      <div class="code-action-container">
-        <button id="add-code-button">코드 추가</button>
-        <div class="action-buttons">
-          <button class="edit-btn" th:data-note-id="${note.id}">수정</button>
-          <button class="delete-btn" th:data-note-id="${note.id}">삭제</button>
-        </div>
-      </div>
+    </div>
     </div>
   </section>
 
@@ -115,10 +100,10 @@
 </main>
 
 <!-- 모달 입력창 -->
-<div class="modal" id="codeModal">
-  <div class="modal-content">
+<div class="code-modal" id="codeModal">
+  <div class="code-modal-content">
     <textarea id="codeInput" placeholder="코드를 입력하세요" rows="10"></textarea>
-    <div class="modal-buttons">
+    <div class="code-modal-buttons">
       <button id="submitCode">추가</button>
       <button id="cancelCode" class="cancel-btn">취소</button>
     </div>
@@ -126,10 +111,10 @@
 </div>
 
 <!-- 수정 모달 입력창 -->
-<div class="modal" id="editCodeModal">
-  <div class="modal-content">
+<div class="code-modal" id="editCodeModal">
+  <div class="code-modal-content">
     <textarea id="editCodeInput" placeholder="수정할 코드를 입력하세요"></textarea>
-    <div class="modal-buttons">
+    <div class="code-modal-buttons">
       <button id="submitEditCode" class="submit-btn">수정</button>
       <button id="cancelEditCode" class="cancel-btn">취소</button>
     </div>

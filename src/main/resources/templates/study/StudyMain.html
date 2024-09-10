@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>스터디 메인</title>
     <!-- 외부 CSS 파일 연결 -->
-    <link rel="stylesheet" href="/css/planner/PlannerSaveForm.css">
+    <link rel="stylesheet" href="/css/study/StudyMainCss.css">
     <link rel="stylesheet" href="/css/header.css">
     <!-- jQuery 라이브러리 로드 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -29,8 +29,37 @@
 <div th:replace="fragments/modal :: modal"></div>
 <link rel="stylesheet" th:href="@{/css/fragments/modal.css}">
 <main>
+    <div id="calendar-header" class="calendar-nav">
+        <div class="calendar-nav" style="width: 100px; height: 23px">
+            <img src="/img/planner-icon.png" width="16" height="16" alt="아이콘입니다.">
+            <span style="line-height: 23px">Study</span>
+        </div>
+        <button id="btn-calendar">New</button>
+    </div>
 
+    <div id="study-list-container" class="study-list">
+    </div>
+
+    <div id="pagination">
+        <div class="active-page" data-page="0">1</div>
+        <div class="page-button" data-page="1">2</div>
+    </div>
 </main>
-
+<script src="/js/study/StudyMainJs.js"></script>
+<footer>
+    <div id="our_information">
+        <ul>
+            <li>진행 프로젝트 : ESTSOFT ORMI 5기 백엔드 파이널 프로젝트</li>
+            <li>팀 이름 : 5조 high - five</li>
+            <li>프로젝트 이름 : Algoy</li>
+            <li>깃허브 : <a href="https://github.com/high-five-ormi">https://github.com/high-five-ormi</a></li>
+            <li>프로젝트 관련 컨텍은 깃허브 READ ME에 안내되어 있습니다</li>
+        </ul>
+    </div>
+    <div id="Catchphrase">
+        <img src="/img/algoy-1.png" alt="알고이 로고입니다." id="footer-logo">
+        <p>"Algoy: Your Coding Commit Companion —Track Mistakes, Plan Success, and Get AI Insights"</p>
+    </div>
+</footer>
 </body>
 </html>
