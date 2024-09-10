@@ -33,4 +33,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("select u from User u where u.email = :username")
 	Optional<User> findOptionalByEmail(String username);
+
+	// username으로 User를 찾는 메서드 정의
+	Optional<User> findByUsername(String username);
 }

@@ -1,6 +1,7 @@
 package com.example.algoyweb.util.user;
 
 import com.example.algoyweb.model.entity.user.User;
+import com.example.algoyweb.service.allen.AllenService;
 import com.example.algoyweb.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,7 +17,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
     private final UserService userService;
 
-    public CustomAuthenticationSuccessHandler(UserService userService) {
+    public CustomAuthenticationSuccessHandler(UserService userService, AllenService allenService) {
         this.userService = userService;
     }
 

@@ -1,8 +1,11 @@
 package com.example.algoyweb.config;
 
+import com.example.algoyweb.controller.user.UserAuthenticationSuccessHandler;
+import com.example.algoyweb.service.allen.AllenService;
 import com.example.algoyweb.service.user.UserService;
 import com.example.algoyweb.util.user.CustomAuthenticationSuccessHandler;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -27,10 +30,19 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 	@Lazy
 	private final UserService userService;
 
-	public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, @Lazy UserService userService) {
+	@Lazy
+	private final AllenService allenService;
+
+	public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, @Lazy UserService userService, @Lazy AllenService allenService) {
 		this.customOAuth2UserService = customOAuth2UserService;
 		this.userService = userService;
+		this.allenService = allenService;
 	}
+
+//	public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, @Lazy UserService userService) {
+//		this.customOAuth2UserService = customOAuth2UserService;
+//		this.userService = userService;
+//	}
 
 	@Bean
 	// 비밀번호 인코더 빈을 생성하는 메서드
@@ -68,6 +80,7 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 				.loginProcessingUrl("/algoy/login") // 로그인 요청을 처리할 URL 설정
 				.successForwardUrl("/algoy/home")
 				.defaultSuccessUrl("/algoy/home")
+					//.successHandler(customAuthenticationSuccessHandler)
 				.successHandler(loginSuccessHandler())
 				.failureUrl("/algoy/login?error=true"))
 			.logout(logout -> logout
@@ -92,7 +105,8 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 	}
 
 	@Bean
-	public CustomAuthenticationSuccessHandler loginSuccessHandler() {
-		return new CustomAuthenticationSuccessHandler(userService);
+	public UserAuthenticationSuccessHandler loginSuccessHandler() {
+		//return new CustomAuthenticationSuccessHandler(userService);
+		return new UserAuthenticationSuccessHandler(userService, allenService);
 	}
 }

@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>오답노트 상세 페이지</title>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap"
+        rel="stylesheet">
   <link rel="stylesheet" href="/css/wronganswernote/view-wrong-answer-note.css">
   <!-- jQuery 라이브러리의 압축된 버전을 CDN을 통해 불러와 현재 HTML 문서에서 사용할 수 있습니다. -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -33,7 +34,7 @@
       <img src="/img/search-glasses.png" alt="Search Icon" class="search-icon">
     </div>
     <button class="logout">Logout</button>
-    <div class="logout-container" style="margin-left: 8px;">
+    <div class="logout-container">
       <div class="logout-icon-wrapper">
         <img src="/img/user-icon.png" alt="User Icon" class="logout-icon">
       </div>
@@ -54,7 +55,7 @@
     <h1 class="note-title" th:text="${note.title}">[제목]</h1>
     <div class="note-meta">
       <span class="author" th:text="${note.userId}">닉네임</span>
-      <span class="date" th:text="${#dates.format(note.createdAt, 'yyyy.MM.dd HH:mm')}">2024.08.20 19:42</span>
+      <span class="date" th:text="${formattedDate}">2024.08.20 19:42</span>
     </div>
 
     <div class="problem-info">
@@ -75,30 +76,36 @@
           <strong>레벨</strong>
           <p th:text="${note.quizLevel}">0</p>
         </div>
-      </div>
-    </div>
-
-    <div class="content">
-      <h3>내용</h3>
-      <p th:utext="${note.content}">내용내용내용내용내용내용내용내용</p>
-      <!-- 내용 부분에 이미지 추가 -->
-      <div class="note-image-container">
-        <div th:each="url : ${note.imageUrls}">
-          <img th:src="@{/uploads/{url}(url=${url})}" alt="노트 이미지" class="note-image" />
+        <div class="detail-item">
+          <strong>풀이 여부</strong>
+          <p th:text="${note.isSolved ? 'Solved' : 'Unsolved'}">Solved</p>
+        </div>
         </div>
       </div>
-    </div>
 
-    <!-- 코드 추가 섹션 -->
-    <div class="sample-code-container">
-      <!-- 코드 블록이 여기에 추가됨 -->
-    </div>
+      <div class="content">
+        <h3>내용</h3>
+        <!-- 이미지 섹션을 내용 텍스트 위로 이동 -->
+        <div class="note-image-container">
+          <div th:each="url : ${note.imageUrls}">
+            <img th:src="@{${url}}" alt="노트 이미지" class="note-image"/>
+          </div>
+        </div>
+        <!-- 텍스트 내용이 이미지 아래에 오도록 배치 -->
+        <p th:utext="${note.content}">내용내용내용내용내용내용내용내용</p>
+      </div>
 
-    <div class="code-action-container">
-      <button id="add-code-button">코드 추가</button>
-      <div class="action-buttons">
-        <button class="edit-btn" th:data-note-id="${note.id}">수정</button>
-        <button class="delete-btn" th:data-note-id="${note.id}">삭제</button>
+      <!-- 코드 추가 섹션 -->
+      <div class="sample-code-container">
+        <!-- 코드 블록이 여기에 추가됨 -->
+      </div>
+
+      <div class="code-action-container">
+        <button id="add-code-button">코드 추가</button>
+        <div class="action-buttons">
+          <button class="edit-btn" th:data-note-id="${note.id}">수정</button>
+          <button class="delete-btn" th:data-note-id="${note.id}">삭제</button>
+        </div>
       </div>
     </div>
   </section>
@@ -110,9 +117,22 @@
 <!-- 모달 입력창 -->
 <div class="modal" id="codeModal">
   <div class="modal-content">
-    <textarea id="codeInput" placeholder="코드를 입력하세요"></textarea>
-    <button id="submitCode">추가</button>
-    <button id="cancelCode" class="cancel-btn">취소</button>
+    <textarea id="codeInput" placeholder="코드를 입력하세요" rows="10"></textarea>
+    <div class="modal-buttons">
+      <button id="submitCode">추가</button>
+      <button id="cancelCode" class="cancel-btn">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- 수정 모달 입력창 -->
+<div class="modal" id="editCodeModal">
+  <div class="modal-content">
+    <textarea id="editCodeInput" placeholder="수정할 코드를 입력하세요"></textarea>
+    <div class="modal-buttons">
+      <button id="submitEditCode" class="submit-btn">수정</button>
+      <button id="cancelEditCode" class="cancel-btn">취소</button>
+    </div>
   </div>
 </div>
 

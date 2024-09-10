@@ -4,55 +4,64 @@ import com.example.algoyweb.model.dto.WrongAnswerNote.WrongAnswerNoteDTO;
 import com.example.algoyweb.model.entity.WrongAnswerNote.WrongAnswerNote;
 import com.example.algoyweb.repository.WrongAnswerNote.WrongAnswerNoteRepository;
 import com.example.algoyweb.util.WrongAnswerNote.WrongAnswerNoteConvertUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class WrongAnswerNoteService {
 
-    private final WrongAnswerNoteRepository repository;
+    private final WrongAnswerNoteRepository wrongAnswerNoteRepository;
 
-    public WrongAnswerNoteService(WrongAnswerNoteRepository repository) {
-        this.repository = repository;
+    @Autowired
+    public WrongAnswerNoteService(WrongAnswerNoteRepository wrongAnswerNoteRepository) {
+        this.wrongAnswerNoteRepository = wrongAnswerNoteRepository;
     }
 
-    public List<WrongAnswerNoteDTO> findAll() {
-        return repository.findAll().stream()
-            .map(WrongAnswerNoteConvertUtil::convertToDto)
-            .collect(Collectors.toList());
-    }
-
-    public Optional<WrongAnswerNoteDTO> findById(Long id) {
-        return repository.findById(id)
+    // 오답노트 페이징 조회
+    public Page<WrongAnswerNoteDTO> findAllWithPagination(int page, int size) {
+        return wrongAnswerNoteRepository.findAllOrderByCreatedDateDesc(PageRequest.of(page, size))
             .map(WrongAnswerNoteConvertUtil::convertToDto);
     }
 
+    // 오답노트 아이디로 조회
+    public Optional<WrongAnswerNoteDTO> findById(Long id) {
+        return wrongAnswerNoteRepository.findById(id)
+            .map(WrongAnswerNoteConvertUtil::convertToDto);
+    }
+
+    // 오답노트 생성
     public WrongAnswerNoteDTO save(WrongAnswerNoteDTO dto) {
-        WrongAnswerNote entity = WrongAnswerNoteConvertUtil.convertToEntity(dto);
-        if (dto.getId() == null) {
-            entity.setCreatedAt(LocalDateTime.now());
-        }
-        entity.setUpdatedAt(LocalDateTime.now());
-        WrongAnswerNote savedEntity = repository.save(entity);
-        return WrongAnswerNoteConvertUtil.convertToDto(savedEntity);
+        WrongAnswerNote wrongAnswerNote = WrongAnswerNoteConvertUtil.convertToEntity(dto);
+        WrongAnswerNote savedNote = wrongAnswerNoteRepository.save(wrongAnswerNote);
+        return WrongAnswerNoteConvertUtil.convertToDto(savedNote);
     }
 
-    public void deleteById(Long id) {
-        repository.deleteById(id);
-    }
-
+    // 오답노트 수정
     public WrongAnswerNoteDTO update(Long id, WrongAnswerNoteDTO dto) {
-        WrongAnswerNote entity = repository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Entity not found"));
-        // 유틸 메서드를 사용해 DTO의 값을 엔티티에 업데이트
-        WrongAnswerNoteConvertUtil.updateEntityFromDto(entity, dto);
-        WrongAnswerNote updatedEntity = repository.save(entity);
-        return WrongAnswerNoteConvertUtil.convertToDto(updatedEntity);
+        WrongAnswerNote wrongAnswerNote = wrongAnswerNoteRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("해당 오답노트를 찾을 수 없습니다."));
+
+        WrongAnswerNoteConvertUtil.updateEntityFromDto(wrongAnswerNote, dto);
+        WrongAnswerNote updatedNote = wrongAnswerNoteRepository.save(wrongAnswerNote);
+        return WrongAnswerNoteConvertUtil.convertToDto(updatedNote);
+    }
+
+    // 오답노트 삭제
+    public void deleteById(Long id) {
+        wrongAnswerNoteRepository.deleteById(id);
+    }
+
+    // 해결 상태 업데이트
+    public WrongAnswerNoteDTO updateSolvedStatus(Long id, boolean isSolved) {
+        WrongAnswerNote note = wrongAnswerNoteRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("해당 오답노트를 찾을 수 없습니다."));
+
+        note.setIsSolved(isSolved);
+        WrongAnswerNote updatedNote = wrongAnswerNoteRepository.save(note);
+        return WrongAnswerNoteConvertUtil.convertToDto(updatedNote);
     }
 }

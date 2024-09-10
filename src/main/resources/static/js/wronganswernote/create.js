@@ -1,71 +1,104 @@
-const dropZone = document.getElementById('drop-zone');
-const fileInput = document.getElementById('files');
-const fileNames = document.getElementById('file-names');
-const imagePreviews = document.getElementById('image-previews');
-let selectedFiles = new DataTransfer();
+document.addEventListener('DOMContentLoaded', () => {
+  const isSolvedInput = document.getElementById('isSolved');
+  const fileInput = document.getElementById('files');
 
-function addFiles(newFiles) {
-  for (let file of newFiles) {
-    selectedFiles.items.add(file);
+  var quill = new Quill('#editor', {
+    theme: 'snow',
+    modules: {
+      toolbar: {
+        container: [
+          [{ header: [1, 2, false] }],
+          ['bold', 'italic', 'underline'],
+          ['link'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          [{ script: 'sub' }, { script: 'super' }],
+          [{ indent: '-1' }, { indent: '+1' }],
+          [{ color: [] }, { background: [] }],
+          [{ align: [] }],
+          ['image'],
+          ['clean']
+        ],
+        handlers: {
+          image: imageHandler
+        }
+      }
+    }
+  });
 
-    // 이미지 파일 미리보기 생성
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      displayImagePreview(e.target.result, file.name);
-    };
-    reader.readAsDataURL(file);
+  // 이미지 삽입 핸들러
+  function imageHandler() {
+    fileInput.click();
   }
-  fileInput.files = selectedFiles.files;
-  updateFileNames();
-}
 
-function updateFileNames() {
-  fileNames.innerHTML = '';
-  for (let i = 0; i < fileInput.files.length; i++) {
-    fileNames.innerHTML += `<p>선택된 파일 ${i + 1}: ${fileInput.files[i].name}</p>`;
-  }
-}
+  // 파일 선택 후 이미지 처리
+  fileInput.addEventListener('change', async function () {
+    const files = fileInput.files;
+    if (files.length > 0) {
+      const file = files[0];
 
-function displayImagePreview(imageDataUrl, fileName) {
-  const previewImage = document.createElement('img');
-  previewImage.src = imageDataUrl;
-  previewImage.alt = fileName;
-  previewImage.className = 'image-preview';
-  imagePreviews.appendChild(previewImage);
-}
+      const maxFileNameLength = 50;
+      let fileName = file.name;
+      if (fileName.length > maxFileNameLength) {
+        const extension = fileName.substring(fileName.lastIndexOf('.'));
+        fileName = fileName.substring(0, maxFileNameLength - extension.length) + extension;
+      }
 
-// 드래그 앤 드롭 이벤트 처리
-dropZone.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  dropZone.classList.add('dragover');
-});
+      const formData = new FormData();
+      formData.append('image', file, fileName);
 
-dropZone.addEventListener('dragleave', () => {
-  dropZone.classList.remove('dragover');
-});
+      try {
+        const response = await fetch('/upload-image-endpoint', {
+          method: 'POST',
+          body: formData,
+        });
 
-dropZone.addEventListener('drop', (e) => {
-  e.preventDefault();
-  dropZone.classList.remove('dragover');
-  addFiles(e.dataTransfer.files);
-});
+        if (response.ok) {
+          const result = await response.json();
+          const imageUrl = result.url;
 
-// 파일 선택 이벤트 처리
-fileInput.addEventListener('change', (e) => {
-  addFiles(e.target.files);
-});
+          const range = quill.getSelection();
+          quill.insertEmbed(range.index, 'image', imageUrl);
+        } else {
+          alert('이미지 업로드에 실패했습니다.');
+        }
+      } catch (error) {
+        console.error('이미지 업로드 중 오류 발생:', error);
+        alert('이미지 업로드 중 오류가 발생했습니다.');
+      }
+    }
+  });
 
-// 폼 제출 시 빈 필드 확인
-document.getElementById('noteForm').addEventListener('submit', (event) => {
-  const title = document.getElementById('title').value.trim();
-  const link = document.getElementById('link').value.trim();
-  const quizSite = document.getElementById('quizSite').value.trim();
-  const quizType = document.getElementById('quizType').value.trim();
-  const quizLevel = document.getElementById('quizLevel').value.trim();
-  const content = document.getElementById('content').value.trim();
+  // 폼 제출 처리
+  document.getElementById('noteForm').addEventListener('submit', async function (event) {
 
-  if (!title || !link || !quizSite || !quizType || !quizLevel || !content) {
-    event.preventDefault(); // 폼 제출 막기
-    alert('모든 필드를 채워주세요.'); // 사용자에게 알림
-  }
+    event.preventDefault();
+
+    const content = document.querySelector('#content');
+    content.value = quill.root.innerHTML;
+
+    // 선택된 풀이 여부 값 확인
+    const isSolved = isSolvedInput.value; // 현재 선택된 값을 가져옵니다.
+    console.log('풀이 여부 값:', isSolved); // 디버깅을 위한 로그
+
+    const formData = new FormData(this);
+    formData.set('isSolved', isSolved); // FormData에 현재 선택된 값을 명확하게 설정
+
+    try {
+      const response = await fetch('/algoy/commit/create', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        window.location.href = '/algoy/commit';
+      } else {
+        const errorMessage = await response.text();
+        console.error('서버 오류:', errorMessage);
+        alert(`게시글 작성에 실패했습니다: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error('전송 중 오류:', error);
+      alert('서버와의 통신 중 오류가 발생했습니다.');
+    }
+  });
 });

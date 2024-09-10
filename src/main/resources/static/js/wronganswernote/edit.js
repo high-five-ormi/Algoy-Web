@@ -1,46 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const dropZone = document.getElementById('drop-zone');
-  const fileInput = document.getElementById('files');
-  const fileNames = document.getElementById('file-names');
-  const imagePreviews = document.getElementById('image-previews');
-  let selectedFiles = new DataTransfer();
+  const isSolvedInput = document.getElementById('isSolved');
+  const statusDisplay = document.getElementById('isSolved-status-display');
 
-  function addFiles(newFiles) {
-    const filesArray = Array.from(newFiles);
+  // "풀이 여부" 초기 표시 처리
+  if (isSolvedInput && statusDisplay) {
+    statusDisplay.textContent = `풀이 여부: ${isSolvedInput.value}`;
 
-    filesArray.forEach(file => {
-      if (!selectedFiles.items.some(item => item.getAsFile().name === file.name)) {
-        selectedFiles.items.add(file);
-        const fileReader = new FileReader();
-        fileReader.onload = () => {
-          const imgElement = document.createElement('img');
-          imgElement.src = fileReader.result;
-          imagePreviews.appendChild(imgElement);
-        };
-        fileReader.readAsDataURL(file);
-      }
+    // "풀이 여부" 변경 시 처리
+    isSolvedInput.addEventListener('change', (e) => {
+      const status = e.target.value;
+      statusDisplay.textContent = `풀이 여부: ${status}`;
     });
-
-    fileInput.files = selectedFiles.files;
-    fileNames.innerHTML = Array.from(fileInput.files).map(file => `<p>${file.name}</p>`).join('');
   }
 
-  dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropZone.classList.add('dragover');
+  // Quill 에디터 초기화
+  const quill = new Quill('#editor', {
+    theme: 'snow',
+    modules: {
+      toolbar: [
+        [{ 'font': [] }],
+        [{ 'size': ['small', false, 'large', 'huge'] }],
+        ['bold', 'italic', 'underline'],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'align': [] }],
+        ['image'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }]
+      ]
+    }
   });
 
-  dropZone.addEventListener('dragleave', () => {
-    dropZone.classList.remove('dragover');
-  });
+  // 기존 내용 로드
+  const existingContent = document.querySelector('input[name="content"]').value;
+  if (existingContent) {
+    try {
+      const delta = quill.clipboard.convert(existingContent);
+      quill.setContents(delta, 'silent');
+    } catch (error) {
+      console.error('Failed to load existing content into Quill:', error);
+      quill.root.innerHTML = existingContent;
+    }
+  }
 
-  dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZone.classList.remove('dragover');
-    addFiles(e.dataTransfer.files);
-  });
-
-  fileInput.addEventListener('change', (e) => {
-    addFiles(e.target.files);
+  // 폼 제출 전에 Quill 에디터의 내용을 hidden 필드에 저장
+  document.querySelector('form').addEventListener('submit', () => {
+    document.querySelector('input[name="content"]').value = quill.root.innerHTML;
   });
 });
