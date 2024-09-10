@@ -9,7 +9,6 @@
 const chatFrag = {
   stompClient: null,
   currentRoomId: null,
-  currentUserNickname: null,
   currentView: 'room-list',
 
   /**
@@ -31,10 +30,11 @@ const chatFrag = {
    * 현재 사용자 정보를 가져오는 메서드
    */
   fetchCurrentUserInfo: function() {
-    fetch('/algoy/api/user/current')
+    return fetch('/algoy/api/user/current')
     .then(response => response.json())
     .then(user => {
-      this.currentUserNickname = user.nickname;
+      // sessionStorage에 사용자 정보 저장
+      sessionStorage.setItem('currentUserNickname', user.nickname);
     })
     .catch(error => console.error('Error fetching current user info:', error));
   },
@@ -128,7 +128,9 @@ const chatFrag = {
     .then(roomDto => {
       this.currentRoomId = roomDto.roomId;
       this.showChatRoomView(roomDto.name);
-      this.loadMessages(roomDto.roomId);
+      this.fetchCurrentUserInfo().then(() => {
+        this.loadMessages(roomDto.roomId);
+      });
       this.stompClient.subscribe(`/topic/room/${roomDto.roomId}`, this.onMessageReceived.bind(this), {id: this.currentRoomId});
     })
     .catch(error => console.error('Error joining room:', error));
@@ -169,7 +171,7 @@ const chatFrag = {
     .then(data => {
       const chatMessages = document.getElementById('chat-frag-messages');
       chatMessages.innerHTML = '';
-      data.content.reverse().forEach(message => {
+      data.content.forEach(message => {
         this.displayMessage(message);
       });
     })
@@ -208,9 +210,11 @@ const chatFrag = {
     const messageElement = document.createElement('div');
     messageElement.classList.add('chat-frag-message');
 
+    const currentUserNickname = sessionStorage.getItem('currentUserNickname');
+
     if (message.nickname === 'System') {
       messageElement.classList.add('system');
-    } else if (message.nickname === this.currentUserNickname) {
+    } else if (message.nickname === currentUserNickname) {
       messageElement.classList.add('sent');
     } else {
       messageElement.classList.add('received');
@@ -360,22 +364,30 @@ const chatFrag = {
       console.error("Hamburger menu element not found for chat component");
     }
 
-    document.getElementById('chat-frag-create-room-btn').addEventListener('click', this.showCreateRoomView.bind(this));
-    document.getElementById('chat-frag-create-room-submit').addEventListener('click', this.createRoom.bind(this));
-    document.getElementById('chat-frag-invite-user-btn').addEventListener('click', this.showInviteModal.bind(this));
-    document.getElementById('chat-frag-send-button').addEventListener('click', this.sendMessage.bind(this));
-    document.getElementById('chat-frag-send-invite').addEventListener('click', this.inviteUser.bind(this));
-    document.getElementById('chat-frag-cancel-invite').addEventListener('click', this.hideInviteModal.bind(this));
+    document.getElementById('chat-frag-create-room-btn').addEventListener(
+        'click', this.showCreateRoomView.bind(this));
+    document.getElementById('chat-frag-create-room-submit').addEventListener(
+        'click', this.createRoom.bind(this));
+    document.getElementById('chat-frag-invite-user-btn').addEventListener(
+        'click', this.showInviteModal.bind(this));
+    document.getElementById('chat-frag-send-button').addEventListener('click',
+        this.sendMessage.bind(this));
+    document.getElementById('chat-frag-send-invite').addEventListener('click',
+        this.inviteUser.bind(this));
+    document.getElementById('chat-frag-cancel-invite').addEventListener('click',
+        this.hideInviteModal.bind(this));
     document.querySelectorAll('.chat-frag-back-btn').forEach(btn => {
       btn.addEventListener('click', this.goBack.bind(this));
     });
-    document.getElementById('chat-frag-leave-room-btn').addEventListener('click', this.leaveRoom.bind(this));
+    document.getElementById('chat-frag-leave-room-btn').addEventListener(
+        'click', this.leaveRoom.bind(this));
 
-    document.getElementById('chat-frag-user-input').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        this.sendMessage();
-      }
-    });
+    document.getElementById('chat-frag-user-input').addEventListener('keypress',
+        (e) => {
+          if (e.key === 'Enter') {
+            this.sendMessage();
+          }
+        });
 
     window.addEventListener('click', (event) => {
       let modal = document.getElementById('chat-frag-invite-modal');
@@ -385,9 +397,11 @@ const chatFrag = {
     });
 
     // 초기 설정
-    this.connect();
-    this.loadRooms();
-    this.hideInviteModal();
+    this.fetchCurrentUserInfo().then(() => {
+      this.connect();
+      this.loadRooms();
+      this.hideInviteModal();
+    });
   }
 };
 
