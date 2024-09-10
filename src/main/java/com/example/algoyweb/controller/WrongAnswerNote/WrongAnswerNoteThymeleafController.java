@@ -3,6 +3,7 @@ package com.example.algoyweb.controller.WrongAnswerNote;
 import com.example.algoyweb.model.dto.WrongAnswerNote.WrongAnswerNoteDTO;
 import com.example.algoyweb.service.WrongAnswerNote.WrongAnswerNoteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,10 @@ import org.springframework.web.bind.annotation.*;
 public class WrongAnswerNoteThymeleafController {
 
     private final WrongAnswerNoteService service;
+
+    // ai-backend.url 설정값을 저장하는 변수입니다.
+    @Value("${ai-backend.url}")
+    private String backendUrl;
 
     // 페이지네이션을 적용한 목록 조회
     @GetMapping
@@ -41,6 +46,7 @@ public class WrongAnswerNoteThymeleafController {
         model.addAttribute("endPage", endPage);
         model.addAttribute("previousGroupStartPage", previousGroupStartPage);
         model.addAttribute("nextGroupStartPage", nextGroupStartPage);
+        model.addAttribute("backendUrl", backendUrl);
 
         return "wronganswernote/list-wrong-answer-notes";
     }
@@ -49,6 +55,7 @@ public class WrongAnswerNoteThymeleafController {
     @GetMapping("/{id}")
     public String getWrongAnswerNoteById(@PathVariable Long id, Model model) {
         service.findById(id).ifPresent(note -> model.addAttribute("note", note));
+        model.addAttribute("backendUrl", backendUrl);
         return "wronganswernote/view-wrong-answer-note";
     }
 
@@ -56,6 +63,7 @@ public class WrongAnswerNoteThymeleafController {
     @GetMapping("/create")
     public String createWrongAnswerNoteForm(Model model) {
         model.addAttribute("note", new WrongAnswerNoteDTO());
+        model.addAttribute("backendUrl", backendUrl);
         return "wronganswernote/create-wrong-answer-note";
     }
 
@@ -70,6 +78,7 @@ public class WrongAnswerNoteThymeleafController {
     @GetMapping("/{id}/edit")
     public String editWrongAnswerNoteForm(@PathVariable Long id, Model model) {
         service.findById(id).ifPresent(note -> model.addAttribute("note", note));
+        model.addAttribute("backendUrl", backendUrl);
         return "wronganswernote/edit-wrong-answer-note";
     }
 
