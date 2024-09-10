@@ -20,24 +20,11 @@
 </head>
 <body>
 <header>
-  <div class="logo">
-    <img src="/img/algoy-1.png" alt="ALGoy Logo">
-  </div>
-  <nav>
-    <a href="/algoy/commit">오답 노트</a>
-    <a href="#">플래너</a>
-  </nav>
-  <div class="user-actions">
-    <div class="search-bar">
-      <input type="text" placeholder="Search">
-      <img src="/img/search-glasses.png" alt="Search Icon" class="search-icon">
-    </div>
-    <button class="logout">Logout</button>
-    <div class="logout-container">
-      <img src="/img/user-icon.png" alt="User Icon" class="user-icon">
-    </div>
-  </div>
+  <div th:replace="fragments/header :: header"></div>
+  <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
 </header>
+<div th:replace="fragments/modal :: modal"></div>
+<link rel="stylesheet" th:href="@{/css/fragments/modal.css}">
 
 <div class="note-header">
   <div class="title-section">
@@ -77,6 +64,9 @@
     </span>
     <a th:href="@{/algoy/commit(page=${nextGroupStartPage}, size=${size})}" th:if="${endPage < totalPages}">다음 &raquo;</a>
   </div>
+
+  <!-- 챗봇 컴포넌트 포함 -->
+  <div th:replace="~{fragments/chatbot :: chatbot(backendUrl=${backendUrl})}"></div>
 </main>
 
 <script src="/js/wronganswernote/list.js"></script>

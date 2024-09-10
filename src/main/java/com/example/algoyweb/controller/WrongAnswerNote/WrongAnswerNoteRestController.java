@@ -2,6 +2,7 @@ package com.example.algoyweb.controller.WrongAnswerNote;
 
 import com.example.algoyweb.model.dto.WrongAnswerNote.WrongAnswerNoteDTO;
 import com.example.algoyweb.service.WrongAnswerNote.WrongAnswerNoteService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -52,5 +53,12 @@ public class WrongAnswerNoteRestController {
     public ResponseEntity<Void> deleteWrongAnswerNote(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // 검색기능 추가
+    @GetMapping("/search")
+    public ResponseEntity<List<WrongAnswerNoteDTO>> searchWrongAnswerNotes(@RequestParam String query) {
+        List<WrongAnswerNoteDTO> notes = service.search(query);
+        return ResponseEntity.ok(notes);
     }
 }
