@@ -83,6 +83,25 @@ public class ChattingService {
       throw new CustomException(ChattingErrorCode.NO_INVITEES);
     }
 
+    List<User> validInvitees = new ArrayList<>();
+    List<String> invalidNicknames = new ArrayList<>();
+
+    for (String nickname : inviteeNicknames) {
+      if (nickname.equals(owner.getNickname())) {
+        throw new CustomException(ChattingErrorCode.SELF_INVITATION_NOT_ALLOWED);
+      }
+      User invitee = userRepository.findByNickname(nickname);
+      if (invitee != null) {
+        validInvitees.add(invitee);
+      } else {
+        invalidNicknames.add(nickname);
+      }
+    }
+
+    if (!invalidNicknames.isEmpty()) {
+      throw new CustomException(ChattingErrorCode.INVALID_INVITEES);
+    }
+
     ChattingRoom chattingRoom = ChattingRoom.builder()
         .roomId("room-" + System.currentTimeMillis())
         .name(roomName)
@@ -92,13 +111,8 @@ public class ChattingService {
         .updatedAt(LocalDateTime.now())
         .build();
 
-    for (String nickname : inviteeNicknames) {
-      if (!nickname.equals(owner.getNickname())) {
-        User invitee = userRepository.findByNickname(nickname);
-        if (invitee != null) {
-          chattingRoom.addParticipant(invitee.getUserId());
-        }
-      }
+    for (User invitee : validInvitees) {
+      chattingRoom.addParticipant(invitee.getUserId());
     }
 
     ChattingRoom savedRoom = chattingRoomRepository.save(chattingRoom);

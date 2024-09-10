@@ -254,11 +254,12 @@ class ChattingControllerTest {
         chattingController.inviteToRoomByNickname(roomId, inviteRequest, authentication);
 
     // Then
-    assertEquals(400, response.getStatusCodeValue());
+    assertEquals(ChattingErrorCode.USER_NOT_FOUND.getHttpStatus().value(), response.getStatusCodeValue());
     assertNotNull(response.getBody());
     assertTrue(response.getBody() instanceof Map);
     Map<String, String> responseBody = (Map<String, String>) response.getBody();
-    assertEquals(expectedException.getMessage(), responseBody.get("error"));
+    assertEquals(ChattingErrorCode.USER_NOT_FOUND.name(), responseBody.get("code"));
+    assertEquals(ChattingErrorCode.USER_NOT_FOUND.getMessage(), responseBody.get("message"));
     verify(chattingService).inviteUserByNickname(roomId, "testUser", "invitedUser");
   }
 }

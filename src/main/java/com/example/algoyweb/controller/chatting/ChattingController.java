@@ -6,6 +6,7 @@ import com.example.algoyweb.service.chatting.ChattingService;
 import jakarta.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -118,9 +119,15 @@ public class ChattingController {
       chattingService.inviteUserByNickname(roomId, userDetails.getUsername(), inviteRequest.getNickname());
       return ResponseEntity.ok().body(Collections.singletonMap("message", "User invited successfully"));
     } catch (CustomException e) {
-      return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
+      return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(
+          Map.of("code", e.getErrorCode().name(),
+              "message", e.getErrorCode().getMessage())
+      );
     } catch (Exception e) {
-      return ResponseEntity.internalServerError().body(Collections.singletonMap("error", "An unexpected error occurred"));
+      return ResponseEntity.internalServerError().body(
+          Map.of("code", "UNKNOWN_ERROR",
+              "message", "An unexpected error occurred")
+      );
     }
   }
 }
