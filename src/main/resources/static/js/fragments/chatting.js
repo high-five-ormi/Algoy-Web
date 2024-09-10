@@ -1,9 +1,20 @@
+/**
+ * @author JSW
+ * 채팅 자바스크립트
+ */
+
+/**
+ * chatFrag 객체: 채팅 기능을 관리하는 메인 객체
+ */
 const chatFrag = {
   stompClient: null,
   currentRoomId: null,
   currentUserNickname: null,
   currentView: 'room-list',
 
+  /**
+   * WebSocket 연결을 설정하고 초기화하는 메서드
+   */
   connect: function() {
     const socket = new SockJS('/algoy/chat-websocket');
     this.stompClient = Stomp.over(socket);
@@ -12,10 +23,13 @@ const chatFrag = {
       this.fetchCurrentUserInfo();
     }, (error) => {
       console.error('STOMP error:', error);
-      setTimeout(() => this.connect(), 5000);
+      setTimeout(() => this.connect(), 5000);  // 5초 후 재연결 시도
     });
   },
 
+  /**
+   * 현재 사용자 정보를 가져오는 메서드
+   */
   fetchCurrentUserInfo: function() {
     fetch('/algoy/api/user/current')
     .then(response => response.json())
@@ -25,6 +39,9 @@ const chatFrag = {
     .catch(error => console.error('Error fetching current user info:', error));
   },
 
+  /**
+   * 채팅방 목록을 로드하고 화면에 표시하는 메서드
+   */
   loadRooms: function() {
     fetch('/algoy/api/chat/rooms')
     .then(response => response.json())
@@ -42,6 +59,9 @@ const chatFrag = {
     .catch(error => console.error('Error loading rooms:', error));
   },
 
+  /**
+   * 새로운 채팅방을 생성하는 메서드
+   */
   createRoom: function() {
     const roomName = document.getElementById('chat-frag-room-name').value.trim();
     const inviteUsers = document.getElementById('chat-frag-invite-users').value.split(',').map(s => s.trim()).filter(s => s !== '');
@@ -81,6 +101,10 @@ const chatFrag = {
     });
   },
 
+  /**
+   * 특정 채팅방에 입장하는 메서드
+   * @param {string} roomId - 입장할 채팅방 ID
+   */
   joinRoom: function(roomId) {
     if (this.currentRoomId) {
       this.stompClient.unsubscribe(this.currentRoomId);
@@ -96,6 +120,9 @@ const chatFrag = {
     .catch(error => console.error('Error joining room:', error));
   },
 
+  /**
+   * 현재 채팅방에서 나가는 메서드
+   */
   leaveRoom: function() {
     if (this.currentRoomId) {
       fetch(`/algoy/api/chat/room/${this.currentRoomId}/leave`, {method: 'POST'})
@@ -118,6 +145,10 @@ const chatFrag = {
     }
   },
 
+  /**
+   * 특정 채팅방의 메시지를 로드하는 메서드
+   * @param {string} roomId - 메시지를 로드할 채팅방 ID
+   */
   loadMessages: function(roomId) {
     fetch(`/algoy/api/chat/room/${roomId}/messages`)
     .then(response => response.json())
@@ -131,6 +162,9 @@ const chatFrag = {
     .catch(error => console.error('Error loading messages:', error));
   },
 
+  /**
+   * 메시지를 전송하는 메서드
+   */
   sendMessage: function() {
     const messageContent = document.getElementById('chat-frag-user-input').value;
     if (messageContent && this.stompClient && this.currentRoomId) {
@@ -143,11 +177,19 @@ const chatFrag = {
     }
   },
 
+  /**
+   * 새 메시지를 수신했을 때 호출되는 콜백 메서드
+   * @param {Object} payload - 수신된 메시지 페이로드
+   */
   onMessageReceived: function(payload) {
     const message = JSON.parse(payload.body);
     this.displayMessage(message);
   },
 
+  /**
+   * 메시지를 화면에 표시하는 메서드
+   * @param {Object} message - 표시할 메시지 객체
+   */
   displayMessage: function(message) {
     const messageElement = document.createElement('div');
     messageElement.classList.add('chat-frag-message');
@@ -174,6 +216,7 @@ const chatFrag = {
     scrollContainer.scrollTop = scrollContainer.scrollHeight;
   },
 
+  // 뷰 전환 메서드들
   showRoomListView: function() {
     this.hideAllViews();
     document.getElementById('chat-frag-room-list-view').classList.remove('chat-frag-hidden');
@@ -209,6 +252,9 @@ const chatFrag = {
     this.hideInviteModal();
   },
 
+  /**
+   * 사용자를 채팅방에 초대하는 메서드
+   */
   inviteUser: function() {
     const inviteeNickname = document.getElementById('chat-frag-invite-nickname').value.trim();
     if (!inviteeNickname) {
@@ -237,6 +283,9 @@ const chatFrag = {
     });
   },
 
+  /**
+   * 이전 화면으로 돌아가는 메서드
+   */
   goBack: function() {
     if (this.currentView === 'chat-room') {
       this.backToRoomList();
@@ -245,6 +294,9 @@ const chatFrag = {
     }
   },
 
+  /**
+   * 채팅방 목록 화면으로 돌아가는 메서드
+   */
   backToRoomList: function() {
     if (this.currentRoomId) {
       this.stompClient.unsubscribe(this.currentRoomId);
@@ -254,6 +306,9 @@ const chatFrag = {
     this.loadRooms();
   },
 
+  /**
+   * 채팅 사이드바를 토글하는 메서드
+   */
   toggleChat: function() {
     document.body.classList.toggle('chat-open');
     const sidebar = document.getElementById('chat-frag-sidebar');
@@ -262,7 +317,11 @@ const chatFrag = {
     }
   },
 
+  /**
+   * 채팅 컴포넌트를 초기화하는 메서드
+   */
   initialize: function() {
+    // 이벤트 리스너 설정
     const hamburgerMenu = document.getElementById('chat-frag-hamburger-menu');
     if (hamburgerMenu) {
       hamburgerMenu.addEventListener('click', this.toggleChat.bind(this));
@@ -294,12 +353,14 @@ const chatFrag = {
       }
     });
 
+    // 초기 설정
     this.connect();
     this.loadRooms();
     this.hideInviteModal();
   }
 };
 
+// DOM이 로드된 후 채팅 컴포넌트 초기화
 document.addEventListener('DOMContentLoaded', function() {
   chatFrag.initialize();
 });

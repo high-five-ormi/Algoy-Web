@@ -1,6 +1,7 @@
 package com.example.algoyweb.controller.temp;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,7 @@ public class ChatBotViewController {
    * @return "temp/chatbot-demo" 뷰의 경로를 반환합니다.
    */
   @GetMapping("/algoy/chatbot-demo")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
   public String chatPage(Model model) {
     model.addAttribute("backendUrl", backendUrl);
     return "temp/chatbot-demo";
