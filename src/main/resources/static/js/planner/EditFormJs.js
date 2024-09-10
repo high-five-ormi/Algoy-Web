@@ -139,7 +139,7 @@ $('.btn-update').on('click', function(event) {
         data: JSON.stringify(plannerDto),
         success: function () {
             alert('수정에 성공했습니다.')
-            location.href = "/algoy/planner/calender"
+            location.href = "/algoy/planner/main"
         },
         error: function (error) {
             alert('수정에 실패했습니다.');

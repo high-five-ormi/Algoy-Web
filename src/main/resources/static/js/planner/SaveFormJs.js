@@ -110,7 +110,7 @@ $('.btn-create').on('click', function (event) {
         dataType: 'json',
         data: JSON.stringify(plannerDto),
         success: function (response) {
-            location.href = "/algoy/planner/calender"
+            location.href = "/algoy/planner/main"
         },
         error: function (error) {
             alert('등록에 실패했습니다.');
