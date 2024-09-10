@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>오답노트 상세 페이지</title>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap"
+        rel="stylesheet">
   <link rel="stylesheet" href="/css/wronganswernote/view-wrong-answer-note.css">
 </head>
 <body>
@@ -68,6 +69,7 @@
           <strong>풀이 여부</strong>
           <p th:text="${note.isSolved ? 'Solved' : 'Unsolved'}">Solved</p>
         </div>
+        </div>
       </div>
 
       <div class="content">
@@ -102,8 +104,10 @@
 <div class="modal" id="codeModal">
   <div class="modal-content">
     <textarea id="codeInput" placeholder="코드를 입력하세요" rows="10"></textarea>
-    <button id="submitCode">추가</button>
-    <button id="cancelCode" class="cancel-btn">취소</button>
+    <div class="modal-buttons">
+      <button id="submitCode">추가</button>
+      <button id="cancelCode" class="cancel-btn">취소</button>
+    </div>
   </div>
 </div>
 

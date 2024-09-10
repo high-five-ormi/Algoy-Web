@@ -1,4 +1,4 @@
-/* 기존 스타일과 동일하게 유지 */
+/* 기본 스타일 초기화 */
 * {
   margin: 0;
   padding: 0;
@@ -12,6 +12,7 @@ body {
   line-height: 1.6;
 }
 
+/* 헤더 스타일 */
 header {
   background-color: #e6eff8;
   height: 190px;
@@ -100,6 +101,7 @@ nav a:hover {
 .logout-container {
   display: flex;
   align-items: center;
+  margin-left: 8px;
 }
 
 .logout-icon-wrapper {
@@ -117,6 +119,7 @@ nav a:hover {
   height: 20px;
 }
 
+/* note-header 섹션 스타일 */
 .note-header {
   display: flex;
   justify-content: space-between;
@@ -134,8 +137,8 @@ nav a:hover {
 }
 
 .small-icon {
-  width: 30px;
-  height: 30px;
+  width: 16px;
+  height: 16px;
   margin-right: 10px;
 }
 
@@ -144,6 +147,7 @@ nav a:hover {
   color: #333;
 }
 
+/* New 버튼 스타일 */
 .new-button {
   padding: 8px 16px;
   border: none;
@@ -158,6 +162,7 @@ nav a:hover {
   background-color: #0056b3;
 }
 
+/* 메인 콘텐츠 스타일 */
 main {
   width: 100%;
   max-width: 1105px;
@@ -204,22 +209,30 @@ main {
   text-align: right;
 }
 
+/* 입력 필드 스타일 */
 .input-field,
 .textarea-field {
-  height: 67px;
   width: 100%;
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #EDF0F2;
   padding: 10px;
   margin-top: 5px;
+  box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 조정 */
+}
+
+.input-field {
+  height: 40px; /* 높이 조정 */
 }
 
 .textarea-field {
   height: 150px;
-  background-color: #EDF0F2;
+  /* 줄바꿈과 공백 처리 */
+  white-space: pre-wrap;
+  word-wrap: break-word; /* 단어가 너무 길 때 줄바꿈 */
 }
 
+/* 버튼 스타일 */
 button {
   width: 100px;
   height: 38px;
@@ -228,6 +241,7 @@ button {
   cursor: pointer;
 }
 
+/* 게시 버튼 기본 색상 */
 button[type="submit"] {
   background-color: #007aff;
   color: #ffffff;
@@ -237,6 +251,7 @@ button[type="submit"]:hover {
   background-color: #0056b3;
 }
 
+/* 취소 버튼 색상 */
 button[type="button"] {
   background-color: #ffffff;
   color: #000000;
@@ -247,6 +262,7 @@ button[type="button"]:hover {
   background-color: #f0f0f0;
 }
 
+/* 드롭존 스타일 */
 #drop-zone {
   padding: 20px;
   border: 2px dashed #ccc;
@@ -259,6 +275,7 @@ button[type="button"]:hover {
   border-color: #007bff;
 }
 
+/* 이미지 미리보기 스타일 */
 .image-preview {
   max-width: 100%;
   height: auto;
@@ -268,9 +285,9 @@ button[type="button"]:hover {
 /* 추가된 스타일 */
 .flex-container {
   display: flex;
-  gap: 20px; /* 항목 간 간격 조정 */
+  gap: 20px; /* 항목 간 간격 */
 }
 
 .flex-container div {
-  flex: 1; /* 항목이 자동으로 크기를 조정하게 함 */
+  flex: 1; /* 각 항목이 동일한 너비로 크기 조정 */
 }

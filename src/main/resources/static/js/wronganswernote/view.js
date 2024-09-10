@@ -5,13 +5,14 @@ document.addEventListener('DOMContentLoaded', function () {
   const cancelCode = document.getElementById('cancelCode');
   const codeInput = document.getElementById('codeInput');
   const sampleCodeContainer = document.querySelector('.sample-code-container');
+  const noteDetails = document.querySelector('.note-details');
   const editCodeModal = document.getElementById('editCodeModal');
   const editCodeInput = document.getElementById('editCodeInput');
   const submitEditCode = document.getElementById('submitEditCode');
   const cancelEditCode = document.getElementById('cancelEditCode');
-  const noteDetails = document.querySelector('.note-details');
+  const toggleSolvedButtons = document.querySelectorAll('.toggle-btn');
 
-  let currentCodeId = null;
+  let currentCodeId = null; // 현재 수정 중인 코드 ID
   const noteId = document.querySelector('.edit-btn')?.getAttribute('data-note-id');
   const apiBaseUrl = '/api/codes';
 
@@ -42,11 +43,11 @@ document.addEventListener('DOMContentLoaded', function () {
   if (cancelCode && codeModal && codeInput) {
     cancelCode.addEventListener('click', function () {
       codeModal.style.display = 'none';
-      codeInput.value = '';
+      codeInput.value = ''; // 입력 필드 초기화
     });
   }
 
-  // 코드 추가
+  // 코드 추가 처리
   if (submitCode && codeInput && sampleCodeContainer && noteId) {
     submitCode.addEventListener('click', function () {
       const codeContent = codeInput.value.trim();
@@ -63,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (data.success) {
             addCodeBlock(data.code);
             codeModal.style.display = 'none';
-            codeInput.value = '';
+            codeInput.value = ''; // 입력 필드 초기화
           } else {
             console.error('코드 추가에 실패했습니다.');
           }
@@ -86,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
     sampleCodeContainer.appendChild(codeBlock);
   }
 
-  // 코드 수정 및 삭제 버튼 클릭 이벤트
+  // 코드 블록 수정 및 삭제 버튼 클릭 이벤트 처리
   if (sampleCodeContainer) {
     sampleCodeContainer.addEventListener('click', function (event) {
       if (event.target.classList.contains('edit-code-btn')) {
@@ -124,11 +125,11 @@ document.addEventListener('DOMContentLoaded', function () {
   if (cancelEditCode && editCodeModal && editCodeInput) {
     cancelEditCode.addEventListener('click', function () {
       editCodeModal.style.display = 'none';
-      editCodeInput.value = '';
+      editCodeInput.value = ''; // 입력 필드 초기화
     });
   }
 
-  // 코드 수정
+  // 코드 수정 (수정 버튼)
   if (submitEditCode && editCodeInput) {
     submitEditCode.addEventListener('click', function () {
       const codeContent = editCodeInput.value.trim();
@@ -146,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const codeBlock = sampleCodeContainer.querySelector(`.edit-code-btn[data-code-id="${currentCodeId}"]`).closest('.sample-code');
             codeBlock.querySelector('code').textContent = data.code.codeContent;
             editCodeModal.style.display = 'none';
-            editCodeInput.value = '';
+            editCodeInput.value = ''; // 입력 필드 초기화
           } else {
             console.error('코드 수정에 실패했습니다.');
           }
@@ -156,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // 노트 수정 및 삭제 버튼 클릭 이벤트
+  // 노트 수정 및 삭제 버튼 클릭 시
   if (noteDetails) {
     noteDetails.addEventListener('click', function (event) {
       if (event.target.classList.contains('edit-btn')) {
@@ -175,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
           })
           .then(response => {
             if (response.ok) {
-              window.location.href = '/algoy/commit';
+              window.location.href = '/algoy/commit'; // 삭제 후 리다이렉션
             } else {
               alert('삭제에 실패했습니다.');
             }
@@ -184,5 +185,54 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
     });
+  }
+
+  // 문제 풀이 완료 상태 토글
+  toggleSolvedButtons.forEach(button => {
+    const noteId = button.getAttribute('data-note-id');
+
+    // 페이지 로드 시 상태 불러오기
+    fetch(`/api/algoy/commit/${noteId}`)
+    .then(response => response.json())
+    .then(data => {
+      button.setAttribute('data-solved', data.isSolved ? 'true' : 'false');
+      updateToggleButtonAppearance(button);
+    })
+    .catch(error => console.error('문제 상태 로드 중 오류 발생:', error));
+
+    button.addEventListener('click', function () {
+      const isSolvedNow = button.getAttribute('data-solved') === 'true';
+      const newState = !isSolvedNow; // 현재 상태 반전
+
+      // 서버에 상태 업데이트 요청
+      fetch(`/api/algoy/commit/${noteId}/solved`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ isSolved: newState })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          button.setAttribute('data-solved', newState); // 버튼 상태 업데이트
+          updateToggleButtonAppearance(button);
+        } else {
+          console.error('문제 상태 업데이트에 실패했습니다.');
+        }
+      })
+      .catch(error => console.error('문제 상태 업데이트 중 오류 발생:', error));
+    });
+  });
+
+  // 토글 버튼 외관 업데이트
+  function updateToggleButtonAppearance(button) {
+    if (button.getAttribute('data-solved') === 'true') {
+      button.classList.add('active');
+      button.textContent = 'Solved';
+    } else {
+      button.classList.remove('active');
+      button.textContent = 'Unsolved';
+    }
   }
 });

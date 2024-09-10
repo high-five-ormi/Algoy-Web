@@ -35,9 +35,9 @@ header {
 }
 
 nav {
-  font-family: Manrope, 'sans-serif';
+  font-family: 'Manrope', sans-serif;
   position: absolute;
-  top: 130px; /* 네비게이션 바 링크 위치를 더 아래로 조정 */
+  top: 130px;
   left: 240px;
 }
 
@@ -55,8 +55,8 @@ nav a:hover {
 
 .user-actions {
   position: absolute;
-  bottom: 29px; /* 네비게이션 바 하단 기준으로 29px 떨어지도록 설정 */
-  right: 20px; /* 오른쪽 끝 기준 20px */
+  bottom: 29px;
+  right: 20px;
   display: flex;
   align-items: center;
 }
@@ -66,14 +66,13 @@ nav a:hover {
   margin-right: 20px;
 }
 
-/* 수정된 검색 바 스타일 */
 .search-bar input[type="text"] {
-  height: 40px; /* 높이 설정 */
-  width: 325px; /* 너비 설정 */
-  padding: 8px 35px 8px 8px; /* 패딩 */
-  border: 1px solid #ccc; /* 테두리 */
-  border-radius: 12px; /* 모서리 둥글게 */
-  font-size: 14px; /* 폰트 크기 */
+  height: 40px;
+  width: 325px;
+  padding: 8px 35px 8px 8px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 14px;
 }
 
 .search-icon {
@@ -86,34 +85,33 @@ nav a:hover {
   cursor: pointer;
 }
 
-/* 수정된 로그아웃 버튼 스타일 */
 .user-actions button {
-  width: 84px; /* 너비 설정 */
-  height: 40px; /* 높이 설정 */
-  border: none; /* 테두리 없음 */
-  background-color: #ffffff; /* 버튼 색상 */
-  color: #121417; /* 글자 색상 */
-  border-radius: 12px; /* 둥근 모서리 */
-  cursor: pointer; /* 커서 포인터 */
-  font-size: 14px; /* 폰트 크기 */
+  width: 84px;
+  height: 40px;
+  border: none;
+  background-color: #ffffff;
+  color: #121417;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
   font-weight: bold;
-  margin-left: 8px; /* 왼쪽 간격 */
+  margin-left: 8px;
 }
 
 .logout-container {
-  width: 40px; /* 너비 설정 */
-  height: 40px; /* 높이 설정 */
-  background-color: #ffffff; /* 배경 색상 */
-  border-radius: 12px; /* 원형으로 만들기 */
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
+  border-radius: 12px;
   display: flex;
-  justify-content: center; /* 아이콘 중앙 정렬 */
-  align-items: center; /* 아이콘 중앙 정렬 */
-  margin-left: 8px; /* 로그아웃 버튼과의 간격 */
+  justify-content: center;
+  align-items: center;
+  margin-left: 8px;
 }
 
 .user-icon {
-  width: 20px; /* 아이콘 크기 */
-  height: 20px; /* 아이콘 크기 */
+  width: 20px;
+  height: 20px;
 }
 
 /* note-header 섹션 스타일 */
@@ -133,14 +131,8 @@ nav a:hover {
   align-items: center;
 }
 
-.small-icon {
-  width: 30px;
-  height: 30px;
-  margin-right: 10px;
-}
-
 .note-header h2 {
-  font-size: 18px; /* 제목 폰트 크기 조정 */
+  font-size: 18px;
   color: #333;
 }
 
@@ -194,16 +186,13 @@ main {
   margin-bottom: 10px;
 }
 
-.note-item p {
-  color: #666;
-  font-size: 16px;
-  flex-grow: 1;
+.note-content {
+  overflow: hidden; /* 긴 콘텐츠가 넘치지 않도록 설정 */
 }
 
-.note-item time {
-  font-size: 14px;
-  color: #aaa;
-  text-align: right;
+.note-content img {
+  max-width: 100px; /* 이미지 크기 제한 */
+  height: auto;
 }
 
 .note-details {
@@ -221,23 +210,23 @@ main {
 /* 페이지네이션 스타일 */
 .pagination {
   display: flex;
-  justify-content: center; /* 중앙 정렬 */
-  margin: 20px 0; /* 위아래 여백 */
+  justify-content: center;
+  margin: 20px 0;
 }
 
 .pagination a {
-  padding: 0; /* 패딩 제거 */
-  margin: 0 10px; /* 좌우 여백 */
-  color: #000; /* 글자색 검은색 */
-  text-decoration: none; /* 밑줄 없애기 */
-  font-size: 16px; /* 폰트 크기 조정 */
-  line-height: 40px; /* 높이 맞추기 */
+  padding: 0;
+  margin: 0 10px;
+  color: #000;
+  text-decoration: none;
+  font-size: 16px;
+  line-height: 40px;
 }
 
 .pagination a:hover {
-  color: #007bff; /* hover 시 글자색 변경 */
+  color: #007bff;
 }
 
 .pagination a.active {
-  font-weight: bold; /* 활성 페이지 글자 굵게 */
+  font-weight: bold;
 }
