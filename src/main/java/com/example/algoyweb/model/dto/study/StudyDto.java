@@ -15,11 +15,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class StudyDto {
 
+    private Long id;
+
     private String title;
 
     private String content;
 
     private String language;
+
+    private String author;
+
+    private Integer maxParticipant;
 
     private Study.Status status;
 

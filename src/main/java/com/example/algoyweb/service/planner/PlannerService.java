@@ -1,9 +1,11 @@
 package com.example.algoyweb.service.planner;
 
+import com.example.algoyweb.exception.errorcode.UserErrorCode;
 import com.example.algoyweb.model.entity.planner.Planner;
 import com.example.algoyweb.model.dto.planner.PlannerDto;
 import com.example.algoyweb.exception.CustomException;
 import com.example.algoyweb.exception.errorcode.PlannerErrorCode;
+import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.repository.planner.PlannerRepository;
 import com.example.algoyweb.repository.user.UserRepository;
 import com.example.algoyweb.util.ConvertUtils;
@@ -148,9 +150,11 @@ public class PlannerService {
     }
 
     @Transactional(readOnly = true)
-    public List<PlannerDto> searchPlans(String keyword) {
+    public List<PlannerDto> searchPlans(String keyword, String username) {
 
-        List<PlannerDto> plannerDtoList = plannerRepository.findByKeyword(keyword).stream()
+        User findUser = userRepository.findOptionalByEmail(username).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
+
+        List<PlannerDto> plannerDtoList = plannerRepository.findByKeyword(keyword, findUser.getUserId()).stream()
                 .map(ConvertUtils::convertPlannerToDto).toList();
 
         List<PlannerDto> tempList = new ArrayList<>();

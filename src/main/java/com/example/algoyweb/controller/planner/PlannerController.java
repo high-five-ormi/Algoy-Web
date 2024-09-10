@@ -78,9 +78,9 @@ public class PlannerController {
     }
 
     // 플래너 메인 페이지를 불러오는 엔드포인트
-    @GetMapping("/calender")
+    @GetMapping("/main")
     @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
-    public ModelAndView viewCalender(Model model) {
+    public ModelAndView viewMain(Model model) {
         model.addAttribute("backendUrl", backendUrl);
         // 플래너 메인 페이지로 이동
         return new ModelAndView("planner/PlannerMain");
@@ -122,9 +122,9 @@ public class PlannerController {
     // 플랜을 검색하는 엔드포인트
     @GetMapping("/search")
     @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
-    public ResponseEntity<List<PlannerDto>> search(@RequestParam String keyword) {
+    public ResponseEntity<List<PlannerDto>> search(@RequestParam String keyword, @AuthenticationPrincipal UserDetails userDetails) {
 
-        List<PlannerDto> plannerDtoList = plannerService.searchPlans(keyword);
+        List<PlannerDto> plannerDtoList = plannerService.searchPlans(keyword, userDetails.getUsername());
 
         return ResponseEntity.status(HttpStatus.OK).body(plannerDtoList);
     }

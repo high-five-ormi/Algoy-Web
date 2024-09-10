@@ -10,6 +10,8 @@ import com.example.algoyweb.model.entity.study.Study;
 import com.example.algoyweb.model.entity.user.User;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Optional;
 
 public class ConvertUtils {
 
@@ -67,6 +69,9 @@ public class ConvertUtils {
         .title(study.getTitle())
         .content(study.getContent())
         .status(study.getStatus())
+            .author(study.getUser().getNickname())
+            .id(study.getId())
+            .maxParticipant(study.getMaxParticipant())
         .createdAt(study.getCreatedAt())
         .updatedAt(study.getUpdatedAt())
         .build();
@@ -80,6 +85,7 @@ public class ConvertUtils {
         .createdAt(studyDto.getCreatedAt())
         .updatedAt(studyDto.getUpdatedAt())
         .language(studyDto.getLanguage())
+            .maxParticipant(studyDto.getMaxParticipant())
         .build();
   }
 
@@ -91,8 +97,6 @@ public class ConvertUtils {
             .updatedAt(save.getUpdatedAt())
             .depth(save.getDepth())
             .secret(save.getSecret())
-            .children(save.getChildren().stream().map(ConvertUtils::convertCommentToDto).toList())
-            .parent(save.getParent().getId())
             .author(save.getUser().getNickname())
             .build();
   }

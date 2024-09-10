@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>새 스터디</title>
+  <!-- 외부 CSS 파일 연결 -->
+  <link rel="stylesheet" href="/css/study/StudyNewCss.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <!-- jQuery 라이브러리 로드 -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- jQuery 라이브러리의 압축된 버전을 CDN을 통해 불러와 현재 HTML 문서에서 사용할 수 있습니다. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!-- 웹 페이지에서 마크다운으로 작성된 내용을 HTML로 변환하여 보여주는 역할을 합니다. -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- 웹 애플리케이션의 보안을 강화하고, 사용자 생성 콘텐츠를 안전하게 처리하는 역할을 합니다. (XSS 방지용) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js"></script>
+  <!-- 웹 페이지 내의 코드를 시각적으로 매력적으로 표현하여 사용자 경험을 향상시키는 역할을 합니다. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <!-- highlight.js 라이브러리와 함께 사용되어 웹 페이지 내의 코드 블록에 시각적인 스타일을 적용하는 역할을 합니다. -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
+  <script th:src="@{/js/fragments/modal.js}"></script>
+</head>
+<body>
+<header>
+  <div th:replace="fragments/header :: header"></div>
+  <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
+</header>
+<div th:replace="fragments/modal :: modal"></div>
+<link rel="stylesheet" th:href="@{/css/fragments/modal.css}">
+
+
+<!-- 캘린더 헤더 -->
+<div id="calendar-header" class="calendar-nav">
+  <div class="calendar-nav" style="width: 100px; height: 23px">
+    <img src="/img/planner-icon.png" width="16" height="16" alt="플래너 아이콘입니다.">
+    <span style="line-height: 23px">Planner</span>
+  </div>
+</div>
+
+<!-- 스터디 수정 폼 컨테이너 -->
+<div class="save-container">
+  <!-- 페이지 제목 -->
+  <h1>새 스터디</h1>
+  <!-- 스터디 수정 폼 -->
+  <form>
+    <!-- 제목 입력 필드 -->
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" id="title" placeholder="제목을 입력해 주세요">
+    </div>
+    <!-- 내용 입력 필드 -->
+    <div class="form-group">
+      <label for="content">Content</label>
+      <textarea id="content" rows="5"></textarea>
+    </div>
+    <!-- 상태 선택 필드 -->
+    <div class="form-group">
+      <label>Status</label>
+      <div class="radio-group">
+        <label><input type="radio" name="status" value="ING" checked> 모집 중</label>
+        <label><input type="radio" name="status" value="DONE"> 모집 완료</label>
+        <label><input type="radio" name="status" value="STOP"> 중지</label>
+      </div>
+    </div>
+    <!-- 최대 모집 인원 입력 필드 -->
+    <div class="form-group">
+      <label for="max-participant">최대 모집 인원</label>
+      <input type="number" id="max-participant" placeholder="최대 인원 수를 입력해주세요">
+    </div>
+    <!-- 언어 입력 필드 -->
+    <div class="form-group">
+      <label for="language">언어</label>
+      <input type="text" id="language" placeholder="언어 이름을 입력해주세요">
+    </div>
+    <!-- 제출 버튼 -->
+    <button class="btn-new">Submit</button>
+  </form>
+</div>
+
+<!-- 챗봇 컴포넌트 포함 -->
+<div th:replace="~{fragments/chatbot :: chatbot(backendUrl=${backendUrl})}"></div>
+</body>
+<!-- 외부 JavaScript 파일 연결 -->
+<script src="/js/study/StudyNewJs.js"></script>
+<footer>
+  <div id="our_information">
+    <ul>
+      <li>진행 프로젝트 : ESTSOFT ORMI 5기 백엔드 파이널 프로젝트</li>
+      <li>팀 이름 : 5조 high - five</li>
+      <li>프로젝트 이름 : Algoy</li>
+      <li>깃허브 : <a href="https://github.com/high-five-ormi">https://github.com/high-five-ormi</a></li>
+      <li>프로젝트 관련 컨텍은 깃허브 READ ME에 안내되어 있습니다</li>
+    </ul>
+  </div>
+  <div id="Catchphrase">
+    <img src="/img/algoy-1.png" alt="알고이 로고입니다." id="footer-logo">
+    <p>"Algoy: Your Coding Commit Companion —Track Mistakes, Plan Success, and Get AI Insights"</p>
+  </div>
+</footer>
+</html>
