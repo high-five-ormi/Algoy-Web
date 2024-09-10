@@ -2,9 +2,6 @@ package com.example.algoyweb.util.WrongAnswerNote;
 
 import com.example.algoyweb.model.dto.WrongAnswerNote.WrongAnswerNoteDTO;
 import com.example.algoyweb.model.entity.WrongAnswerNote.WrongAnswerNote;
-import com.example.algoyweb.model.entity.WrongAnswerNote.Image;
-
-import java.util.stream.Collectors;
 
 public class WrongAnswerNoteConvertUtil {
 
@@ -25,12 +22,6 @@ public class WrongAnswerNoteConvertUtil {
         dto.setIsSolved(entity.getIsSolved());
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
-
-        if (entity.getImages() != null) {
-            dto.setImageUrls(entity.getImages().stream()
-                .map(Image::getImgUrl)
-                .collect(Collectors.toList()));
-        }
 
         return dto;
     }
@@ -66,6 +57,5 @@ public class WrongAnswerNoteConvertUtil {
         entity.setQuizLevel(dto.getQuizLevel());
         entity.setContent(dto.getContent());
         entity.setIsSolved(dto.getIsSolved());
-
     }
 }
