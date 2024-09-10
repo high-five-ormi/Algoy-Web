@@ -1,5 +1,7 @@
 package com.example.algoyweb.exception.chatting;
 
+import com.example.algoyweb.exception.CustomException;
+import com.example.algoyweb.model.dto.chatting.ErrorResponse;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -15,6 +17,8 @@ public class WebSocketExceptionHandler extends StompSubProtocolErrorHandler {
     Throwable exception = ex;
     if (exception instanceof BindException) {
       return handleBindException((BindException) exception);
+    } else if (exception instanceof CustomException) {
+      return handleCustomException((CustomException) exception);
     } else if (exception instanceof Exception) {
       return handleException(clientMessage, exception);
     }
@@ -24,6 +28,11 @@ public class WebSocketExceptionHandler extends StompSubProtocolErrorHandler {
   private Message<byte[]> handleBindException(BindException ex) {
     String errorMessage = "유효성 검사 실패: " + ex.getAllErrors().get(0).getDefaultMessage();
     return createErrorMessage(errorMessage);
+  }
+
+  private Message<byte[]> handleCustomException(CustomException ex) {
+    ErrorResponse errorResponse = new ErrorResponse(ex.getErrorCode().getMessage());
+    return createErrorMessage(errorResponse.getMessage());
   }
 
   private Message<byte[]> handleException(Message<byte[]> clientMessage, Throwable ex) {

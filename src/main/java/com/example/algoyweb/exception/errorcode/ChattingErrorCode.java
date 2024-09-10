@@ -10,7 +10,8 @@ public enum ChattingErrorCode implements ErrorCode {
 	USER_ALREADY_IN_ROOM(HttpStatus.BAD_REQUEST, "사용자가 이미 채팅방에 참여하고 있습니다."),
 	SELF_INVITATION_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "자기 자신을 초대할 수 없습니다."),
 	INVALID_ROOM_NAME(HttpStatus.BAD_REQUEST, "유효하지 않은 방 이름입니다."),
-	NO_INVITEES(HttpStatus.BAD_REQUEST, "초대할 사용자가 없습니다.");
+	NO_INVITEES(HttpStatus.BAD_REQUEST, "초대할 사용자가 없습니다."),
+	MESSAGE_TOO_LONG(HttpStatus.BAD_REQUEST, "메시지가 너무 깁니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;

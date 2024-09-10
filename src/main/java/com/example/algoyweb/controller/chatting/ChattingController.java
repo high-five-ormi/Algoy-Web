@@ -4,8 +4,8 @@ import com.example.algoyweb.exception.CustomException;
 import com.example.algoyweb.model.dto.chatting.*;
 import com.example.algoyweb.service.chatting.ChattingService;
 import jakarta.validation.Valid;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -69,11 +69,11 @@ public class ChattingController {
     try {
       UserDetails userDetails = (UserDetails) authentication.getPrincipal();
       chattingService.inviteUserByNickname(roomId, userDetails.getUsername(), inviteRequest.getNickname());
-      return ResponseEntity.ok().body(Map.of("message", "User invited successfully"));
+      return ResponseEntity.ok().body(Collections.singletonMap("message", "User invited successfully"));
     } catch (CustomException e) {
-      return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+      return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
     } catch (Exception e) {
-      return ResponseEntity.internalServerError().body(Map.of("error", "An unexpected error occurred"));
+      return ResponseEntity.internalServerError().body(Collections.singletonMap("error", "An unexpected error occurred"));
     }
   }
 }

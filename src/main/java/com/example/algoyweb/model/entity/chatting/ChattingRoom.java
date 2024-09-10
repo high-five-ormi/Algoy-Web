@@ -40,6 +40,7 @@ public class ChattingRoom {
   @JoinColumn(name = "owner_id")
   private User owner;
 
+  @Builder.Default
   @ElementCollection
   @CollectionTable(name = "chatting_room_participants", joinColumns = @JoinColumn(name = "room_id"))
   @Column(name = "user_id")
