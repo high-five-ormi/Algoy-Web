@@ -13,6 +13,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+/**
+ * @author JSW
+ *
+ * ChattingRoomRepository의 단위 테스트
+ */
 @DataJpaTest
 class ChattingRoomRepositoryTest {
 
@@ -20,217 +25,215 @@ class ChattingRoomRepositoryTest {
 
   @Autowired private UserRepository userRepository;
 
+  /**
+   * 채팅방 ID로 채팅방을 조회하는 기능을 테스트합니다.
+   */
   @Test
   public void testFindByRoomId() {
-    // 방 소유자 생성
-    User owner =
-        User.builder()
-            .username("owner")
-            .nickname("ownerNickname")
-            .email("owner@example.com")
-            .password("password123")
-            .role(Role.NORMAL)
-            .isDeleted(false)
-            .createdAt(LocalDateTime.now())
-            .build();
+    // Given
+    User owner = User.builder()
+        .username("owner")
+        .nickname("ownerNickname")
+        .email("owner@example.com")
+        .password("password123")
+        .role(Role.NORMAL)
+        .isDeleted(false)
+        .createdAt(LocalDateTime.now())
+        .build();
     userRepository.save(owner);
 
-    // 채팅 방 생성 및 저장
-    ChattingRoom chattingRoom =
-        ChattingRoom.builder()
-            .roomId("room1")
-            .name("첫 번째 방")
-            .owner(owner)
-            .createdAt(LocalDateTime.now())
-            .build();
+    ChattingRoom chattingRoom = ChattingRoom.builder()
+        .roomId("room1")
+        .name("첫 번째 방")
+        .owner(owner)
+        .createdAt(LocalDateTime.now())
+        .build();
     chattingRoomRepository.save(chattingRoom);
 
-    // 방 ID로 조회
+    // When
     Optional<ChattingRoom> foundRoom = chattingRoomRepository.findByRoomId("room1");
 
-    // 방이 존재하는지 확인
+    // Then
     assertThat(foundRoom).isPresent();
     assertThat(foundRoom.get().getName()).isEqualTo("첫 번째 방");
   }
 
+  /**
+   * 사용자 ID로 참여 중인 채팅방을 조회하는 기능을 테스트합니다.
+   */
   @Test
   public void testFindByUserIdInParticipantsOrOwnerId() {
-    // 방 소유자 생성
-    User owner =
-        User.builder()
-            .username("owner")
-            .nickname("ownerNickname")
-            .email("owner@example.com")
-            .password("password123")
-            .role(Role.NORMAL)
-            .isDeleted(false)
-            .createdAt(LocalDateTime.now())
-            .build();
+    // Given
+    User owner = User.builder()
+        .username("owner")
+        .nickname("ownerNickname")
+        .email("owner@example.com")
+        .password("password123")
+        .role(Role.NORMAL)
+        .isDeleted(false)
+        .createdAt(LocalDateTime.now())
+        .build();
     userRepository.save(owner);
 
-    // 참여자 생성
-    User participant =
-        User.builder()
-            .username("participant")
-            .nickname("participantNickname")
-            .email("participant@example.com")
-            .password("password123")
-            .role(Role.NORMAL)
-            .isDeleted(false)
-            .createdAt(LocalDateTime.now())
-            .build();
+    User participant = User.builder()
+        .username("participant")
+        .nickname("participantNickname")
+        .email("participant@example.com")
+        .password("password123")
+        .role(Role.NORMAL)
+        .isDeleted(false)
+        .createdAt(LocalDateTime.now())
+        .build();
     userRepository.save(participant);
 
-    ChattingRoom chattingRoom =
-        ChattingRoom.builder()
-            .roomId("room2")
-            .name("두 번째 방")
-            .owner(owner)
-            .createdAt(LocalDateTime.now())
-            .build();
+    ChattingRoom chattingRoom = ChattingRoom.builder()
+        .roomId("room2")
+        .name("두 번째 방")
+        .owner(owner)
+        .createdAt(LocalDateTime.now())
+        .build();
     chattingRoom.addParticipant(participant.getUserId());
     chattingRoomRepository.save(chattingRoom);
 
-    List<ChattingRoom> rooms =
-        chattingRoomRepository.findByUserIdInParticipantsOrOwnerId(participant.getUserId());
+    // When
+    List<ChattingRoom> rooms = chattingRoomRepository.findByUserIdInParticipantsOrOwnerId(participant.getUserId());
 
+    // Then
     assertThat(rooms.size()).isEqualTo(1);
     assertThat(rooms.get(0).getName()).isEqualTo("두 번째 방");
   }
 
+  /**
+   * 채팅방에 참여자를 추가하고 제거하는 기능을 테스트합니다.
+   */
   @Test
   public void testAddAndRemoveParticipant() {
-    // 방 소유자 생성
-    User owner =
-        User.builder()
-            .username("owner")
-            .nickname("ownerNickname")
-            .email("owner@example.com")
-            .password("password123")
-            .role(Role.NORMAL)
-            .isDeleted(false)
-            .createdAt(LocalDateTime.now())
-            .build();
+    // Given
+    User owner = User.builder()
+        .username("owner")
+        .nickname("ownerNickname")
+        .email("owner@example.com")
+        .password("password123")
+        .role(Role.NORMAL)
+        .isDeleted(false)
+        .createdAt(LocalDateTime.now())
+        .build();
     userRepository.save(owner);
 
-    // 참여자 생성
-    User participant =
-        User.builder()
-            .username("participant")
-            .nickname("participantNickname")
-            .email("participant@example.com")
-            .password("password123")
-            .role(Role.NORMAL)
-            .isDeleted(false)
-            .createdAt(LocalDateTime.now())
-            .build();
+    User participant = User.builder()
+        .username("participant")
+        .nickname("participantNickname")
+        .email("participant@example.com")
+        .password("password123")
+        .role(Role.NORMAL)
+        .isDeleted(false)
+        .createdAt(LocalDateTime.now())
+        .build();
     userRepository.save(participant);
 
-    // 채팅 방 생성 및 저장
-    ChattingRoom chattingRoom =
-        ChattingRoom.builder()
-            .roomId("room3")
-            .name("세 번째 방")
-            .owner(owner)
-            .createdAt(LocalDateTime.now())
-            .build();
+    ChattingRoom chattingRoom = ChattingRoom.builder()
+        .roomId("room3")
+        .name("세 번째 방")
+        .owner(owner)
+        .createdAt(LocalDateTime.now())
+        .build();
     chattingRoomRepository.save(chattingRoom);
 
-    // 참여자 추가
+    // When
     chattingRoom.addParticipant(participant.getUserId());
     chattingRoomRepository.save(chattingRoom);
 
-    // 참여자가 추가되었는지 확인
+    // Then
     Optional<ChattingRoom> foundRoom = chattingRoomRepository.findByRoomId("room3");
     assertThat(foundRoom).isPresent();
     assertThat(foundRoom.get().isParticipant(participant.getUserId())).isTrue();
 
-    // 참여자 삭제
+    // When
     chattingRoom.removeParticipant(participant.getUserId());
     chattingRoomRepository.save(chattingRoom);
 
-    // 참여자가 삭제되었는지 확인
+    // Then
     Optional<ChattingRoom> updatedRoom = chattingRoomRepository.findByRoomId("room3");
     assertThat(updatedRoom).isPresent();
     assertThat(updatedRoom.get().isParticipant(participant.getUserId())).isFalse();
   }
 
+  /**
+   * 채팅방의 소유자를 변경하는 기능을 테스트합니다.
+   */
   @Test
   public void testChangeOwner() {
-    // 방 소유자 생성
-    User owner =
-        User.builder()
-            .username("owner")
-            .nickname("ownerNickname")
-            .email("owner@example.com")
-            .password("password123")
-            .role(Role.NORMAL)
-            .isDeleted(false)
-            .createdAt(LocalDateTime.now())
-            .build();
+    // Given
+    User owner = User.builder()
+        .username("owner")
+        .nickname("ownerNickname")
+        .email("owner@example.com")
+        .password("password123")
+        .role(Role.NORMAL)
+        .isDeleted(false)
+        .createdAt(LocalDateTime.now())
+        .build();
     userRepository.save(owner);
 
-    // 새로운 소유자 생성
-    User newOwner =
-        User.builder()
-            .username("newOwner")
-            .nickname("newOwnerNickname")
-            .email("newOwner@example.com")
-            .password("password123")
-            .role(Role.NORMAL)
-            .isDeleted(false)
-            .createdAt(LocalDateTime.now())
-            .build();
+    User newOwner = User.builder()
+        .username("newOwner")
+        .nickname("newOwnerNickname")
+        .email("newOwner@example.com")
+        .password("password123")
+        .role(Role.NORMAL)
+        .isDeleted(false)
+        .createdAt(LocalDateTime.now())
+        .build();
     userRepository.save(newOwner);
 
-    // 채팅 방 생성 및 저장
-    ChattingRoom chattingRoom =
-        ChattingRoom.builder()
-            .roomId("room4")
-            .name("네 번째 방")
-            .owner(owner)
-            .createdAt(LocalDateTime.now())
-            .build();
-    chattingRoom.addParticipant(newOwner.getUserId()); // 새로운 소유자를 참여자로 추가
+    ChattingRoom chattingRoom = ChattingRoom.builder()
+        .roomId("room4")
+        .name("네 번째 방")
+        .owner(owner)
+        .createdAt(LocalDateTime.now())
+        .build();
+    chattingRoom.addParticipant(newOwner.getUserId());
     chattingRoomRepository.save(chattingRoom);
 
-    // 소유자 변경
+    // When
     chattingRoom.changeOwner(newOwner);
     chattingRoomRepository.save(chattingRoom);
 
-    // 소유자가 변경되었는지 확인
+    // Then
     Optional<ChattingRoom> updatedRoom = chattingRoomRepository.findByRoomId("room4");
     assertThat(updatedRoom).isPresent();
     assertThat(updatedRoom.get().getOwner().getUserId()).isEqualTo(newOwner.getUserId());
   }
 
+  /**
+   * 채팅방이 비어있는지 확인하는 기능을 테스트합니다.
+   */
   @Test
   public void testRoomIsEmpty() {
-    // 방 소유자 생성
-    User owner =
-        User.builder()
-            .username("owner")
-            .nickname("ownerNickname")
-            .email("owner@example.com")
-            .password("password123")
-            .role(Role.NORMAL)
-            .isDeleted(false)
-            .createdAt(LocalDateTime.now())
-            .build();
+    // Given
+    User owner = User.builder()
+        .username("owner")
+        .nickname("ownerNickname")
+        .email("owner@example.com")
+        .password("password123")
+        .role(Role.NORMAL)
+        .isDeleted(false)
+        .createdAt(LocalDateTime.now())
+        .build();
     userRepository.save(owner);
 
-    // 채팅 방 생성 및 저장
-    ChattingRoom chattingRoom =
-        ChattingRoom.builder()
-            .roomId("room5")
-            .name("다섯 번째 방")
-            .owner(owner)
-            .createdAt(LocalDateTime.now())
-            .build();
+    ChattingRoom chattingRoom = ChattingRoom.builder()
+        .roomId("room5")
+        .name("다섯 번째 방")
+        .owner(owner)
+        .createdAt(LocalDateTime.now())
+        .build();
     chattingRoomRepository.save(chattingRoom);
 
-    // 방이 비어 있는지 확인
+    // When
     Optional<ChattingRoom> foundRoom = chattingRoomRepository.findByRoomId("room5");
+
+    // Then
     assertThat(foundRoom).isPresent();
     assertThat(foundRoom.get().isEmpty()).isTrue();
   }
