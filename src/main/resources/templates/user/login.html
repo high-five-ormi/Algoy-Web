@@ -40,9 +40,9 @@
                 <button type="submit" class="btn-signin">Sign in</button>
             </form>
             <div class="google-signin">
-                <button class="btn-google">
+                <a th:href="@{/oauth2/authorization/google}" class="btn-google" role="button">
                     <img src="/img/google-icon.png" alt="Google Icon">Or sign in with Google
-                </button>
+                </a>
             </div>
             <p class="signup-link">Don't have an account? <a th:href="@{/algoy/sign}">Sign up now</a></p>
         </div>
