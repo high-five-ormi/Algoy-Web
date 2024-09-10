@@ -1,6 +1,5 @@
 package com.example.algoyweb.model.dto.WrongAnswerNote;
 
-// WrongAnswerNoteDTO.java
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -25,5 +24,5 @@ public class WrongAnswerNoteDTO {
     private Boolean isSolved;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private List<String> imageUrls; // 파일 경로 또는 URL
+    private List<String> imageUrls;
 }

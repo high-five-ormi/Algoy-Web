@@ -1,79 +1,82 @@
 package com.example.algoyweb.service.WrongAnswerNote;
 
-import com.example.algoyweb.exception.ImageNotFoundException;
 import com.example.algoyweb.model.dto.WrongAnswerNote.ImageDTO;
 import com.example.algoyweb.model.entity.WrongAnswerNote.Image;
+import com.example.algoyweb.model.entity.WrongAnswerNote.WrongAnswerNote;
 import com.example.algoyweb.repository.WrongAnswerNote.ImageRepository;
-import com.example.algoyweb.util.WrongAnswerNote.ImageConvertUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.algoyweb.repository.WrongAnswerNote.WrongAnswerNoteRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
+@RequiredArgsConstructor
 public class ImageService {
 
     private final ImageRepository imageRepository;
-    private static final String UPLOAD_DIR = "uploads/wrong_answer_note/";
+    private final WrongAnswerNoteRepository wrongAnswerNoteRepository;
 
-    @Autowired
-    public ImageService(ImageRepository imageRepository) {
-        this.imageRepository = imageRepository;
+    @Value("${upload.directory}")
+    private String uploadDir;
+
+    private static final Logger logger = LoggerFactory.getLogger(ImageService.class);
+
+    public ImageDTO uploadImage(MultipartFile file) throws IOException {
+        String originalFileName = file.getOriginalFilename();
+        String storeFileName = UUID.randomUUID() + "_" + originalFileName;
+        Path filePath = Paths.get(uploadDir).resolve(storeFileName);
+
+        Files.createDirectories(filePath.getParent());
+        Files.copy(file.getInputStream(), filePath);
+
+        Image image = new Image();
+        image.setOriginFileName(originalFileName);
+        image.setStoreFileName(storeFileName);
+        image.setFilePath(filePath.toString());
+        image.setImgUrl("/uploads/" + storeFileName);
+
+        logger.info("이미지 파일 저장 완료: 원본 파일명 = {}, 저장 파일명 = {}, 경로 = {}", originalFileName, storeFileName, filePath.toString());
+
+        Image savedImage = imageRepository.save(image);
+        return ImageDTO.fromImage(savedImage);
     }
 
-    public ImageDTO createImage(ImageDTO imageDTO) {
-        Image image = ImageConvertUtil.convertToEntity(imageDTO);
-        image.setCreatedAt(LocalDateTime.now());
-        image = imageRepository.save(image);
-        return ImageConvertUtil.convertToDto(image);
-    }
-
-    public ImageDTO uploadImage(MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new IllegalArgumentException("파일을 선택해주세요.");
-        }
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void linkImageToNote(Long noteId, Long imageId) {
+        logger.info("linkImageToNote 호출됨: noteId = {}, imageId = {}", noteId, imageId);
 
         try {
-            Path uploadPath = Paths.get(UPLOAD_DIR);
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
+            WrongAnswerNote note = wrongAnswerNoteRepository.findById(noteId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 오답노트를 찾을 수 없습니다. Note ID: " + noteId));
 
-            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-            Path path = Paths.get(UPLOAD_DIR + fileName);
-            Files.write(path, file.getBytes());
+            Image image = imageRepository.findById(imageId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 이미지를 찾을 수 없습니다. Image ID: " + imageId));
 
-            String fileUrl = "/wrong_answer_note/" + fileName;
-            Image image = new Image();
-            image.setImgUrl(fileUrl);
-            image.setCreatedAt(LocalDateTime.now());
-            image = imageRepository.save(image);
+            image.setWrongAnswerNote(note);
+            imageRepository.save(image);
 
-            return ImageConvertUtil.convertToDto(image);
-        } catch (IOException e) {
-            throw new RuntimeException("이미지 업로드 중 오류가 발생했습니다: " + e.getMessage());
+            logger.info("이미지와 오답노트 연결 완료: Note ID = {}, Image ID = {}", noteId, imageId);
+        } catch (Exception e) {
+            logger.error("이미지와 오답노트 연결 중 오류 발생", e);
+            throw e;
         }
     }
 
-    public String getImageUrl(Long id) {
-        return imageRepository.findById(id)
+    public String getImageUrl(Long imageId) {
+        return imageRepository.findById(imageId)
             .map(Image::getImgUrl)
-            .orElseThrow(() -> new ImageNotFoundException("ID " + id + "에 해당하는 이미지를 찾을 수 없습니다."));
-    }
-
-    public void deleteImageFile(String imgUrl) {
-        try {
-            String fileName = imgUrl.substring(imgUrl.lastIndexOf('/') + 1);
-            Path filePath = Paths.get(UPLOAD_DIR + fileName);
-            Files.deleteIfExists(filePath);
-        } catch (IOException e) {
-            throw new RuntimeException("파일 삭제 중 오류 발생: " + e.getMessage());
-        }
+            .orElseThrow(() -> new IllegalArgumentException("이미지를 찾을 수 없습니다: " + imageId));
     }
 }
