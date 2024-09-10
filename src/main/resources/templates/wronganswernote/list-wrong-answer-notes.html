@@ -6,6 +6,17 @@
   <title>오답노트 목록</title>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/wronganswernote/list-wrong-answer-note.css">
+  <!-- jQuery 라이브러리의 압축된 버전을 CDN을 통해 불러와 현재 HTML 문서에서 사용할 수 있습니다. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!-- 웹 페이지에서 마크다운으로 작성된 내용을 HTML로 변환하여 보여주는 역할을 합니다. -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- 웹 애플리케이션의 보안을 강화하고, 사용자 생성 콘텐츠를 안전하게 처리하는 역할을 합니다. (XSS 방지용) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js"></script>
+  <!-- 웹 페이지 내의 코드를 시각적으로 매력적으로 표현하여 사용자 경험을 향상시키는 역할을 합니다. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <!-- highlight.js 라이브러리와 함께 사용되어 웹 페이지 내의 코드 블록에 시각적인 스타일을 적용하는 역할을 합니다. -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
+  <script th:src="@{/js/fragments/modal.js}"></script>
 </head>
 <body>
 <header>

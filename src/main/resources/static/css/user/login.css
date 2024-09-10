@@ -4,6 +4,7 @@ body {
     text-decoration-line: none;
 }
 
+/*로그인 헤더는 로고만 있어서 지우면 안됨*/
 #header-container {
     width: 100%;
     height: 190px;
@@ -52,7 +53,6 @@ main {
     margin-left: 40px;
 }
 
-/* Login Header */
 .login-header h1 {
     font-size: 24px;
     color: #333;
@@ -65,7 +65,6 @@ main {
     margin-bottom: 20px;
 }
 
-/* Login Form */
 .login-form {
     display: flex;
     flex-direction: column;
@@ -150,7 +149,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    /*width: 100%;*/
     padding: 10px;
     font-size: 16px;
     color: #555;
@@ -159,6 +158,7 @@ main {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    text-decoration: none;
 }
 
 .btn-google img {

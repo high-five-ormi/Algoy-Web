@@ -1,11 +1,8 @@
 package com.example.algoyweb.controller;
 
 import com.example.algoyweb.service.user.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,15 +14,18 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    // ai-backend.url 설정값을 저장하는 변수입니다.
+    @Value("${ai-backend.url}")
+    private String backendUrl;
 
     @GetMapping("/algoy/home")
     public String home(Model model) {
-        boolean isAuthenticated = userService.isAuthenticated();
-        model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("backendUrl", backendUrl);
         return "home"; // view name
     }
 }

@@ -42,6 +42,11 @@ $('.btn-create').on('click', function (event) {
         return;
     }
 
+    if(title.length > 20) {
+        alert('플랜 제목이 너무 깁니다.');
+        $('#etc-input').val('');
+        return;
+    }
     if(questionName.length > 20) {
         alert('문제 이름이 너무 깁니다.');
         $('#question').val('');

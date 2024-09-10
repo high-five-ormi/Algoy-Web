@@ -2,10 +2,14 @@ server:
   port: 8081
 
 ai-backend:
-  url: http://localhost:8082
+  url: ${AI_BACKEND_URL}
 
 solvedac:
   url: https://solved.ac/api/v3/user/top_100?handle=
+
+askallen:
+  #url: http://15.165.235.170/ai/allenapi
+  url: http://localhost:8082/ai/allenapi
 
 spring:
   application:
@@ -24,10 +28,10 @@ spring:
         enabled: true
 
   datasource:
-    url: jdbc:mysql://mymysql.cjee2s48u8zx.ap-northeast-2.rds.amazonaws.com/algoy?serverTimezone=UTC
+    url: ${DATASOURCE_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: admin
-    password: manbochuchu
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
 
   jpa:
     hibernate:

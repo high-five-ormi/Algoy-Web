@@ -8,6 +8,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/algoy/allen")
 public class AllenController {
@@ -19,15 +21,18 @@ public class AllenController {
         this.allenService = allenService;
     }
 
+    //solvedAC 기반으로 문제 추천 받기
     @GetMapping("/solvedac")
-    public ResponseEntity<String> solvedac(@RequestParam String userName,@AuthenticationPrincipal UserDetails userDetails) throws Exception {
-        System.out.println("controller check");
+    public ResponseEntity<String> solvedac(@RequestParam String solvedacusername, @AuthenticationPrincipal UserDetails userDetails) throws Exception {
+        System.out.println("controller check"); //
         try{
-            String response = allenService.sovledacCall(userName);
-            System.out.println(response);
-            return ResponseEntity.ok("solvedac");
+            //userID와 solvedAC의 username을 8082로 보낸다.
+            String allenResponse = allenService.askAllen(userDetails.getUsername(), solvedacusername);
+            //String allenResponse = allenService.askAllen("zoan", solvedacusername);
+
+            return ResponseEntity.ok(allenResponse);
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("api 호출 중 에러가 발생하였습니다");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("username을 다시 입력하세요");
         }
 
     }

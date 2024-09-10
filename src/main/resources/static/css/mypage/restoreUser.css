@@ -1,0 +1,66 @@
+body {
+    background-color: #f7f7f7;
+    color: #333;
+    padding: 20px;
+    margin: 0;
+}
+
+a{
+    text-decoration-line: none;
+    color: black;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#userEditForm {
+    background-color: #fff;
+    padding: 100px;
+    border-radius: 40px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.form-container {
+    display: flex;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.back-button,
+.updateUserBtn {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.updateUserBtn {
+    background-color: #007bff;
+    margin-right: 5px;
+}
+
+.back-button {
+    background-color: #6c757d;
+    margin-left: 5px;
+}
+
+.updateUserBtn:hover {
+    background-color: #0056b3;
+}
+
+.back-button:hover {
+    background-color: #5a6268;
+}
+
+.view-message {
+    color: red;
+    margin-top: -15px;
+}

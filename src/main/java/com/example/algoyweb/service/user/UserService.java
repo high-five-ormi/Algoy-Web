@@ -1,6 +1,7 @@
 package com.example.algoyweb.service.user;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -8,23 +9,32 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import com.example.algoyweb.exception.CustomException;
-import com.example.algoyweb.exception.UserErrorCode;
+import com.example.algoyweb.exception.errorcode.UserErrorCode;
 import com.example.algoyweb.model.entity.user.Role;
 import com.example.algoyweb.util.ConvertUtils;
 
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.repository.user.UserRepository;
+
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -41,18 +51,32 @@ public class UserService implements UserDetailsService {
 	 *
 	 * @author yuseok
 	 * @param userDto 회원가입 정보를 담고 있는 DTO
+	 *
+	 * @author 조아라
+	 * solvedAC username db 저장하는 로직 추가
+	 * @since 24. 09. 08
 	 */
 	@Transactional
 	public void signUpUser(UserDto userDto) {
+		// SolvedAC username 유효성 확인 되면 db에 저장하기 위한 기능
+		if (userDto.getSolvedacUserName() != null && !userDto.getSolvedacUserName().isEmpty()) {
+			boolean isValid = isUsernameValid(userDto.getSolvedacUserName());
+			if (!isValid) {
+				throw new CustomException(UserErrorCode.INVALID_SOLVEDAC_USERNAME);
+			}
+		}
+
 		// User 엔티티 생성
 		User user = User.builder()
 			.username(userDto.getUsername())
 			.nickname(userDto.getNickname())
 			.email(userDto.getEmail())
 			.password(passwordEncoder.encode(userDto.getPassword())) // 비밀번호 암호화
+			.solvedacUserName(userDto.getSolvedacUserName()) // solvedAC username 저장(유효성을 확인하는 로직 필요)
 			.role(Role.NORMAL)
 			.isDeleted(false)
 			.createdAt(LocalDateTime.now())
+			.banCount(0)
 			.build();
 
 		// 저장
@@ -71,6 +95,23 @@ public class UserService implements UserDetailsService {
 		return userRepository.findByNickname(nickname);
 	}
 
+  /**
+   * @author JSW
+   *
+   * 주어진 사용자 이름(이메일)을 기준으로 사용자 정보를 가져옵니다.
+   *
+   * @param username 검색할 사용자의 사용자 이름(이메일)
+   * @return UserDto 사용자 정보를 담은 DTO 객체
+   */
+  @Transactional(readOnly = true)
+  public UserDto getUserByUsername(String username) {
+		User user = userRepository.findByEmail(username);
+		if (user == null) {
+			throw new RuntimeException("User not found");
+		}
+		return ConvertUtils.convertUserToDto(user);
+	}
+
 	/**
 	 * 로그인
 	 *
@@ -84,10 +125,11 @@ public class UserService implements UserDetailsService {
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found with email: " + email);
 		}
-		System.out.println(user);
 
-		return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
-			.password(user.getPassword()) // Assuming this is already hashed
+		return org.springframework.security.core.userdetails.User
+			.withUsername(user.getEmail())
+			.password(user.getPassword())  // Assuming this is already hashed
+			.authorities(new SimpleGrantedAuthority(user.getRole().getKey())) // 권한 추가
 			.build();
 	}
 
@@ -109,6 +151,14 @@ public class UserService implements UserDetailsService {
 			encodedPassword = passwordEncoder.encode(userDto.getPassword());
 		}
 
+		// SolvedAC username 유효성 확인 되면 db에 저장하기 위한 기능
+		if (userDto.getSolvedacUserName() != null && !userDto.getSolvedacUserName().isEmpty()) {
+			boolean isValid = isUsernameValid(userDto.getSolvedacUserName());
+			if (!isValid) {
+				throw new CustomException(UserErrorCode.INVALID_SOLVEDAC_USERNAME);
+			}
+		}
+
 		// UserDto에서 업데이트 정보를 반영
 		findUser.updateUser(userDto, encodedPassword);
 
@@ -118,10 +168,38 @@ public class UserService implements UserDetailsService {
 		return ConvertUtils.convertUserToDto(findUser);
 	}
 
+	/**
+	 * 탈퇴 신청
+	 *
+	 * @param email 로그인시 email로 로그인
+	 * @return user를 repository에 저장
+	 * @author jooyoung
+	 */
 	@Transactional
-	public void setDeleted(String email) {
-		User findUser = userRepository.findByEmail(email);
-		findUser.setDeleted();
+	public void setDeleted(String email, HttpServletRequest request, HttpServletResponse response) {
+		User user = userRepository.findByEmail(email);
+		if (user != null) {
+			user.setDeleted();
+			userRepository.save(user); // 변경 사항 저장
+
+			// 로그아웃 처리
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			if (auth != null) {
+				new SecurityContextLogoutHandler().logout(request, response, auth);
+			}
+			SecurityContextHolder.clearContext();
+
+			// 명시적으로 쿠키 삭제
+			Cookie rememberMeCookie = new Cookie("remember-me", null);
+			rememberMeCookie.setPath("/");
+			rememberMeCookie.setMaxAge(0);
+			response.addCookie(rememberMeCookie);
+
+			Cookie sessionCookie = new Cookie("JSESSIONID", null);
+			sessionCookie.setPath("/");
+			sessionCookie.setMaxAge(0);
+			response.addCookie(sessionCookie);
+		}
 	}
 
 	public List<User> findAll() {
@@ -130,27 +208,53 @@ public class UserService implements UserDetailsService {
 
 	@Transactional
 	public void delete(String username) {
-		User findUser = userRepository.findByEmail(username);
-		if (!findUser.getIsDeleted()) {
+		User user = userRepository.findByEmail(username);
+		if (user == null || !user.getIsDeleted()) {
 			throw new CustomException(UserErrorCode.USER_NOT_EQUAL_EMAIL);
 		}
-		userRepository.delete(findUser);
+
+		userRepository.delete(user);
 	}
 
-	public String getUserNicknameByEmail(String email) {
-		User user = userRepository.findByEmail(email); // 이메일을 기준으로 사용자를 조회
-		if (user != null) {
-			return user.getNickname(); // 닉네임 반환
+	/**
+	 * 계정 삭제 스케줄러
+	 *
+	 * @return user를 삭제
+	 * @author jooyoung
+	 * 확인 필요합니다.
+	 */
+	@Transactional
+	//@Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
+	@Scheduled(fixedRate = 86400000) // 매일 실행 (24시간 = 86400000 ms)
+	public void deleteScheduledUsers() {
+		List<User> usersToDelete = userRepository.findByIsDeletedTrueAndDeletedAtBefore(LocalDateTime.now());
+		for (User user : usersToDelete) {
+			userRepository.delete(user);
 		}
-		return null; // 사용자가 없으면 null 반환
 	}
 
-	// 로그인 여부를 확인
+	/**
+	 * 계정 복구
+	 *
+	 * @param email 로그인시 email로 로그인
+	 * @return user를 repository에 저장
+	 * @author jooyoung
+	 */
+	public void restoreAccount(String email) {
+		User user = userRepository.findByEmail(email);
+		if (user != null) {
+			user.restore();
+			userRepository.save(user); // 변경 사항 저장
+		}
+	}
+
+
+	/*// 로그인 여부를 확인
 	public boolean isAuthenticated() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return authentication != null && authentication.isAuthenticated()
 			&& !(authentication instanceof AnonymousAuthenticationToken);
-	}
+	}*/
 
 	/**
 	 * 사용자의 이메일과 사용자 이름으로 비밀번호 재설정 토큰 생성
@@ -196,5 +300,54 @@ public class UserService implements UserDetailsService {
 		}
 
 		return false; // 유저가 없거나 토큰이 잘못된 경우 실패
+	}
+
+	/**
+	 * 모든 사용자 정보 조회
+	 *
+	 * @author yuseok
+	 * @return 모든 사용자의 정보가 담긴 UserDto 객체들의 리스트
+	 */
+	public List<UserDto> getAllUsers() {
+		// 모든 User 엔티티를 데이터베이스에서 조회 후 리스트에 저장
+		List<User> users = userRepository.findAll();
+
+		// UserDto 객체들을 저장할 리스트 초기화
+		List<UserDto> userDtos = new ArrayList<>();
+
+		// 각 User 엔티티를 UserDto로 변환 후 리스트에 추가
+		for (User user : users) {
+			UserDto userDto = ConvertUtils.convertUserToDto(user);
+			userDtos.add(userDto);
+		}
+
+		// UserDto 리스트 반환
+		return userDtos;
+	}
+
+	/**
+	 * SolvedAC username 유효성 확인
+	 *
+	 * @author 조아라
+	 * @return username의 유효성을 체크하는 boolean
+	 * js에서 구현했을때 CORS에러로 인해 서버에서 로직을 처리함.
+	 */
+
+	public boolean isUsernameValid(String solvedacUsername) {
+		String SOLVEDAC_USERNAME_VALID = "https://solved.ac/api/v3/user/show?handle=";
+
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String apiUrl = SOLVEDAC_USERNAME_VALID + solvedacUsername;
+
+			ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
+			// username이 존재하면 true 반환
+			return response.getStatusCode().is2xxSuccessful();
+
+		} catch (Exception e) {
+			// 존재하지 않는다면 false 반환
+			return false;
+		}
+
 	}
 }

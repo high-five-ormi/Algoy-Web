@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Main Page</title>
+  <!-- 외부 라이브러리 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+  <script th:src="@{/js/fragments/modal.js}"></script>
+</head>
+<body>
+<header>
+  <div th:replace="~{fragments/header :: header}"></div>
+  <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
+</header>
+<div th:replace="~{fragments/modal :: modal}"></div>
+<link rel="stylesheet" th:href="@{/css/fragments/modal.css}">
+
+<h1>Welcome to the Main Page</h1>
+
+<!-- 여기에 채팅 프래그먼트 삽입 -->
+<div th:replace="~{fragments/chatting :: chat}"></div>
+
+<!-- 기타 페이지 내용 -->
+</body>
+</html>

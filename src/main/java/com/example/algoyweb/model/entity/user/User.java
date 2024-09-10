@@ -7,6 +7,9 @@ import java.util.List;
 import com.example.algoyweb.model.dto.user.UserDto;
 import com.example.algoyweb.model.entity.planner.Planner;
 
+import com.example.algoyweb.model.entity.study.Comment;
+import com.example.algoyweb.model.entity.study.Study;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,6 +40,9 @@ public class User {
 	@Column(name = "password", nullable = false)
 	private String password;
 
+	@Column(name = "solvedac_username", nullable = true) // solvedAC username의 기본값은 null이다.
+	private String solvedacUserName;
+
 	@Enumerated(EnumType.STRING) // Enum 값을 문자열로 저장
 	@Column(name = "role", nullable = false)
 	private Role role;
@@ -53,13 +59,40 @@ public class User {
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
 
-	@OneToMany(mappedBy = "user", orphanRemoval = true)
+	@Column(name = "ban_count", nullable = false)
+	private int banCount = 0; // 정지 횟수: 초기 값은 0
+
+	@Column(name = "ban_reason")
+	private String banReason; // 정지 사유
+
+	@Column(name = "ban_expiration")
+	private LocalDateTime banExpiration; // 정지 유효시간 (만료 시간)
+
+	@OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<Planner> plannerList;
+
+	@OneToMany(mappedBy = "user", orphanRemoval = true)
+	private List<Study> studyList;
+
+	@OneToMany(mappedBy = "user", orphanRemoval = true)
+	private List<Comment> commentList;
 
 	public void connectPlanner(Planner planner) {
 		if (this.plannerList == null)
 			this.plannerList = new ArrayList<>();
 		this.getPlannerList().add(planner);
+	}
+
+	public void connectStudy(Study study) {
+		if (this.studyList == null)
+			this.studyList = new ArrayList<>();
+		this.getStudyList().add(study);
+	}
+
+	public void connectComment(Comment comment) {
+		if (this.commentList == null)
+			this.commentList = new ArrayList<>();
+		this.getCommentList().add(comment);
 	}
 
 	public void update(String username, String nickname, String email, String password, Role role, Boolean isDeleted) {
@@ -77,6 +110,11 @@ public class User {
 		this.deletedAt = LocalDateTime.now().plusMonths(1);
 	}
 
+	public void restore() {
+		this.isDeleted = false;
+		this.deletedAt = null;
+	}
+
 	public String getRoleKey() {
 		return this.role.getKey();
 	}
@@ -88,13 +126,38 @@ public class User {
 		if (encodedPassword != null) {
 			this.password = encodedPassword;
 		}
+		if (userDto.getSolvedacUserName() != null) {  // solvedacUsername 업데이트 추가
+			this.solvedacUserName = userDto.getSolvedacUserName();
+		}
 		if (userDto.getIsDeleted() != null) {
 			this.isDeleted = userDto.getIsDeleted();
 		}
+
 		this.updatedAt = LocalDateTime.now();
 	}
 
 	public void updatePassword(String password) {
 		this.password = password;
+	}
+
+	public void updateRole(Role role) {
+		this.role = role;
+		this.updatedAt = LocalDateTime.now();
+	}
+
+	public boolean isBanned() {
+		return role == Role.BANNED && banExpiration != null && LocalDateTime.now().isBefore(banExpiration);
+	}
+
+	public void increaseBanCount() {
+		this.banCount++;
+	}
+
+	public void updateBanExpiration(LocalDateTime expirationTime) {
+		this.banExpiration = expirationTime;
+	}
+
+	public void updateBanReason(String banReason) {
+		this.banReason = banReason;
 	}
 }

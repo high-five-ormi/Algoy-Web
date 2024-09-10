@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -62,9 +63,28 @@ public class UserController {
 	 */
 	@PostMapping("/sign")
 	public String signUp(@ModelAttribute("user") UserDto userDto) {
+		System.out.println(userDto.getSolvedacUserName());
 		userService.signUpUser(userDto);
 
 		return "redirect:/algoy/login"; // 회원가입 성공시 로그인 화면으로 리다이렉트
+	}
+
+	/**
+	 * 회원가입 요청 처리
+	 *
+	 * @author 조아라
+	 * @param username 유효성 검사를 위해 solvedac username
+	 * @return boolean 값을 담은 josn 형식
+	 * solvedAC api를 통해 user 정보가 있는지 체크 후 정보가 존재하면 true반환
+	 */
+	@GetMapping("/validate-username")
+	public ResponseEntity<Map<String, Boolean>> validateUsername(@RequestParam("username") String username) {
+
+		boolean isValid = userService.isUsernameValid(username);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("isValid", isValid);
+
+		return ResponseEntity.ok(response);
 	}
 
 	/**
@@ -179,5 +199,24 @@ public class UserController {
 		model.addAttribute("error", "토큰이 유효하지 않거나 만료되었습니다.");
 
 		return "password/reset-password"; // 비밀번호 재설정 페이지로 이동
+	}
+
+  /**
+   * @author JSW
+   *
+   * 현재 인증된 사용자의 정보를 가져옵니다.
+   *
+   * @param authentication 인증 정보를 포함한 Authentication 객체
+   * @return ResponseEntity<UserDto> 현재 사용자의 정보를 담은 DTO 객체를 포함한 응답
+   */
+  @GetMapping("/api/user/current")
+  @ResponseBody
+  public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
+		if (authentication == null) {
+			return ResponseEntity.status(401).build(); // Unauthorized
+		}
+		String username = authentication.getName();
+		UserDto userDto = userService.getUserByUsername(username);
+		return ResponseEntity.ok(userDto);
 	}
 }

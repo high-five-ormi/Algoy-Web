@@ -5,42 +5,28 @@
     <title>플래너</title>
     <!-- 외부 CSS 파일 연결 -->
     <link rel="stylesheet" href="/css/planner/PlannerMainCss.css">
+    <link rel="stylesheet" href="/css/header.css">
     <!-- jQuery 라이브러리 로드 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- jQuery 라이브러리의 압축된 버전을 CDN을 통해 불러와 현재 HTML 문서에서 사용할 수 있습니다. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- 웹 페이지에서 마크다운으로 작성된 내용을 HTML로 변환하여 보여주는 역할을 합니다. -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- 웹 애플리케이션의 보안을 강화하고, 사용자 생성 콘텐츠를 안전하게 처리하는 역할을 합니다. (XSS 방지용) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js"></script>
+    <!-- 웹 페이지 내의 코드를 시각적으로 매력적으로 표현하여 사용자 경험을 향상시키는 역할을 합니다. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+    <!-- highlight.js 라이브러리와 함께 사용되어 웹 페이지 내의 코드 블록에 시각적인 스타일을 적용하는 역할을 합니다. -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
+    <script th:src="@{/js/fragments/modal.js}"></script>
 </head>
 <body>
 <header>
-    <div id="header-container">
-        <!-- 홈으로 이동하는 로고 링크 -->
-        <a th:href="@{/algoy/home}">
-            <img src="/img/algoy-1.png" width="190" height="190" alt="알고이 로고입니다." id="header-logo">
-        </a>
-        <!-- 네비게이션 메뉴 (첫 번째) -->
-        <nav id="header-nav-1">
-            <span><a href="">오답 노트</a></span>
-            <span><a href="/algoy/planner/calender">플래너</a></span>
-        </nav>
-        <!-- 네비게이션 메뉴 (두 번째) -->
-        <nav id="header-nav-2">
-            <!-- 검색 창 -->
-            <div id="search-container">
-                <input type="text" placeholder="search" class="search-input">
-                <button class="search-button">
-                    <img src="/img/search-glasses.png" width="29" height="29" alt="검색 창의 돋보기 입니다.">
-                </button>
-            </div>
-            <!-- 사용자 영역 (로그아웃 및 마이 페이지) -->
-            <div class="header-user-area">
-                <button id="header-logout">
-                    <span>Logout</span>
-                </button>
-                <button id="header-my-page">
-                    <img src="/img/user-icon.png" width="20" height="20" alt="마이 페이지 버튼입니다">
-                </button>
-            </div>
-        </nav>
-    </div>
+    <div th:replace="fragments/header :: header"></div>
+    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
 </header>
+<div th:replace="fragments/modal :: modal"></div>
+<link rel="stylesheet" th:href="@{/css/fragments/modal.css}">
 
 <!-- 캘린더 헤더 -->
 <div id="calendar-header" class="calendar-nav">
@@ -69,9 +55,8 @@
         <table id="planner-table">
             <thead>
             <tr>
-                <th style="width: 50px">No.</th>
                 <th>Title</th>
-                <th>Content</th>
+                <th>Period</th>
                 <th>Site</th>
                 <th>Question</th>
                 <th style="width: 120px">Status</th>
@@ -85,36 +70,38 @@
 </div>
 
 <!-- 모달 창 구조 -->
-<div id="planner-modal" class="modal">
-    <div class="modal-content">
+<div id="planner-modal" class="modal-main">
+    <div class="modal-main-content">
         <!-- 모달 닫기 버튼 -->
-        <span class="modal-close">&times;</span>
+        <span class="modal-main-close">&times;</span>
         <!-- 모달 제목 -->
-        <h2 id="modal-title">Title</h2>
+        <h2 id="modal-main-title">Title</h2>
         <!-- 모달 본문 내용 -->
-        <div id="modal-content" style="border: 1px solid #e3e3e3; padding: 15px; min-height: 279px; margin-top: 20px;">
+        <div id="modal-main-content" style="border: 1px solid #e3e3e3; min-height: 279px; margin-top: 20px;">
             <p>Loading...</p>
         </div>
         <!-- 작성된 시간 정보 -->
-        <div id="modal-info" style="font-size: 12px; color: #666; margin-top: 30px;">
-            <p><span id="modal-createdAt">Loading...</span></p>
+        <div id="modal-main-info" style="font-size: 12px; color: #666; margin-top: 30px;">
+            <p><span id="modal-main-createdAt">Loading...</span></p>
             <!-- 문제 링크와 관련된 이슈 -->
-            <p>Related issues - <a href="#" id="modal-link" target="_blank">Loading...</a></p>
+            <p>Related issues - <a href="#" id="modal-main-link" target="_blank">Loading...</a></p>
             <!-- 플랜 작업 시간 -->
-            <p><span id="modal-timeAt"></span></p>
+            <p><span id="modal-main-timeAt"></span></p>
             <!-- 문제 이름 -->
-            <p>Question Name - <span id="modal-question">Loading...</span></p>
+            <p>Question Name - <span id="modal-main-question">Loading...</span></p>
             <!-- 사이트 이름 -->
-            <p>Site Name - <span id="modal-site">Loading...</span></p>
+            <p>Site Name - <span id="modal-main-site">Loading...</span></p>
         </div>
         <!-- 모달 버튼 그룹 (수정 및 삭제) -->
-        <div class="modal-button-group">
+        <div class="modal-main-button-group">
             <button id="btn-edit">수정</button>
             <button id="btn-delete">삭제</button>
         </div>
     </div>
 </div>
 
+<!-- 챗봇 컴포넌트 포함 -->
+<div th:replace="~{fragments/chatbot :: chatbot(backendUrl=${backendUrl})}"></div>
 </body>
 <!-- 외부 JavaScript 파일 연결 -->
 <script src="/js/planner/PlannerMainJs.js"></script>

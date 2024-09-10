@@ -41,11 +41,17 @@
         </div>
         <p id="nickname-message" class="view-message"></p>
 
+        <!--solvedAC username을 입력하는 필드추가 (유효성 검사도 한다)-->
+        <label for="solvedacUsername">SolvedAC Username (선택)</label>
+        <div class="input-group">
+            <input type="text" id="solvedacUsername" th:value="${user.solvedacUserName}" placeholder="SolvedAC username을 입력하세요.">
+            <button type="button" class="check-button" onclick="checkEditSolvedacUsername(event)">유효성 확인</button>
+        </div>
+        <p id="solvedac-message" class="view-message"></p>
+
         <div class="btn-wrap">
             <button type="button" class="updateUserBtn">저장하기</button>
-            <a th:href="@{/algoy/home}">
-                <button type="button" class="back-button">메인으로</button>
-            </a>
+            <a href="/algoy/home" class="back-button">메인으로</a>
         </div>
     </form>
 

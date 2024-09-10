@@ -1,0 +1,198 @@
+.bot-frag-component {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.bot-frag-sidebar {
+  position: fixed;
+  right: -500px;
+  top: 300px;
+  width: 400px;
+  height: calc(100vh - 350px);
+  background-color: white;
+  transition: right 0.3s ease;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  margin-right: 100px;
+}
+
+.bot-frag-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.bot-frag-header {
+  background-color: #1e88e5;
+  color: white;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.bot-frag-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  overflow: hidden;
+}
+
+.bot-frag-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bot-frag-header h1 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.bot-frag-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  scroll-behavior: smooth;
+}
+
+.bot-frag-ai-message, .bot-frag-messages p {
+  max-width: 80%;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.bot-frag-messages p:nth-child(even) {
+  background-color: #e6e6e6;
+  color: #333;
+  align-self: flex-end;
+}
+
+.bot-frag-messages p:nth-child(odd) {
+  background-color: #1e88e5;
+  color: white;
+  align-self: flex-start;
+}
+
+.bot-frag-ai-message {
+  background-color: #f0f0f0;
+  align-self: flex-end;
+}
+
+.bot-frag-input-area {
+  padding: 15px;
+  background-color: #f0f2f5;
+  display: flex;
+  align-items: center;
+}
+
+.bot-frag-user-input {
+  flex: 1;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  outline: none;
+}
+
+.bot-frag-send-button {
+  background-color: #1e88e5;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  transition: background-color 0.3s ease;
+}
+
+.bot-frag-send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bot-frag-send-button img {
+  width: 60%;
+  height: 60%;
+}
+
+.bot-frag-hamburger-menu {
+  position: fixed;
+  top: 800px;
+  right: 30px;
+  cursor: pointer;
+  z-index: 1001;
+  background-color: #1e88e5;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.bot-frag-hamburger-menu span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 2px 0;
+  transition: 0.4s;
+}
+
+body.bot-frag-open .bot-frag-sidebar {
+  right: 0;
+}
+
+body.bot-frag-open .bot-frag-hamburger-menu span:nth-child(1) {
+  transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+body.bot-frag-open .bot-frag-hamburger-menu span:nth-child(2) {
+  opacity: 0;
+}
+
+body.bot-frag-open .bot-frag-hamburger-menu span:nth-child(3) {
+  transform: rotate(45deg) translate(-5px, -6px);
+}
+
+.bot-frag-code-block-wrapper {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 10px 0;
+  overflow-x: auto;
+}
+
+.bot-frag-markdown-body {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.bot-frag-markdown-body p {
+  margin-bottom: 10px;
+}
+
+.bot-frag-markdown-body pre {
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  font-size: 85%;
+  line-height: 1.45;
+  overflow: auto;
+  padding: 16px;
+}

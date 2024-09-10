@@ -1,15 +1,15 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $('.loader').show();
 
     // 서버에서 플래너 가져와서 정보 입력
     $.ajax({
         url: '/algoy/planner/get/plans',
         method: 'GET',
-        success: function(data) {
+        success: function (data) {
             $('.loader').hide();
 
             let tableBody = $('#planner-table tbody');
-            $.each(data, function(index, item) {
+            $.each(data, function (index, item) {
                 // status에 맞는 입력값 한글화
                 let statusClass = '';
                 let statusText = '';
@@ -26,21 +26,20 @@ $(document).ready(function() {
 
                 let convertSiteName = '';
 
-                if(item.siteName.trim() === "BOJ") {
+                if (item.siteName.trim() === "BOJ") {
                     convertSiteName = 'Baekjoon';
-                } else if(item.siteName.trim() === "PGS"){
+                } else if (item.siteName.trim() === "PGS") {
                     convertSiteName = 'Programmers';
-                } else if(item.siteName.trim() === "SWEA") {
+                } else if (item.siteName.trim() === "SWEA") {
                     convertSiteName = 'SW Expert Academy';
-                } else if(item.siteName.trim() === "ETC") {
+                } else if (item.siteName.trim() === "ETC") {
                     convertSiteName = 'ETC';
                 }
 
                 // 테이블 행 추가
                 let row = '<tr>' +
-                    '<td>' + item.id + '</td>' +
-                    '<td>' + item.title + '</td>' +
-                    '<td><a href="#" class="table-content" data-id="' + item.id + '">Content</a></td>' +
+                    '<td><a href="#" class="table-content" data-id="' + item.id + '">' + item.title + '</a></td>' +
+                    '<td><span>' + item.startAt + '<br>~<br>'+ item.endAt +'</span></td>' +
                     '<td>' + convertSiteName + '</td>' +
                     '<td>' + item.questionName + '</td>' +
                     '<td class="planner-table-status-container"><div class="' + statusClass + '">' + statusText + '</div></td>' +
@@ -50,20 +49,20 @@ $(document).ready(function() {
             });
 
             // 테이블 content 클릭 시 모달 실행
-            $('.table-content').on('click', function(event) {
+            $('.table-content').on('click', function (event) {
                 event.preventDefault();
                 let plannerId = $(this).data('id');
                 loadPlannerDetail(plannerId);
             });
         },
-        error: function(error) {
+        error: function (error) {
             $('.loader').hide();
             alert('에러 로딩 데이터 : ' + error.statusText);
         }
     });
 
     // 새 플랜 입력으로 넘어가는 버튼 입력 이벤트 핸들러
-    $('#btn-calendar').on('click', function(event) {
+    $('#btn-calendar').on('click', function (event) {
         event.preventDefault();
         $.ajax({
             url: '/algoy/planner/save-form',
@@ -78,7 +77,7 @@ $(document).ready(function() {
     })
 
     // 플랜 수정으로 넘어가는 버튼 입력 이벤트 핸들러
-    $('#btn-edit').on('click', function(event) {
+    $('#btn-edit').on('click', function (event) {
         event.preventDefault();
 
         // 클릭된 버튼에서 data-id 값을 가져와 변수에 저장
@@ -96,7 +95,7 @@ $(document).ready(function() {
     })
 
     // 플랜 삭제로 넘어가는 버튼 입력 이벤트 핸들러
-    $('#btn-delete').on('click', function(event) {
+    $('#btn-delete').on('click', function (event) {
         event.preventDefault();
 
         // 클릭된 버튼에서 data-id 값을 가져와 변수에 저장
@@ -114,45 +113,109 @@ $(document).ready(function() {
         });
     })
 
+    $('.search-button').on('click', function (event) {
+        event.preventDefault();
+        // 서버에서 플래너 가져와서 정보 입력
+        $.ajax({
+            url: '/algoy/planner/search?keyword=' + $('.search-input').val(),
+            method: 'GET',
+            success: function (data) {
+                $('.loader').hide();
+
+                let tableBody = $('#planner-table tbody');
+                tableBody.empty();
+                $.each(data, function (index, item) {
+                    // status에 맞는 입력값 한글화
+                    let statusClass = '';
+                    let statusText = '';
+                    if (item.status === 'TODO') {
+                        statusClass = 'status-not-started';
+                        statusText = '준비 중';
+                    } else if (item.status === 'IN_PROGRESS') {
+                        statusClass = 'status-in-progress';
+                        statusText = '진행 중';
+                    } else if (item.status === 'DONE') {
+                        statusClass = 'status-done';
+                        statusText = '완료';
+                    }
+
+                    let convertSiteName = '';
+
+                    if (item.siteName.trim() === "BOJ") {
+                        convertSiteName = 'Baekjoon';
+                    } else if (item.siteName.trim() === "PGS") {
+                        convertSiteName = 'Programmers';
+                    } else if (item.siteName.trim() === "SWEA") {
+                        convertSiteName = 'SW Expert Academy';
+                    } else if (item.siteName.trim() === "ETC") {
+                        convertSiteName = 'ETC';
+                    }
+
+                    // 테이블 행 추가
+                    let row = '<tr>' +
+                        '<td><a href="#" class="table-content" data-id="' + item.id + '">' + item.title + '</a></td>' +
+                        '<td><span>' + item.startAt + '<br>~<br>'+ item.endAt +'</span></td>' +
+                        '<td>' + convertSiteName + '</td>' +
+                        '<td>' + item.questionName + '</td>' +
+                        '<td class="planner-table-status-container"><div class="' + statusClass + '">' + statusText + '</div></td>' +
+                        '</tr>';
+
+                    tableBody.append(row);
+                });
+
+                // 테이블 content 클릭 시 모달 실행
+                $('.table-content').on('click', function (event) {
+                    event.preventDefault();
+                    let plannerId = $(this).data('id');
+                    loadPlannerDetail(plannerId);
+                });
+            },
+            error: function (error) {
+                $('.loader').hide();
+                alert('에러 로딩 데이터 : ' + error.statusText);
+            }
+        })
+    })
+
     // 모달 불러오는 ajax 메소드
     function loadPlannerDetail(plannerId) {
         $.ajax({
             url: '/algoy/planner/' + plannerId,
             method: 'GET',
-            success: function(data) {
-                $('#modal-title').text(data.title);
-                $('#modal-content').html(data.content);
-                $('#modal-createdAt').text(`Created on ${formatDateTime(data.createAt)}`);
-                $('#modal-timeAt').text(`${formatDate(data.startAt)} ~ ${formatDate(data.endAt)}`);
-                $('#modal-question').text(data.questionName);
-                if(data.siteName.trim() === "BOJ") {
-                    $('#modal-site').text("Baekjoon");
-                } else if(data.siteName.trim() === "PGS"){
-                    $('#modal-site').text("Programmers");
-                } else if(data.siteName.trim() === "SWEA") {
-                    $('#modal-site').text("SW Expert Academy");
-                } else if(data.siteName.trim() === "ETC") {
-                    $('#modal-site').text(data.etcName);
+            success: function (data) {
+                $('#modal-main-title').text(data.title);
+                $('#modal-main-content').html(data.content);
+                $('#modal-main-createdAt').text(`Created on ${formatDateTime(data.createAt)}`);
+                $('#modal-main-timeAt').text(`${formatDate(data.startAt)} ~ ${formatDate(data.endAt)}`);
+                $('#modal-main-question').text(data.questionName);
+                if (data.siteName.trim() === "BOJ") {
+                    $('#modal-main-site').text("Baekjoon");
+                } else if (data.siteName.trim() === "PGS") {
+                    $('#modal-main-site').text("Programmers");
+                } else if (data.siteName.trim() === "SWEA") {
+                    $('#modal-main-site').text("SW Expert Academy");
+                } else if (data.siteName.trim() === "ETC") {
+                    $('#modal-main-site').text(data.etcName);
                 }
-                $('#modal-link').attr('href', data.link);
-                $('#modal-link').text(data.link);
+                $('#modal-main-link').attr('href', data.link);
+                $('#modal-main-link').text(data.link);
                 $('#planner-modal').show();
                 $('#btn-edit').attr('data-id', data.id);
                 $('#btn-delete').attr('data-id', data.id);
             },
-            error: function(error) {
+            error: function (error) {
                 alert('플래너 로딩 에러 : ' + error.statusText);
             }
         });
     }
 
     // 모달 내 닫기 버튼
-    $('.modal-close').on('click', function() {
+    $('.modal-main-close').on('click', function () {
         $('#planner-modal').hide();
     });
 
     // 모달 바깥 클릭 시 모달 닫기
-    $(window).on('click', function(event) {
+    $(window).on('click', function (event) {
         if ($(event.target).is('#planner-modal')) {
             $('#planner-modal').hide();
         }
@@ -160,13 +223,13 @@ $(document).ready(function() {
 
     // 시간을 포맷팅하는 함수
     function formatDateTime(dateTimeString) {
-        const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        const options = {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'};
         const date = new Date(dateTimeString);
         return date.toLocaleDateString('en-US', options);
     }
 
     function formatDate(dateTimeString) {
-        const options = { year: 'numeric', month: 'short', day: 'numeric'};
+        const options = {year: 'numeric', month: 'short', day: 'numeric'};
         const date = new Date(dateTimeString);
         return date.toLocaleDateString('en-US', options);
     }

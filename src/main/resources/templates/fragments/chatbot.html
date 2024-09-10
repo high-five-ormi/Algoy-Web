@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Chatbot Fragment</title>
+</head>
+<body>
+<!-- 챗봇 컴포넌트 프래그먼트 -->
+<div th:fragment="chatbot(backendUrl)">
+  <div id="bot-frag-component" class="bot-frag-component" th:data-backend-url="${backendUrl}">
+    <div id="bot-frag-hamburger-menu" class="bot-frag-hamburger-menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <div id="bot-frag-sidebar" class="bot-frag-sidebar">
+      <div id="bot-frag-container" class="bot-frag-container">
+        <div class="bot-frag-header">
+          <div class="bot-frag-avatar">
+            <img src="/img/bot_icon.png" alt="AI Avatar">
+          </div>
+          <h1>Alan AI</h1>
+        </div>
+        <div id="bot-frag-messages" class="bot-frag-messages"></div>
+        <div class="bot-frag-input-area">
+          <input type="text" id="bot-frag-user-input" class="bot-frag-user-input" placeholder="Type your message...">
+          <button id="bot-frag-send-button" class="bot-frag-send-button">
+            <img src="/img/send_icon.png" alt="Send">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 챗봇 스타일시트 -->
+  <link rel="stylesheet" th:href="@{/css/fragments/chatbot.css}">
+
+  <!-- 챗봇 스크립트 -->
+  <script th:src="@{/js/fragments/chatbot.js}"></script>
+  <script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+      var chatbotElement = document.getElementById('bot-frag-component');
+      var backendUrl = chatbotElement.dataset.backendUrl;
+      console.log("Backend URL from data attribute:", backendUrl);
+      if (backendUrl) {
+        new BotFragChatbotComponent(backendUrl);
+      } else {
+        console.error("Backend URL is not set properly");
+      }
+    });
+  </script>
+</div>
+</body>
+</html>
