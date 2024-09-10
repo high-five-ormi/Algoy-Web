@@ -46,6 +46,30 @@ label {
     margin-bottom: 20px;
 }
 
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+
+}
+
+.form-group i{
+    position: absolute;
+    right: 5px;
+    transform: translateY(-50%);
+    height: 22px;
+    font-size: 22px;
+    cursor: pointer;
+    color: black;
+}
+
+#eye-con-1 {
+    top: 30%;
+}
+
+#eye-con-2 {
+    top: 80%
+}
+
 .check-button {
     padding: 9px 15px;
     margin-left: 10px;
