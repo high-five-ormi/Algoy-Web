@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 import com.example.algoyweb.exception.CustomException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -149,5 +152,45 @@ class UserServiceTest {
 		assertEquals(userDto.getNickname(), updatedUser.getNickname());
 		assertEquals(encodedPassword, updatedUser.getPassword()); // 비밀번호 암호화 확인
 		assertEquals(userDto.getSolvedacUserName(), updatedUser.getSolvedacUserName()); // SolvedAC 유저명 확인
+	}
+
+	@Test
+	void testDeleteUser() {
+		String email = "test@example.com";
+		String encodedPassword = "encodedPassword";
+
+		// 유저 정보를 업데이트할 DTO
+		userDto = UserDto.builder()
+				.username("updated username")
+				.nickname("updated nickname")
+				.email(email)
+				.password("newPassword123")
+				.solvedacUserName("validSolvedacUser")
+				.build();
+
+		when(userRepository.findByEmail("test@example.com")).thenReturn(existingUser);
+
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		HttpServletResponse response = mock(HttpServletResponse.class);
+
+		// When
+		userService.setDeleted("test@example.com", request, response);
+
+		// Then
+		// 저장된 유저의 상태를 캡처하기 위해 ArgumentCaptor를 사용
+		ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+
+		// findByEmail 메서드가 호출되었는지 검증
+		verify(userRepository, times(1)).findByEmail("test@example.com");
+
+		// save 메서드가 호출되었는지 검증하고, 저장된 User 객체를 캡처
+		verify(userRepository, times(1)).save(userCaptor.capture());
+
+		// 캡처된 User 객체의 isDeleted 상태가 true인지 검증
+		User savedUser = userCaptor.getValue();
+		assertTrue(savedUser.getIsDeleted()); // isDeleted가 true로 설정되었는지 확인
+
+		// 로그아웃 및 쿠키 삭제 처리가 호출되었는지 검증
+		verify(response, times(2)).addCookie(any(Cookie.class)); // 두 개의 쿠키 삭제
 	}
 }
