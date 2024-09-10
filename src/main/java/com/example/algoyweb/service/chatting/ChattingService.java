@@ -152,6 +152,10 @@ public class ChattingService {
   }
 
   public ChattingDto processAndSaveMessage(String content, String roomId, String username) {
+    if (content.length() > 1000) {
+      throw new CustomException(ChattingErrorCode.MESSAGE_TOO_LONG);
+    }
+
     User user = getUserByUsername(username);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
 
