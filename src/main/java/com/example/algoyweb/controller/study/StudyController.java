@@ -5,12 +5,14 @@ import com.example.algoyweb.model.entity.study.Study;
 import com.example.algoyweb.service.study.StudyService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,6 +24,10 @@ import java.util.List;
 public class StudyController {
 
     private final StudyService studyService;
+
+    // ai-backend.url 설정값을 저장하는 변수입니다.
+    @Value("${ai-backend.url}")
+    private String backendUrl;
 
     @GetMapping("/gets")
     public ResponseEntity<Page<StudyDto>> getStudyList(@RequestParam int page, @RequestParam String keyword) {
@@ -72,22 +78,26 @@ public class StudyController {
     }
 
     @GetMapping("/main")
-    public ModelAndView getMain() {
+    public ModelAndView getMain(Model model) {
+        model.addAttribute("backendUrl", backendUrl);
         return new ModelAndView("study/StudyMain");
     }
 
     @GetMapping("/detail")
-    public ModelAndView getDetail(@RequestParam Long studyId) {
+    public ModelAndView getDetail(Model model, @RequestParam Long studyId) {
+        model.addAttribute("backendUrl", backendUrl);
         return new ModelAndView("study/StudyDetail");
     }
 
     @GetMapping("/edit-form")
-    public ModelAndView getEdit(@RequestParam Long studyId) {
+    public ModelAndView getEdit(Model model, @RequestParam Long studyId) {
+        model.addAttribute("backendUrl", backendUrl);
         return new ModelAndView("study/StudyEdit");
     }
 
     @GetMapping("/new-form")
-    public ModelAndView getNew() {
+    public ModelAndView getNew(Model model) {
+        model.addAttribute("backendUrl", backendUrl);
         return new ModelAndView("study/StudyNew");
     }
 }

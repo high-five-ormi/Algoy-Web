@@ -5,7 +5,6 @@ body {
 a {
     text-decoration: none;
     color: inherit;
-    display: inline-block;
     padding: 10px 20px;
     font-size: 16px;
     border-radius: 5px;
@@ -68,3 +67,22 @@ h1 {
     color: red;
     margin-top: -15px;
 }
+
+footer {
+    background-color: #e8e8e8;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    margin-top: 200px;
+    justify-content: space-around;
+}
+
+ul {
+    list-style: none;
+}
+
+#footer-logo {
+    width: 70px;
+    height: 70px;
+}
+

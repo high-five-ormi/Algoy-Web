@@ -3,58 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALGOY 로그인</title>
+    <title>ALGOY</title>
+    <link rel="icon" href="/img/algoy-1.png" type="image/x-icon">
     <link rel="stylesheet" th:href="@{/css/user/login.css}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
-    <header>
-        <a th:href="@{/algoy/home}">
-            <div id="header-container">
-                <img src="/img/algoy-1.png" alt="알고이 로고입니다." id="header-logo">
-            </div>
-        </a>
-    </header>
-    <main>
-        <!--<div class="image-container">
-            <img src="/img/login-image.png" alt="Background Image">
-        </div>-->
-        <div class="login-container">
-            <div class="login-header">
-                <h1>로그인</h1>
-                <p>어서오세요!</p>
-            </div>
-            <form class="login-form" th:action="@{/algoy/login}" method="post">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="username" placeholder="Email">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter password">
-                    <p th:if="${param.error}" id="param-error">Invalid email or password.</p>
-                </div>
-                <div class="form-options">
-                    <label><input type="checkbox" name="remember-me" checked> Remember me</label>
-                    <a href="/algoy/find-password" class="forgot-password">Forgot password?</a>
-                </div>
-                <button type="submit" class="btn-signin">Sign in</button>
-            </form>
-            <div class="google-signin">
-                <a th:href="@{/oauth2/authorization/google}" class="btn-google" role="button">
-                    <img src="/img/google-icon.png" alt="Google Icon">Or sign in with Google
-                </a>
-            </div>
-            <p class="signup-link">Don't have an account? <a th:href="@{/algoy/sign}">Sign up now</a></p>
+<header>
+    <a th:href="@{/algoy/home}">
+        <div id="header-container">
+            <img src="/img/algoy-1.png" alt="알고이 로고입니다." id="header-logo">
         </div>
-    </main>
+    </a>
+</header>
+<main>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>로그인</h1>
+            <p>어서오세요!</p>
+        </div>
+        <form class="login-form" th:action="@{/algoy/login}" method="post">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="username" placeholder="Email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter password">
+                <i class="fa fa-eye fa-lg"></i>
+                <p th:if="${param.error}" id="param-error">Invalid email or password.</p>
+            </div>
+            <div class="form-options">
+                <label><input type="checkbox" name="remember-me" checked> Remember me</label>
+                <a href="/algoy/find-password" class="forgot-password">Forgot password?</a>
+            </div>
+            <button type="submit" class="btn-signin">Sign in</button>
+        </form>
+        <div class="google-signin">
+            <a th:href="@{/oauth2/authorization/google}" class="btn-google" role="button">
+                <img src="/img/google-icon.png" alt="Google Icon">Or sign in with Google
+            </a>
+        </div>
+        <p class="signup-link">Don't have an account? <a th:href="@{/algoy/sign}">Sign up now</a></p>
+    </div>
+</main>
 
 
 </body>
 
 <script>
-    document.querySelector('.login-form').addEventListener('submit', function (event) {
-        // 폼 제출을 막는 코드가 있는지 확인
-        console.log('Form submitted');
+    $(document).ready(function() {
+        // 눈 아이콘 클릭 시 패스워드 보이기
+        $('.form-group i').on('click', function() {
+            let $input = $(this).prev('input'); // 아이콘의 바로 이전에 위치한 입력 필드 선택
+            $input.toggleClass('active'); // 'active' 클래스 토글
+
+            if ($input.hasClass('active')) {
+                $(this).attr('class', 'fa fa-eye-slash fa-lg'); // 아이콘 변경
+                $input.attr('type', 'text'); // 입력 필드의 타입을 'text'로 변경
+            } else {
+                $(this).attr('class', 'fa fa-eye fa-lg'); // 아이콘 변경
+                $input.attr('type', 'password'); // 입력 필드의 타입을 'password'로 변경
+            }
+        });
     });
 </script>
+<footer>
+    <div id="our_information">
+        <ul>
+            <li>진행 프로젝트 : ESTSOFT ORMI 5기 백엔드 파이널 프로젝트</li>
+            <li>팀 이름 : 5조 high - five</li>
+            <li>프로젝트 이름 : Algoy</li>
+            <li>깃허브 : <a href="https://github.com/high-five-ormi">https://github.com/high-five-ormi</a></li>
+            <li>프로젝트 관련 컨텍은 깃허브 READ ME에 안내되어 있습니다</li>
+        </ul>
+    </div>
+    <div id="Catchphrase">
+        <img src="/img/algoy-1.png" alt="알고이 로고입니다." id="footer-logo">
+        <p>"Algoy: Your Coding Commit Companion —Track Mistakes, Plan Success, and Get AI Insights"</p>
+    </div>
+</footer>
 </html>

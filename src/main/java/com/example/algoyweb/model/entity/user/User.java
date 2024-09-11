@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.algoyweb.model.dto.user.UserDto;
-import com.example.algoyweb.model.entity.allen.SolvedACResponse;
+import com.example.algoyweb.model.entity.allen.SolvedACResponseEntity;
 import com.example.algoyweb.model.entity.planner.Planner;
 
 import com.example.algoyweb.model.entity.study.Comment;
@@ -83,7 +83,7 @@ public class User {
 	private List<Comment> commentList;
 //SolvedACResponseEntity와의 OneToOne 관계를 추가
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private SolvedACResponse solvedACResponse;
+	private SolvedACResponseEntity solvedACResponse;
 
 	public Long getId() {
 		return userId;
@@ -159,6 +159,10 @@ public class User {
 
 	public boolean isBanned() {
 		return role == Role.BANNED && banExpiration != null && LocalDateTime.now().isBefore(banExpiration);
+	}
+
+	public String getEmail() {
+		return email;
 	}
 
 	public void increaseBanCount() {

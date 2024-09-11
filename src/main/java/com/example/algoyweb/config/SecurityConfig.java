@@ -3,6 +3,7 @@ package com.example.algoyweb.config;
 import com.example.algoyweb.util.user.UserAuthenticationSuccessHandler;
 import com.example.algoyweb.service.allen.AllenService;
 import com.example.algoyweb.service.user.UserService;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -46,13 +47,8 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 	// HttpSecurity라는 객체를 사용하여 웹 애플리케이션의 보안을 설정
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-			.csrf((csrf) -> csrf
-				.ignoringRequestMatchers("/algoy/**")
-				.disable()
-			) // CSRF 보안 기능 비활성화
+			.csrf((csrf) -> csrf.ignoringRequestMatchers("/algoy/**").disable()) // CSRF 보안 기능 비활성화
 			.authorizeHttpRequests((requests) -> requests
-				.requestMatchers("/").permitAll()
-				.requestMatchers("/algoy").permitAll()
 				.requestMatchers("/algoy/home/**").permitAll()
 				.requestMatchers("/algoy/login").permitAll()
 				.requestMatchers("/algoy/sign").permitAll()
@@ -64,8 +60,8 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 				.requestMatchers("/algoy/check-nickname-duplicate").permitAll()
 				.requestMatchers("/algoy/allen/**").permitAll()
 				.requestMatchers("/css/**").permitAll()
-				.requestMatchers("/js/**").permitAll()
 				.requestMatchers("/img/**").permitAll()
+				.requestMatchers("/js/**").permitAll()
 				.requestMatchers("/algoy/chat-websocket/**").authenticated() // WebSocket 엔드포인트 보호
 				.anyRequest().authenticated()) // 이외의(위에서 정의되지 않은) 모든 경로(요청)는 인증된 사용자만 허용
 			.formLogin(form -> form
@@ -73,7 +69,6 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 				.loginProcessingUrl("/algoy/login") // 로그인 요청을 처리할 URL 설정
 				.successForwardUrl("/algoy/home")
 				.defaultSuccessUrl("/algoy/home")
-					//.successHandler(customAuthenticationSuccessHandler)
 				.successHandler(userAuthenticationSuccessHandler())
 				.failureUrl("/algoy/login?error=true"))
 			.logout(logout -> logout
@@ -101,5 +96,4 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 	public UserAuthenticationSuccessHandler userAuthenticationSuccessHandler() {
 		return new UserAuthenticationSuccessHandler(userService, allenService);
 	}
-
 }

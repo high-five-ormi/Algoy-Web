@@ -22,9 +22,10 @@ h1 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.delete-btn-wrap {
-    text-align: center;
+#email, #username {
+    background-color: #eaeaea;
 }
+
 
 label {
     display: block;
@@ -44,6 +45,30 @@ label {
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-bottom: 20px;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+
+}
+
+.form-group i{
+    position: absolute;
+    right: 5px;
+    transform: translateY(-50%);
+    height: 22px;
+    font-size: 22px;
+    cursor: pointer;
+    color: black;
+}
+
+#eye-con-1 {
+    top: 30%;
+}
+
+#eye-con-2 {
+    top: 80%
 }
 
 .check-button {
@@ -107,4 +132,22 @@ label {
 .view-message {
     color: red;
     margin-top: -15px;
+}
+
+footer {
+    background-color: #e8e8e8;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    margin-top: 200px;
+    justify-content: space-around;
+}
+
+ul {
+    list-style: none;
+}
+
+#footer-logo {
+    width: 70px;
+    height: 70px;
 }

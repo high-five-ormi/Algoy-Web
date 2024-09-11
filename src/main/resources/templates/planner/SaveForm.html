@@ -2,12 +2,15 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>플래너</title>
+    <title>ALGOY</title>
+    <link rel="icon" href="/img/algoy-1.png" type="image/x-icon">
     <!-- 외부 CSS 파일 연결 -->
     <link rel="stylesheet" href="/css/planner/PlannerSaveForm.css">
     <link rel="stylesheet" href="/css/header.css">
-    <!-- jQuery 라이브러리 로드 -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 모든 브라우저에서 WebSocket을 완벽하게 지원하지 않기 때문에, 다양한 브라우저에서 WebSocket과 유사한 기능을 제공하는 라이브러리입니다. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <!-- STOMP는 JavaScript 환경에서 사용할 수 있도록 도와주는 라이브러리입니다. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <!-- jQuery 라이브러리의 압축된 버전을 CDN을 통해 불러와 현재 HTML 문서에서 사용할 수 있습니다. -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- 웹 페이지에서 마크다운으로 작성된 내용을 HTML로 변환하여 보여주는 역할을 합니다. -->
@@ -98,7 +101,10 @@
     </form>
 </div>
 
-<!-- 챗봇 컴포넌트 포함 -->
+<!-- 채팅 프래그먼트 포함 -->
+<div th:replace="~{fragments/chatting :: chat}"></div>
+
+<!-- 챗봇 프래그먼트 포함 -->
 <div th:replace="~{fragments/chatbot :: chatbot(backendUrl=${backendUrl})}"></div>
 </body>
 <!-- 외부 JavaScript 파일 연결 -->

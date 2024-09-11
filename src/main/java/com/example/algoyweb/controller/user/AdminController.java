@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.algoyweb.service.user.UserPermissionService;
 import com.example.algoyweb.service.user.UserService;
@@ -44,7 +43,7 @@ public class AdminController {
 	 * 사용자의 역할(Role) 변경: 관리자가 특정 사용자의 역할을 변경할 때 사용
 	 *
 	 * @param userId 역할을 변경할 사용자의 ID
-	 * @param action 수행할 작업. 가능한 값: "admin" (관리자 승격), "ban" (사용자 밴), "lift" (밴 해제)
+	 * @param action 수행할 작업: "admin" (관리자 승격), "ban" (사용자 밴), "lift" (밴 해제)
 	 * @param banReason 유저의 밴 사유 (필수값 아님)
 	 * @return 관리자 페이지로 리다이렉트 할 URL
 	 */

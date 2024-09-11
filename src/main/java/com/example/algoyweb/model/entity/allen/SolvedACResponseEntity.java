@@ -1,5 +1,6 @@
 package com.example.algoyweb.model.entity.allen;
 
+import com.example.algoyweb.model.dto.allen.SolvedACResponseDto;
 import com.example.algoyweb.model.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SolvedACResponse {
+public class SolvedACResponseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "response_id", nullable = false)
@@ -26,6 +27,9 @@ public class SolvedACResponse {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
+
+    @Column(name = "user_email", nullable = false)
+    private String userEmail;
 
     @ElementCollection
     @CollectionTable(name = "response_list", joinColumns = @JoinColumn(name = "response_id"))
@@ -38,6 +42,16 @@ public class SolvedACResponse {
     public void updateResponse(List<String> response) {
         this.response = response;
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public SolvedACResponseDto toDto() {
+        return SolvedACResponseDto.builder()
+                .id(this.id)
+                .userId(this.user.getUsername())
+                .userEmail(this.user.getEmail()) // 유저 entity의 getUsername() 메서드 호출
+                .response(this.response)
+                .updatedAt(this.updatedAt)
+                .build();
     }
 
 }

@@ -28,21 +28,6 @@ main {
     margin-top: 20px;
 }
 
-/*!* Image Container *!
-.image-container {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.image-container img {
-    max-width: 100%;
-    height: auto;
-    !*border-radius: 10px;*!
-}*/
-
-
 .login-container {
     flex: 1;
     padding: 40px;
@@ -75,7 +60,20 @@ main {
 }
 
 .form-group {
+    position: relative;
     margin-bottom: 20px;
+
+}
+
+.form-group i{
+    position: absolute;
+    top: 75%;
+    right: 5px;
+    transform: translateY(-50%);
+    height: 22px;
+    font-size: 22px;
+    cursor: pointer;
+    color: black;
 }
 
 .form-group label {
@@ -98,7 +96,6 @@ main {
     outline: none;
 }
 
-/* Form Options */
 .form-options {
     display: flex;
     justify-content: space-between;
@@ -184,4 +181,22 @@ main {
 
 .signup-link a:hover {
     text-decoration: underline;
+}
+
+footer {
+    background-color: #e8e8e8;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    margin-top: 200px;
+    justify-content: space-around;
+}
+
+ul {
+    list-style: none;
+}
+
+#footer-logo {
+    width: 70px;
+    height: 70px;
 }
