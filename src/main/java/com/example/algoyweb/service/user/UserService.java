@@ -41,7 +41,8 @@ public class UserService implements UserDetailsService {
 	private final PasswordEncoder passwordEncoder; // Spring Security의 PasswordEncoder 사용
 
 	@Autowired
-	public UserService(SolvedACResponseRepository solvedACResponseRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	public UserService(SolvedACResponseRepository solvedACResponseRepository, UserRepository userRepository,
+		PasswordEncoder passwordEncoder) {
 		this.solvedACResponseRepository = solvedACResponseRepository;
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
@@ -96,16 +97,16 @@ public class UserService implements UserDetailsService {
 		return userRepository.findByNickname(nickname);
 	}
 
-  /**
-   * @author JSW
-   *
-   * 주어진 사용자 이름(이메일)을 기준으로 사용자 정보를 가져옵니다.
-   *
-   * @param username 검색할 사용자의 사용자 이름(이메일)
-   * @return UserDto 사용자 정보를 담은 DTO 객체
-   */
-  @Transactional(readOnly = true)
-  public UserDto getUserByUsername(String username) {
+	/**
+	 * @author JSW
+	 *
+	 * 주어진 사용자 이름(이메일)을 기준으로 사용자 정보를 가져옵니다.
+	 *
+	 * @param username 검색할 사용자의 사용자 이름(이메일)
+	 * @return UserDto 사용자 정보를 담은 DTO 객체
+	 */
+	@Transactional(readOnly = true)
+	public UserDto getUserByUsername(String username) {
 		User user = userRepository.findByEmail(username);
 		if (user == null) {
 			throw new RuntimeException("User not found");
@@ -359,7 +360,7 @@ public class UserService implements UserDetailsService {
 	 * @return 추천 문제 String 반환
 	 * 리스트에 저장된 문제들 중 랜덤으로 한 문제를 화면에 출력
 	 */
-    public String getRandomProblemsByUsername(String userEmail) {
+	public String getRandomProblemsByUsername(String userEmail) {
 		// SolvedACResponseEntity에서 사용자 문제 리스트 가져오기
 		Optional<SolvedACResponseEntity> optionalResponseEntity = solvedACResponseRepository.findByUserEmail(userEmail);
 
@@ -381,7 +382,7 @@ public class UserService implements UserDetailsService {
 	 * @return 추천 문제 String 반환
 	 * 랜덤으로 한 문제 고르는 메서드
 	 */
-	private String getRandomProblem(List<String> problems){
+	private String getRandomProblem(List<String> problems) {
 		if (problems == null || problems.isEmpty()) {
 			return "추천 문제를 가져올 수 없습니다."; // 문제가 없을 때의 처리
 		}
@@ -403,7 +404,7 @@ public class UserService implements UserDetailsService {
 		// 사용자가 SolvedAC 문제 추천 리스트를 가지고 있지 않은 경우
 		if (optionalResponseEntity.isEmpty()) {
 			return false; // 또는 null을 반환하여 처리
-		}else{
+		} else {
 			return true;
 		}
 	}

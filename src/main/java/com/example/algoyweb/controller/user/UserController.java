@@ -1,7 +1,6 @@
 package com.example.algoyweb.controller.user;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,6 @@ public class UserController {
 	public UserController(UserService userService) {
 		this.userService = userService;
 	}
-
-
 
 	/**
 	 * 로그인 폼 보여주기

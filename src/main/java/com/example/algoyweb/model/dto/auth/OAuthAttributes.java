@@ -62,7 +62,7 @@ public class OAuthAttributes {
 		String nickname = (String)attributes.get("nickname");
 
 		if (nickname == null) {
-			// @앞 부분을 닉네임으로 지정, 그러리가 없겠지만 이메일이 없다면 기본 닉네임 DefaultNickname으로 지정
+			// @앞 부분을 닉네임으로 지정, 만약 이메일이 없다면 기본 닉네임 DefaultNickname으로 지정
 			nickname = email != null ? email.split("@")[0] : "DefaultNickname";
 		}
 
