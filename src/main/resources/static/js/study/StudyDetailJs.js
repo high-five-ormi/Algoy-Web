@@ -3,6 +3,7 @@ $(document).ready(function() {
     const urlParams = new URL(location.href).searchParams;
     const studyId = urlParams.get('studyId'); // Example Study ID
     let isParticipant = false;
+    let isStop = false;
     let presentParticipant;
     let statusText;
     let statusClass;
@@ -13,20 +14,21 @@ $(document).ready(function() {
         success: function(study) {
             $('#study-title').text(study.title);
             $('#study-author').text(study.author);
-            $('#study-createdAt').text(study.createdAt);
-            $('#study-status').text(study.status);
+            $('#study-createdAt').text(formatDateTime(study.createdAt));
             $('#study-language').text(study.language);
             $('#study-content').html(study.content);
 
-            if (study.status === 'TODO') {
+            if (study.status === 'ING') {
                 statusClass = 'status-not-started';
-                statusText = '준비 중';
-            } else if (study.status === 'IN_PROGRESS') {
+                statusText = '모집 중';
+            } else if (study.status === 'STOP') {
                 statusClass = 'status-in-progress';
-                statusText = '진행 중';
+                statusText = '모집 중단';
+                isStop = true;
             } else if (study.status === 'DONE') {
                 statusClass = 'status-done';
-                statusText = '완료';
+                statusText = '종료';
+                isStop = true;
             }
 
             $('#study-status').text(statusText);
@@ -195,6 +197,11 @@ $(document).ready(function() {
         if(isParticipant === true) {
             event.preventDefault();
             alert("스터디 가입 인원이 최대입니다.");
+            return;
+        }
+        if(isStop === true) {
+            event.preventDefault();
+            alert("스터디가 모집 중이 아닙니다.");
             return;
         }
         const commentElement = $(this).closest('.comment');
@@ -388,3 +395,9 @@ $('.search-button').click(function() {
         window.location.href = '/algoy/study/main'; // 페이지 이동
     }
 });
+
+function formatDateTime(dateTimeString) {
+    const options = {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'};
+    const date = new Date(dateTimeString);
+    return date.toLocaleDateString('en-US', options);
+}
