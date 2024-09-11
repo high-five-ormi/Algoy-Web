@@ -68,7 +68,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 		// UserDetails 객체 생성
 		UserDetails userDetails = org.springframework.security.core.userdetails.User
 			.withUsername(user.getUsername()) // 사용자 이름 설정
-			.username(user.getEmail()) // 유저이름에 이메일로
+			.username(user.getEmail()) // 유저이름에 이메일로 (UserDetails로 이메일을 읽어오는 용도)
 			.password(user.getPassword()) // 비밀번호 설정
 			.authorities(new SimpleGrantedAuthority(user.getRole().getKey())) // 사용자 역할에 대한 권한 설정
 			.build();
@@ -85,7 +85,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 		} else { // 사용자가 이미 존재하는 경우, OAuth2 속성으로 기존 사용자 정보 업데이트
 			user.update(
 				attributes.getUsername(), // 사용자 이름
-				attributes.getNickname(), // 사용자 닉네임
+				user.getNickname(), // 사용자 닉네임
 				attributes.getEmail(), // 사용자 이메일
 				attributes.getPassword(), // 사용자 비밀번호
 				user.getRole(), // 기존 역할 유지
