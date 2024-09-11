@@ -1,0 +1,197 @@
+/* 기본 스타일 초기화 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration-line: none;
+  color: black;
+  font-weight: bold;
+}
+
+/* note-header 섹션 스타일 */
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #ffffff;
+  border-bottom: 2px solid #e6eff8;
+  max-width: 1105px;
+  margin: 0 auto;
+}
+
+.title-section {
+  display: flex;
+  align-items: center;
+}
+
+.small-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+}
+
+.note-header h2 {
+  font-size: 18px;
+  color: #333;
+}
+
+/* New 버튼 스타일 */
+.new-button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.new-button:hover {
+  background-color: #0056b3;
+}
+
+/* 메인 콘텐츠 스타일 */
+main {
+  width: 100%;
+  max-width: 1105px;
+  margin: 30px auto;
+  padding: 0 15px;
+}
+
+.note-list {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.note-item {
+  width: 100%;
+  height: 260px;
+  border-bottom: 1px solid #e6eff8;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.note-item:last-child {
+  border-bottom: none;
+}
+
+.note-item h2 {
+  font-size: 18px;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.note-item p {
+  color: #666;
+  font-size: 16px;
+  flex-grow: 1;
+}
+
+.note-item time {
+  font-size: 14px;
+  color: #aaa;
+  text-align: right;
+}
+
+/* 입력 필드 스타일 */
+.input-field,
+.textarea-field {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #EDF0F2;
+  padding: 10px;
+  margin-top: 5px;
+  box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 조정 */
+}
+
+.input-field {
+  height: 40px; /* 높이 조정 */
+}
+
+.textarea-field {
+  height: 150px;
+  /* 줄바꿈과 공백 처리 */
+  white-space: pre-wrap;
+  word-wrap: break-word; /* 단어가 너무 길 때 줄바꿈 */
+}
+
+/* 버튼 스타일 */
+.custom-button {
+  width: 100px;
+  height: 38px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* 게시 버튼 */
+.custom-button[type="submit"] {
+  background-color: #007aff;
+  color: #ffffff;
+}
+
+.custom-button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* 취소 버튼 */
+.custom-button[type="button"] {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #007AFF;
+}
+
+.custom-button[type="button"]:hover {
+  background-color: #f0f0f0;
+}
+
+/* 이미지 미리보기 스타일 */
+.image-preview {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+
+/* 추가된 스타일 */
+.flex-container {
+  display: flex;
+  gap: 20px; /* 항목 간 간격 */
+}
+
+.flex-container div {
+  flex: 1; /* 각 항목이 동일한 너비로 크기 조정 */
+}
+
+footer {
+  background-color: #e8e8e8;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  margin-top: 200px;
+  justify-content: space-around;
+}
+
+ul {
+  list-style: none;
+}
+
+#footer-logo {
+  width: 70px;
+  height: 70px;
+}

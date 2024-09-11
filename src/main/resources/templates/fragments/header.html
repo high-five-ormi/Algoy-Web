@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>ALGOY</title>
+    <link rel="icon" href="/img/algoy-1.png" type="image/x-icon">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div id="header-container" th:fragment="header">
+    <a th:href="@{/algoy/home}">
+        <img src="/img/algoy-1.png" alt="알고이 로고입니다." id="header-logo">
+    </a>
+    <nav id="header-nav-1">
+        <a href="/algoy/commit">오답 노트</a>
+        <a href="/algoy/planner/main">플래너</a>
+        <a href="/algoy/study/main">스터디</a>
+    </nav>
+    <nav id="header-nav-2">
+        <a th:href="@{/algoy/admin}" sec:authorize="hasRole('ADMIN')" class="admin-btn">Administrator Page</a>
+        <div id="search-container">
+            <input type="text" placeholder="search" class="search-input">
+            <button class="search-button">
+                <img src="/img/search-glasses.png" alt="검색 창의 돋보기 입니다.">
+            </button>
+        </div>
+        <div id="header-user-area">
+            <button id="header-my-page" class="modal-btn">
+                <img src="/img/user-icon.png" alt="마이 페이지 버튼입니다">
+            </button>
+            <div sec:authorize="isAuthenticated()">
+                <form action="/algoy/logout" method="post">
+                    <button type="submit" name="logout" id="header-logout">
+                        <span>Logout</span>
+                    </button>
+                </form>
+            </div>
+            <div sec:authorize="isAnonymous()">
+                <a href="/algoy/login" id="header-login">
+                    <span>Login</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ALGOY</title>
+    <link rel="icon" href="/img/algoy-1.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/mypage/editUser.css}">
+    <script th:src="@{/js/fragments/modal.js}"></script>
+</head>
+<body>
+<header>
+    <div th:replace="fragments/header :: header"></div>
+    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
+</header>
+<div th:replace="fragments/modal :: modal"></div>
+<link rel="stylesheet" th:href="@{/css/fragments/modal.css}">
+<main>
+    <h1>회원 정보 수정</h1>
+    <form id="userEditForm" th:object="${user}" method="post">
+        <label for="email">E-amil</label>
+        <div class="input-group">
+            <input type="email" id="email" th:value="${user.email}" readonly/>
+        </div>
+        <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="새 비밀번호를 입력하세요.">
+            <i id="eye-con-1" class="fa fa-eye fa-lg"></i>
+
+        <label for="confirm-password">Re-enter Password</label>
+        <input type="password" id="confirm-password" name="confirmPassword" placeholder="비밀번호를 다시 입력하세요."
+               onblur="checkPasswordMatch()"/>
+            <i id="eye-con-2" class="fa fa-eye fa-lg"></i>
+        <p id="password-message" class="view-message"></p>
+        </div>
+        <label for="username">이름</label>
+        <input type="text" id="username" th:value="${user.username}" readonly/>
+
+        <label for="nickname">닉네임</label>
+        <div class="input-group">
+            <input type="text" id="nickname" th:value="${user.nickname}" placeholder="닉네임을 입력하세요." required/>
+            <button type="button" class="check-button" onclick="checkDuplicateNickname(event)">중복 확인</button>
+        </div>
+        <p id="nickname-message" class="view-message"></p>
+
+        <!--solvedAC username을 입력하는 필드추가 (유효성 검사도 한다)-->
+        <label for="solvedacUsername">SolvedAC Username (선택)</label>
+        <div class="input-group">
+            <input type="text" id="solvedacUsername" th:value="${user.solvedacUserName}" placeholder="SolvedAC username을 입력하세요.">
+            <button type="button" class="check-button" onclick="checkEditSolvedacUsername(event)">유효성 확인</button>
+        </div>
+        <p id="solvedac-message" class="view-message"></p>
+
+        <div class="btn-wrap">
+            <button type="button" class="updateUserBtn">저장하기</button>
+            <a href="/algoy/home" class="back-button">메인으로</a>
+        </div>
+    </form>
+
+</main>
+
+<script th:src="@{/js/mypage/userEdit.js}"></script>
+<script>
+    $(document).ready(function () {
+        // 눈 아이콘 클릭 시 패스워드 보이기
+        $('.form-group i').on('click', function () {
+            let $input = $(this).prev('input'); // 아이콘의 바로 이전에 위치한 입력 필드 선택
+            $input.toggleClass('active'); // 'active' 클래스 토글
+
+            if ($input.hasClass('active')) {
+                $(this).attr('class', 'fa fa-eye-slash fa-lg'); // 아이콘 변경
+                $input.attr('type', 'text'); // 입력 필드의 타입을 'text'로 변경
+            } else {
+                $(this).attr('class', 'fa fa-eye fa-lg'); // 아이콘 변경
+                $input.attr('type', 'password'); // 입력 필드의 타입을 'password'로 변경
+            }
+        });
+    });
+</script>
+</body>
+<footer>
+    <div id="our_information">
+        <ul>
+            <li>진행 프로젝트 : ESTSOFT ORMI 5기 백엔드 파이널 프로젝트</li>
+            <li>팀 이름 : 5조 high - five</li>
+            <li>프로젝트 이름 : Algoy</li>
+            <li>깃허브 : <a href="https://github.com/high-five-ormi">https://github.com/high-five-ormi</a></li>
+            <li>프로젝트 관련 컨텍은 깃허브 READ ME에 안내되어 있습니다</li>
+        </ul>
+    </div>
+    <div id="Catchphrase">
+        <img src="/img/algoy-1.png" alt="알고이 로고입니다." id="footer-logo">
+        <p>"Algoy: Your Coding Commit Companion —Track Mistakes, Plan Success, and Get AI Insights"</p>
+    </div>
+</footer>
+</html>

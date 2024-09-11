@@ -1,0 +1,26 @@
+/*캘린더 자체 크기 설정*/
+#calendar {
+    width: 70%;/*
+    height: 80%;*/
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.fc-event {
+    border: none;
+}
+
+.fc .fc-button {
+    font-size: 0.7em;
+}
+.fc .fc-toolbar-title {
+    font-size: 1.5em;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 1em;
+}
+
+.fc table {
+
+}

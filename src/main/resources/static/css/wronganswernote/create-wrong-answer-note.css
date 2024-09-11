@@ -1,0 +1,165 @@
+/* 기본 스타일 초기화 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration-line: none;
+  color: black;
+  font-weight: bold;
+}
+
+/* note-header 섹션 스타일 */
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #ffffff;
+  border-bottom: 2px solid #e6eff8;
+  max-width: 1105px;
+  margin: 0 auto;
+}
+
+.title-section {
+  display: flex;
+  align-items: center;
+}
+
+.small-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+}
+
+.note-header h2 {
+  font-size: 18px;
+  color: #333;
+}
+
+/* 메인 콘텐츠 스타일 */
+main {
+  width: 100%;
+  max-width: 1105px;
+  margin: 30px auto;
+  padding: 0 15px;
+}
+
+.input-field,
+.textarea-field {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #EDF0F2;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+.input-field {
+  height: 40px;
+}
+
+.textarea-field {
+  height: 150px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* 버튼 스타일 */
+.custom-button {
+  width: 100px;
+  height: 38px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* 게시 버튼 */
+.custom-button[type="submit"] {
+  background-color: #007aff;
+  color: #ffffff;
+}
+
+.custom-button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* 취소 버튼 */
+.custom-button[type="button"] {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #007AFF;
+}
+
+.custom-button[type="button"]:hover {
+  background-color: #f0f0f0;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.flex-container {
+  display: flex;
+  gap: 20px; /* 항목 간 간격 */
+  justify-content: space-between; /* 항목을 한 줄에 배치 */
+}
+
+.flex-container div {
+  flex: 1; /* 각 항목이 동일한 너비를 가짐 */
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
+  gap: 10px;
+  margin-top: 10px; /* 상단 여백 */
+}
+
+button[type="submit"] {
+  background-color: #007aff;
+  color: #ffffff;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+button[type="button"] {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #007AFF;
+}
+
+button[type="button"]:hover {
+  background-color: #f0f0f0;
+}
+
+footer {
+  background-color: #e8e8e8;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  margin-top: 200px;
+  justify-content: space-around;
+}
+
+ul {
+  list-style: none;
+}
+
+#footer-logo {
+  width: 70px;
+  height: 70px;
+}

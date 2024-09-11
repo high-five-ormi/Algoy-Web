@@ -1,0 +1,377 @@
+/* 모든 요소의 기본 마진과 패딩을 0으로 설정하고 박스 크기 계산을 개선 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* body 기본 스타일 설정: 폰트, 배경색, 텍스트 색상, 줄 간격 */
+body {
+  font-family: 'Manrope', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration-line: none;
+  color: black;
+  font-weight: bold;
+}
+
+/* note-header 섹션 스타일: 배경색, 크기, 마진, 패딩, 테두리 */
+.note-header {
+  background-color: #ffffff;
+  width: 1280px;
+  height: 65px;
+  margin: 0 auto;
+  padding: 0 20px;
+  border-bottom: 2px solid #d1d9e3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 타이틀 섹션의 레이아웃 설정: 정렬 및 간격 */
+.title-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* WrongAnawerNote 아이콘 크기 설정 */
+.WrongAnawerNote-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* note-header 내 제목 텍스트 스타일 */
+.note-header h2 {
+  font-size: 18px;
+  color: #333;
+}
+
+/* 반응형 디자인: 768px 이하 화면에서 note-header 글자 크기 조정 */
+@media (max-width: 768px) {
+  .WrongAnawerNote-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .note-header h2 {
+    font-size: 18px;
+  }
+}
+
+/* note-details 섹션 스타일: 최대 너비, 마진, 패딩, 배경색, 테두리 */
+.note-details {
+  max-width: 1105px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 노트 제목 스타일: 폰트 크기, 색상, 마진 */
+.note-title {
+  font-size: 24px;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+/* 메타 정보 스타일: 폰트 크기, 색상, 레이아웃 설정 */
+.note-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* 문제 정보 스타일: 마진 */
+.problem-info {
+  margin-bottom: 20px;
+}
+
+/* 문제 사이트 및 세부 정보 스타일: 마진 */
+.problem-site, .problem-details {
+  margin-bottom: 15px;
+}
+
+/* 문제 사이트 및 세부 항목 강한 텍스트 스타일 */
+.problem-site strong, .problem-details .detail-item strong {
+  font-weight: 600;
+  color: #333;
+}
+
+/* 문제 세부 사항 레이아웃: Flexbox를 사용한 레이아웃 설정 */
+.problem-details {
+  display: flex;
+  gap: 20px;
+}
+
+/* 세부 항목 폰트 스타일 */
+.detail-item {
+  font-size: 14px;
+}
+
+/* 콘텐츠 영역 스타일: 마진 */
+.content {
+  margin-bottom: 20px;
+}
+
+/* 콘텐츠 제목 스타일 */
+.content h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* 콘텐츠 내 텍스트 스타일: 줄바꿈 유지 */
+.content p {
+  white-space: pre-wrap; /* 줄바꿈 유지 */
+}
+
+/* 샘플 코드 컨테이너 스타일: 마진 */
+.sample-code-container {
+  margin-bottom: 20px;
+}
+
+/* 샘플 코드 영역 스타일: 배경색, 패딩, 테두리 */
+.sample-code {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  position: relative;
+}
+
+/* 샘플 코드 제목 스타일 */
+.sample-code h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+/* 코드 표시 영역 스타일: 배경색, 패딩, 테두리 */
+.sample-code pre {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+/* 삭제 및 수정 버튼 스타일: 위치, 크기, 색상 */
+.delete-code-btn, .edit-code-btn {
+  position: absolute;
+  top: 15px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #fff;
+}
+
+/* 삭제 버튼 스타일: 색상 및 hover 시 색상 변화 */
+.delete-code-btn {
+  right: 15px;
+  background: #ff1a1a;
+}
+
+.delete-code-btn:hover {
+  background: #ff4d4d;
+}
+
+/* 수정 버튼 스타일: 색상 및 hover 시 색상 변화 */
+.edit-code-btn {
+  right: 70px;
+  background-color: #007bff;
+}
+
+.edit-code-btn:hover {
+  background-color: #0056b3;
+}
+
+/* 코드 액션 컨테이너 레이아웃: Flexbox를 사용한 정렬 */
+.code-action-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 코드 추가 버튼 스타일: 배경색, 패딩, 폰트 크기 */
+#add-code-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* 코드 추가 버튼 hover 시 색상 변화 */
+#add-code-button:hover {
+  background-color: #0056b3;
+}
+
+/* 액션 버튼 스타일: 배경색, 폰트 크기 */
+.action-buttons button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+/* 액션 버튼 hover 시 색상 변화 */
+.action-buttons button:hover {
+  background-color: #0056b3;
+}
+
+/* 모달 기본 스타일: 전체 화면, 배경, 중앙 정렬 */
+.code-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 모달 내용 스타일: 배경색, 패딩, 테두리 */
+.code-modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 600px;
+  position: relative;
+}
+
+/* 수정 모달창 버튼 스타일 */
+.code-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px; /* 버튼 사이 간격 */
+  margin-top: 10px;
+}
+
+.submit-btn, .cancel-btn {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.submit-btn {
+  background-color: #007bff; /* 파란색 */
+  color: #fff;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3; /* hover 시 색상 */
+}
+
+.cancel-btn {
+  background-color: #ff4d4d; /* 빨간색 */
+  color: #fff;
+}
+
+.cancel-btn:hover {
+  background-color: #ff1a1a; /* hover 시 색상 */
+}
+
+/* 텍스트 영역 스타일: 크기, 패딩, 폰트 크기 */
+textarea {
+  width: 100%;
+  height: 300px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  resize: none; /* 사용자가 크기를 조절하지 못하게 설정 */
+}
+
+/* 제출 및 취소 버튼 스타일 */
+#submitCode, #cancelCode {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+/* 제출 버튼 hover 시 색상 변화 */
+#submitCode:hover {
+  background-color: #0056b3;
+}
+
+/* 취소 버튼 스타일 및 hover 시 색상 변화 */
+#cancelCode {
+  background-color: #ff4d4d;
+}
+
+#cancelCode:hover {
+  background-color: #ff4d4d;
+}
+
+/* 수정 버튼 스타일 */
+.note-details .edit-btn {
+  background-color: #007bff; /* 파란색 */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.note-details .edit-btn:hover {
+  background-color: #0056b3; /* hover 시 색상 */
+}
+
+/* 삭제 버튼 스타일 */
+.note-details .delete-btn {
+  background-color: #ff1a1a; /* 빨간색 */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 0; /* 필요에 따라 추가 마진 조정 */
+}
+
+.note-details .delete-btn:hover {
+  background-color: #ff4d4d; /* hover 시 색상 */
+}
+
+footer {
+  background-color: #e8e8e8;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  margin-top: 200px;
+  justify-content: space-around;
+}
+
+ul {
+  list-style: none;
+}
+
+#footer-logo {
+  width: 70px;
+  height: 70px;
+}

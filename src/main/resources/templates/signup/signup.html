@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link th:href="@{/css/signup/signup.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>ALGOY</title>
+    <link rel="icon" href="/img/algoy-1.png" type="image/x-icon">
+</head>
+<body>
+<h1>회원가입</h1>
+<form th:action="@{/algoy/sign}" th:object="${user}" method="post">
+    <label for="email">E-mail</label>
+    <div class="input-group">
+        <input type="email" id="email" th:field="*{email}" placeholder="이메일을 입력하세요." required/>
+        <button type="button" class="check-button" onclick="checkDuplicateEmail(event)">중복 확인</button>
+    </div>
+    <p id="email-message" class="view-message"></p>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" th:field="*{password}" placeholder="비밀번호를 입력하세요." required/>
+        <i id="eye-con-1" class="fa fa-eye fa-lg"></i>
+
+        <label for="confirm-password">Re-enter Password</label>
+        <input type="password" id="confirm-password" name="confirmPassword" placeholder="비밀번호를 입력하세요." required
+               onblur="checkPasswordMatch()"/><!-- onblur: 포커스 해지 시 이벤트 설정 -->
+        <i id="eye-con-2" class="fa fa-eye fa-lg"></i>
+        <p id="password-message" class="view-message"></p>
+    </div>
+    <label for="username">이름</label>
+    <input type="text" id="username" th:field="*{username}" placeholder="이름을 입력하세요." required/>
+
+    <label for="nickname">닉네임</label>
+    <div class="input-group">
+        <input type="text" id="nickname" th:field="*{nickname}" placeholder="닉네임을 입력하세요." required/>
+        <button type="button" class="check-button" onclick="checkDuplicateNickname(event)">중복 확인</button>
+    </div>
+    <p id="nickname-message" class="view-message"></p>
+
+    <!--solvedAC username을 입력하는 필드추가 (유효성 검사도 한다)-->
+    <label for="solvedacUsername">solvedAC Username (선택)</label>
+    <div class="input-group">
+        <input type="text" id="solvedacUsername" th:field="*{solvedacUserName}"
+               placeholder="solvedAC Username을 입력하세요."/>
+        <button type="button" class="check-button" onclick="checkSolvedacUsername(event)">유효성 확인</button>
+    </div>
+    <p id="solvedac-message" class="view-message"></p>
+
+
+    <div class="btn-wrap">
+        <button type="submit" class="submit-button">회원 가입</button>
+        <a href="/algoy/home" class="back-button">메인으로</a>
+    </div>
+</form>
+
+<script th:src="@{/js/signup/signup.js}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script>
+    $(document).ready(function () {
+        // 눈 아이콘 클릭 시 패스워드 보이기
+        $('.form-group i').on('click', function () {
+            let $input = $(this).prev('input'); // 아이콘의 바로 이전에 위치한 입력 필드 선택
+            $input.toggleClass('active'); // 'active' 클래스 토글
+
+            if ($input.hasClass('active')) {
+                $(this).attr('class', 'fa fa-eye-slash fa-lg'); // 아이콘 변경
+                $input.attr('type', 'text'); // 입력 필드의 타입을 'text'로 변경
+            } else {
+                $(this).attr('class', 'fa fa-eye fa-lg'); // 아이콘 변경
+                $input.attr('type', 'password'); // 입력 필드의 타입을 'password'로 변경
+            }
+        });
+    });
+</script>
+</body>
+</html>

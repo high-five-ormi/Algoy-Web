@@ -1,0 +1,118 @@
+* {
+    margin: 0;
+    text-align: center;
+}
+
+h2 {
+    margin-top: 20px;
+}
+
+table {
+    margin: 20px auto 20px;
+    width: 1000px;
+}
+
+th {
+    height: 45px;
+    background-color: #E4EDF3;
+}
+
+td {
+    background-color: #e6e6e6;
+}
+
+/* tr의 마지막 td가 아닌 모든 td에 적용 (버튼이 없는 열) */
+tr td:not(:last-child) {
+    width: 160px;
+    max-width: 160px; /* 셀의 최대 너비를 160픽셀로 제한: 콘텐츠가 많아도 160픽셀을 넘지 않음 */
+    padding: 10px;
+    overflow-wrap: break-word; /* 셀 너비 초과 시 자동 줄바꿈 */
+}
+
+a {
+    width: 200px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background-color: #5a6268;
+}
+
+a:link {
+    color: white;
+    text-decoration: none;
+}
+
+a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+button {
+    border: none;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.admin-btn {
+    background-color: #4CAF50;
+}
+
+.ban-btn {
+    background-color: #f44336;
+}
+
+.lift-btn {
+    background-color: #008CBA;
+}
+
+#modal {
+    width: 500px;
+    height: 200px;
+
+    display: none;
+    position: fixed;
+    /* calc()을 쓸 때 +, -는 좌우 공백 필요. 일관성을 위해 *와 / 에도 공백 추가하는 게 좋다 */
+    top: calc(50% - 200px);
+    left: calc(50% - 250px);
+    z-index: 1;
+
+    border-radius: 20px;
+    box-shadow: 0 0 30px 0 #00000033;
+    background-color: ivory;
+}
+
+#modal h2 {
+    margin-bottom: 10px;
+}
+
+#modal form button {
+    background-color: #008CBA;
+}
+
+#modal form button:last-child {
+    background-color: #5a6268;
+}
+
+footer {
+    background-color: #e8e8e8;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    margin-top: 200px;
+    justify-content: space-around;
+}
+
+ul {
+    list-style: none;
+}
+
+#footer-logo {
+    width: 70px;
+    height: 70px;
+}

@@ -1,0 +1,282 @@
+body {
+    margin :0;
+}
+
+#calendar-header {
+    max-width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    margin-left:80px;
+    margin-right: 80px;
+    padding-left: 40px;
+    padding-right: 40px;
+    height: 65px;
+    position: relative;
+}
+
+#calendar-header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: gray;
+}
+
+
+a {
+    text-decoration-line: none;
+    color: black;
+    font-weight: bold;
+}
+
+.calendar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#btn-calendar {
+    background-color: #007bff;
+    width: 84px;
+    height: 40px;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#btn-calendar:hover {
+    background-color: #0056b3;
+}
+
+.planner-container {
+    width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fafafa;
+}
+
+.planner-container h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.planner-container p {
+    margin: 5px 0 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.scrollable-table {
+    max-height: 800px;
+    overflow-y: auto;
+    border-top: 1px solid #ddd;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+tr {
+    height: 50px;
+    align-items: center;
+}
+
+th, td {
+    padding: 8px 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+.planner-table-status-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70px;
+}
+
+.status-not-started {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: red;
+    width: 90px;
+    height: 50px;
+    font-weight: bold;
+    border-radius: 12px;
+    border:none;
+    background-color: rgba(255,209,223,0.2);
+}
+
+.status-in-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: orange;
+    width: 90px;
+    height: 50px;
+    font-weight: bold;
+    border-radius: 12px;
+    border:none;
+    background-color: rgba(255,160,122,0.2);
+}
+
+.status-done {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: green;
+    width: 90px;
+    height: 50px;
+    font-weight: bold;
+    border-radius: 12px;
+    border:none;
+    background-color: rgba(144,238,144,0.2);
+}
+
+.loader {
+    text-align: center;
+    margin-top: 20px;
+    display: none;
+}
+
+.modal-main {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-main-content {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    min-width: 800px;
+    min-height: 600px;
+    border-radius: 8px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 40px 60px 20px;
+    box-sizing: border-box;
+}
+
+.modal-main-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: #aaa;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-main-close:hover, .modal-main-close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-main-content h2 {
+    margin-top: 0;
+    font-size: 28px;
+    font-weight: bold;
+    color: #000;
+}
+
+.modal-main-button-group {
+    position: absolute;
+    bottom: 20px;
+    right: 60px;
+    display: flex;
+    gap: 30px;
+}
+
+.modal-main-button-group button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 84px;
+    height: 40px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.modal-main-button-group #btn-edit:hover,
+.modal-main-button-group #btn-delete:hover {
+    background-color: #0056b3;
+}
+
+#modal-main-content {
+    min-height: 279px;
+    overflow-y: auto;
+    font-size: 16px;
+    color: #333;
+    border: 1px solid #e3e3e3;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+#modal-main-content p {
+    margin: 0;
+}
+
+#modal-main-info {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #666;
+}
+
+#modal-main-info a {
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#modal-main-info a:hover {
+    color: #0056b3;
+}
+
+
+footer {
+    background-color: #e8e8e8;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    margin-top: 200px;
+    justify-content: space-around;
+}
+
+ul {
+    list-style: none;
+}
+
+#footer-logo {
+    width: 70px;
+    height: 70px;
+}

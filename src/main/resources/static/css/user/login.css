@@ -1,0 +1,202 @@
+
+body {
+    margin: 0;
+    text-decoration-line: none;
+}
+
+/*로그인 헤더는 로고만 있어서 지우면 안됨*/
+#header-container {
+    width: 100%;
+    height: 190px;
+    background-color: #E4EDF3;
+    box-sizing: border-box;
+    padding: 0 36px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+#header-logo {
+    width: 190px;
+    height: 190px;
+}
+
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.login-container {
+    flex: 1;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin-left: 40px;
+}
+
+.login-header h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.login-header p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+#param-error {
+    color: red;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+
+}
+
+.form-group i{
+    position: absolute;
+    top: 75%;
+    right: 5px;
+    transform: translateY(-50%);
+    height: 22px;
+    font-size: 22px;
+    cursor: pointer;
+    color: black;
+}
+
+.form-group label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-group input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-options label {
+    font-size: 14px;
+    color: #555;
+}
+
+.forgot-password {
+    font-size: 14px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* Buttons */
+.btn-signin {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-signin:hover {
+    background-color: #0056b3;
+}
+
+.google-signin {
+    text-align: center;
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*width: 100%;*/
+    padding: 10px;
+    font-size: 16px;
+    color: #555;
+    background-color: #f0f4f8;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+}
+
+.btn-google img {
+    width: 20px;
+    margin-right: 10px;
+}
+
+.btn-google:hover {
+    background-color: #e0e6ed;
+}
+
+/* Signup Link */
+.signup-link {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.signup-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+footer {
+    background-color: #e8e8e8;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    margin-top: 200px;
+    justify-content: space-around;
+}
+
+ul {
+    list-style: none;
+}
+
+#footer-logo {
+    width: 70px;
+    height: 70px;
+}

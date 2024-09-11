@@ -1,0 +1,132 @@
+body {
+    background-color: #f7f7f7;
+    color: #333;
+    padding: 20px;
+    margin: 0;
+}
+
+a{
+    text-decoration-line: none;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+form {
+    background-color: #fff;
+    padding: 100px;
+    border-radius: 40px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.input-group input {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+
+}
+
+.form-group i{
+    position: absolute;
+    right: 5px;
+    transform: translateY(-50%);
+    height: 22px;
+    font-size: 22px;
+    cursor: pointer;
+    color: black;
+}
+
+#eye-con-1 {
+    top: 30%;
+}
+
+#eye-con-2 {
+    top: 80%
+}
+
+.check-button {
+    padding: 9px 15px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.check-button:hover {
+    background-color: #0056b3;
+}
+
+input[type="password"],
+input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.btn-wrap {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.back-button,
+.submit-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-button {
+    background-color: #007bff;
+    margin-right: 5px;
+}
+
+.back-button {
+    background-color: #6c757d;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+.back-button:hover {
+    background-color: #5a6268;
+}
+
+.view-message {
+    color: red;
+    margin-top: -15px;
+}

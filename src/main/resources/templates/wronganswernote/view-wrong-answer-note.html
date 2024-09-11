@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALGOY</title>
+  <link rel="icon" href="/img/algoy-1.png" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap"
+        rel="stylesheet">
+  <link rel="stylesheet" href="/css/wronganswernote/view-wrong-answer-note.css">
+  <!-- 모든 브라우저에서 WebSocket을 완벽하게 지원하지 않기 때문에, 다양한 브라우저에서 WebSocket과 유사한 기능을 제공하는 라이브러리입니다. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+  <!-- STOMP는 JavaScript 환경에서 사용할 수 있도록 도와주는 라이브러리입니다. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+  <!-- jQuery 라이브러리의 압축된 버전을 CDN을 통해 불러와 현재 HTML 문서에서 사용할 수 있습니다. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!-- 웹 페이지에서 마크다운으로 작성된 내용을 HTML로 변환하여 보여주는 역할을 합니다. -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- 웹 애플리케이션의 보안을 강화하고, 사용자 생성 콘텐츠를 안전하게 처리하는 역할을 합니다. (XSS 방지용) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js"></script>
+  <!-- 웹 페이지 내의 코드를 시각적으로 매력적으로 표현하여 사용자 경험을 향상시키는 역할을 합니다. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <!-- highlight.js 라이브러리와 함께 사용되어 웹 페이지 내의 코드 블록에 시각적인 스타일을 적용하는 역할을 합니다. -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
+  <script th:src="@{/js/fragments/modal.js}"></script>
+</head>
+<body>
+<header>
+  <div th:replace="fragments/header :: header"></div>
+  <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
+</header>
+<div th:replace="fragments/modal :: modal"></div>
+<link rel="stylesheet" th:href="@{/css/fragments/modal.css}">
+
+<!-- 노트 헤더 섹션 -->
+<div class="note-header">
+  <div class="title-section">
+    <img src="/img/planner-icon.png" alt="오답노트 아이콘" class="WrongAnawerNote-icon">
+    <h2>오답노트</h2>
+  </div>
+</div>
+
+<main>
+  <section class="note-details">
+    <h1 class="note-title" th:text="${note.title}">[제목]</h1>
+    <div class="note-meta">
+      <span class="author" th:text="${note.userId}">닉네임</span>
+      <span class="date" th:text="${formattedDate}">2024.08.20 19:42</span>
+    </div>
+
+    <div class="problem-info">
+      <div class="problem-site">
+        <strong>문제 링크</strong>
+        <p><a th:href="${note.link}" th:text="${note.link}" target="_blank">문제 링크</a></p>
+      </div>
+      <div class="problem-details">
+        <div class="detail-item">
+          <strong>문제 사이트</strong>
+          <p th:text="${note.quizSite}">프로그래머스</p>
+        </div>
+        <div class="detail-item">
+          <strong>유형</strong>
+          <p th:text="${note.quizType}">배열</p>
+        </div>
+        <div class="detail-item">
+          <strong>레벨</strong>
+          <p th:text="${note.quizLevel}">0</p>
+        </div>
+        <div class="detail-item">
+          <strong>풀이 여부</strong>
+          <p th:text="${note.isSolved ? 'Solved' : 'Unsolved'}">Solved</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <h3>내용</h3>
+      <!-- 이미지 섹션을 내용 텍스트 위로 이동 -->
+      <div class="note-image-container">
+        <div th:each="url : ${note.imageUrls}">
+          <img th:src="@{${url}}" alt="노트 이미지" class="note-image"/>
+        </div>
+      </div>
+      <!-- 텍스트 내용이 이미지 아래에 오도록 배치 -->
+      <p th:utext="${note.content}">내용내용내용내용내용내용내용내용</p>
+    </div>
+
+    <!-- 코드 추가 섹션 -->
+    <div class="sample-code-container">
+      <!-- 코드 블록이 여기에 추가됨 -->
+    </div>
+
+    <div class="code-action-container">
+      <button id="add-code-button">코드 추가</button>
+      <div class="action-buttons">
+        <button class="edit-btn" th:data-note-id="${note.id}">수정</button>
+        <button class="delete-btn" th:data-note-id="${note.id}">삭제</button>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- 채팅 프래그먼트 포함 -->
+  <div th:replace="~{fragments/chatting :: chat}"></div>
+
+  <!-- 챗봇 프래그먼트 포함 -->
+  <div th:replace="~{fragments/chatbot :: chatbot(backendUrl=${backendUrl})}"></div>
+</main>
+
+<!-- 모달 입력창 -->
+<div class="code-modal" id="codeModal">
+  <div class="code-modal-content">
+    <textarea id="codeInput" placeholder="코드를 입력하세요" rows="10"></textarea>
+    <div class="code-modal-buttons">
+      <button id="submitCode">추가</button>
+      <button id="cancelCode" class="cancel-btn">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- 수정 모달 입력창 -->
+<div class="code-modal" id="editCodeModal">
+  <div class="code-modal-content">
+    <textarea id="editCodeInput" placeholder="수정할 코드를 입력하세요"></textarea>
+    <div class="code-modal-buttons">
+      <button id="submitEditCode" class="submit-btn">수정</button>
+      <button id="cancelEditCode" class="cancel-btn">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- 스크립트 -->
+<script src="/js/wronganswernote/view.js"></script>
+</body>
+<footer>
+  <div id="our_information">
+    <ul>
+      <li>진행 프로젝트 : ESTSOFT ORMI 5기 백엔드 파이널 프로젝트</li>
+      <li>팀 이름 : 5조 high - five</li>
+      <li>프로젝트 이름 : Algoy</li>
+      <li>깃허브 : <a href="https://github.com/high-five-ormi">https://github.com/high-five-ormi</a></li>
+      <li>프로젝트 관련 컨텍은 깃허브 READ ME에 안내되어 있습니다</li>
+    </ul>
+  </div>
+  <div id="Catchphrase">
+    <img src="/img/algoy-1.png" alt="알고이 로고입니다." id="footer-logo">
+    <p>"Algoy: Your Coding Commit Companion —Track Mistakes, Plan Success, and Get AI Insights"</p>
+  </div>
+</footer>
+</html>

@@ -1,6 +1,16 @@
 server:
   port: 8081
 
+ai-backend:
+  url: ${AI_BACKEND_URL}
+
+solvedac:
+  url: https://solved.ac/api/v3/user/top_100?handle=
+
+askallen:
+  #url: http://15.165.235.170/ai/allenapi
+  url: http://localhost:8082/ai/allenapi
+
 spring:
   application:
     name: algoy
@@ -18,16 +28,28 @@ spring:
         enabled: true
 
   datasource:
-    url: jdbc:mysql://mymysql.cjee2s48u8zx.ap-northeast-2.rds.amazonaws.com/algoy?serverTimezone=UTC
+    url: ${DATASOURCE_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: admin
-    password: manbochuchu
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
 
   jpa:
     hibernate:
-      ddl-auto: none
-    show-sql: true
+      ddl-auto: update
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
-        format_sql: true
+        format_sql: false
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: ${GOOGLE_REDIRECT_URI}
+            scope:
+              - email
+              - profile

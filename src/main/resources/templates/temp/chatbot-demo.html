@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALGOY</title>
+  <link rel="icon" href="/img/algoy-1.png" type="image/x-icon">
+  <!-- 외부 라이브러리 -->
+  <!-- jQuery 라이브러리의 압축된 버전을 CDN을 통해 불러와 현재 HTML 문서에서 사용할 수 있습니다. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!-- 웹 페이지에서 마크다운으로 작성된 내용을 HTML로 변환하여 보여주는 역할을 합니다. -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- 웹 애플리케이션의 보안을 강화하고, 사용자 생성 콘텐츠를 안전하게 처리하는 역할을 합니다. (XSS 방지용) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js"></script>
+  <!-- 웹 페이지 내의 코드를 시각적으로 매력적으로 표현하여 사용자 경험을 향상시키는 역할을 합니다. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <!-- highlight.js 라이브러리와 함께 사용되어 웹 페이지 내의 코드 블록에 시각적인 스타일을 적용하는 역할을 합니다. -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
+  <script th:src="@{/js/fragments/modal.js}"></script>
+</head>
+<body>
+<header>
+  <div th:replace="~{fragments/header :: header}"></div>
+  <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
+</header>
+<div th:replace="~{fragments/modal :: modal}"></div>
+<link rel="stylesheet" th:href="@{/css/fragments/modal.css}">
+
+<main>
+  <section id="home">
+    <h2>Welcome to Our Chatbot Demo</h2>
+    <p>This page demonstrates the integration of our AI chatbot into a web page. Feel free to interact with it!</p>
+  </section>
+
+  <section id="about">
+    <h2>About This Demo</h2>
+    <p>Our chatbot is designed to provide quick and helpful responses to your queries. It uses advanced natural language processing to understand and respond to your questions.</p>
+  </section>
+
+  <section id="demo">
+    <h2>Try the Chatbot</h2>
+    <p>Click on the chat icon in the bottom right corner to start a conversation with our AI assistant.</p>
+  </section>
+</main>
+
+<!-- 챗봇 컴포넌트 포함 -->
+<div th:replace="~{fragments/chatbot :: chatbot(backendUrl=${backendUrl})}"></div>
+
+<footer>
+  <p>&copy; 2024 Our Company. All rights reserved.</p>
+</footer>
+</body>
+</html>

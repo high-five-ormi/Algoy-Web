@@ -1,0 +1,229 @@
+body {
+    margin :0;
+}
+
+#calendar-header {
+    max-width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    margin-left:80px;
+    margin-right: 80px;
+    padding-left: 40px;
+    padding-right: 40px;
+    height: 65px;
+    position: relative;
+}
+
+#calendar-header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: gray;
+}
+
+.calendar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.btn-calendar {
+    background-color: #007bff;
+    width: 84px;
+    height: 40px;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-calendar:hover {
+    background-color: #0056b3;
+}
+
+#btn-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+
+.study-detail-container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+a {
+    text-decoration-line: none;
+    color: black;
+    font-weight: bold;
+}
+
+.study-info div {
+    margin-bottom: 10px;
+}
+
+.study-info strong {
+    display: inline-block;
+    width: 120px;
+}
+
+.study-content {
+    margin: 20px 0;
+}
+
+#comments-list {
+    list-style-type: none;
+    padding: 0;
+    position: relative;
+}
+
+#comments-list li {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+textarea {
+    width: 100%;
+    height: 80px;
+    margin-bottom: 10px;
+}
+
+main button[type="submit"] {
+    background-color: #007bff;
+    width: 84px;
+    height: 40px;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+main button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+
+.btn-square {
+    width: 184px;
+    height: 54px;
+    background: #007BFF;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-square-small {
+    width: 52px;
+    height: 36px;
+    background: #007BFF;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-square:hover {
+    width: 184px;
+    height: 54px;
+    background:  #0056b3;
+    border-radius: 6px;
+    border: none;
+    cursor:pointer;
+}
+
+.btn-square-small:hover {
+    width: 52px;
+    height: 36px;
+    background: #0056b3;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+#sectionComment #btn-comment-submit {
+    margin-top: 38px;
+    margin-bottom: 38px;
+    float: right;
+}
+
+#comments-list .comment .comment-sec .comment-author {
+    width: 20%;
+}
+
+#comments-list .comment .comment-sec .comment-body-date {
+    width: 70%;
+    display:flex;
+    flex-direction: column;
+}
+
+#comments-list .comment .comment-sec .edit-textarea {
+    width: 70%;
+    min-height: 180px;
+    resize:none;
+}
+
+#comments-list .comment .comment-sec .reply-textarea {
+    width: 70%;
+    min-height: 180px;
+    resize:none;
+}
+
+.comment-btn {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-left: auto;
+    align-items: center;
+    position: relative;
+    top: -5px;
+}
+
+.submit-reply-btn {
+    margin-bottom:5%;
+}
+
+.comment-sec-line {
+    border: 1px solid #9095A0;
+    align-content: center;
+}
+
+.reply-container .reply-textarea{
+    width: 80%;
+    resize: none;
+    margin-bottom:30px;
+    min-height: 180px;
+}
+
+.secret-container {
+    display: flex;
+}
+
+
+footer {
+    background-color: #e8e8e8;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    margin-top: 200px;
+    justify-content: space-around;
+}
+
+ul {
+    list-style: none;
+}
+
+#footer-logo {
+    width: 70px;
+    height: 70px;
+}
