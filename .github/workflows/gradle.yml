@@ -88,21 +88,21 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-#      - name: SCP to EC2
-#        env:
-#          EC2_USER: ${{ secrets.EC2_USER }}
-#          EC2_HOST: ${{ secrets.EC2_HOST }}
-#        run: |
-#          scp -i ~/.ssh/id_rsa build/libs/*.jar $EC2_USER@$EC2_HOST:/home/ubuntu
-
-      - name: SFTP to EC2
+      - name: SCP to EC2
         env:
-            EC2_USER: ${{ secrets.EC2_USER }}
-            EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
-            sftp -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST <<EOF
-            put build/libs/*.jar /home/ubuntu
-            EOF
+          scp -i ~/.ssh/id_rsa build/libs/*.jar $EC2_USER@$EC2_HOST:/home/ubuntu
+
+#      - name: SFTP to EC2
+#        env:
+#            EC2_USER: ${{ secrets.EC2_USER }}
+#            EC2_HOST: ${{ secrets.EC2_HOST }}
+#        run: |
+#            sftp -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST <<EOF
+#            put build/libs/*.jar /home/ubuntu
+#            EOF
 
       - name: Set execute permission on jar
         env:
