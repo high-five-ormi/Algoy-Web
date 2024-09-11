@@ -7,6 +7,7 @@ import com.example.algoyweb.model.entity.user.Role;
 import com.example.algoyweb.model.entity.user.User;
 import com.example.algoyweb.repository.user.UserRepository;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -34,35 +35,61 @@ class ChattingRepositoryTest {
   @Test
   public void testFindByRoomIdOrderByCreatedAtDescWithPaging() {
     // Given
-    User user =
-        User.builder()
-            .username("testUser")
-            .nickname("testNickname")
-            .email("testuser@example.com")
-            .password("password123")
-            .role(Role.NORMAL)
-            .isDeleted(false)
-            .createdAt(LocalDateTime.now())
-            .build();
+    User user = User.builder()
+        .username("testUser")
+        .nickname("testNickname")
+        .email("testuser@example.com")
+        .password("password123")
+        .role(Role.NORMAL)
+        .isDeleted(false)
+        .createdAt(LocalDateTime.now())
+        .build();
 
     userRepository.save(user);
 
-    Chatting chatting1 = Chatting.builder().content("첫 번째 메시지").roomId("12345").user(user).build();
-    Chatting chatting2 = Chatting.builder().content("두 번째 메시지").roomId("12345").user(user).build();
+    Chatting chatting1 = Chatting.builder()
+        .content("첫 번째 메시지")
+        .roomId("12345")
+        .user(user)
+        .nickname(user.getNickname())
+        .createdAt(LocalDateTime.now().minusMinutes(1))
+        .build();
 
-    chattingRepository.save(chatting1);
-    chattingRepository.save(chatting2);
+    Chatting chatting2 = Chatting.builder()
+        .content("두 번째 메시지")
+        .roomId("12345")
+        .user(user)
+        .nickname(user.getNickname())
+        .createdAt(LocalDateTime.now())
+        .build();
 
-    Pageable pageable = PageRequest.of(0, 2);
+    Chatting systemMessage = Chatting.builder()
+        .content("시스템 메시지")
+        .roomId("12345")
+        .user(null)
+        .nickname("System")
+        .createdAt(LocalDateTime.now().plusMinutes(1))
+        .build();
+
+    chattingRepository.saveAll(Arrays.asList(chatting1, chatting2, systemMessage));
+
+    Pageable pageable = PageRequest.of(0, 3);
 
     // When
-    Page<Chatting> chatMessagesPage =
-        chattingRepository.findByRoomIdOrderByCreatedAtDesc("12345", pageable);
+    Page<Chatting> chatMessagesPage = chattingRepository.findByRoomIdOrderByCreatedAtDesc("12345", pageable);
 
     // Then
-    assertThat(chatMessagesPage.getTotalElements()).isEqualTo(2);
-    assertThat(chatMessagesPage.getContent().get(0).getContent()).isEqualTo("두 번째 메시지");
-    assertThat(chatMessagesPage.getContent().get(1).getContent()).isEqualTo("첫 번째 메시지");
+    assertThat(chatMessagesPage.getTotalElements()).isEqualTo(3);
+    assertThat(chatMessagesPage.getContent().get(0).getContent()).isEqualTo("시스템 메시지");
+    assertThat(chatMessagesPage.getContent().get(0).getNickname()).isEqualTo("System");
+    assertThat(chatMessagesPage.getContent().get(1).getContent()).isEqualTo("두 번째 메시지");
+    assertThat(chatMessagesPage.getContent().get(2).getContent()).isEqualTo("첫 번째 메시지");
+
+    // User가 null인 경우 (시스템 메시지) 확인
+    assertThat(chatMessagesPage.getContent().get(0).getUser()).isNull();
+    // User가 설정된 경우 확인
+    assertThat(chatMessagesPage.getContent().get(1).getUser()).isNotNull();
+    assertThat(chatMessagesPage.getContent().get(1).getUser().getNickname()).isEqualTo("testNickname");
   }
 
   /**
