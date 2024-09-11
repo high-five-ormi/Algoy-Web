@@ -13,6 +13,12 @@ body {
   line-height: 1.6;
 }
 
+a {
+  text-decoration-line: none;
+  color: black;
+  font-weight: bold;
+}
+
 /* note-header 섹션 스타일: 배경색, 크기, 마진, 패딩, 테두리 */
 .note-header {
   background-color: #ffffff;
@@ -350,4 +356,22 @@ textarea {
 
 .note-details .delete-btn:hover {
   background-color: #ff4d4d; /* hover 시 색상 */
+}
+
+footer {
+  background-color: #e8e8e8;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  margin-top: 200px;
+  justify-content: space-around;
+}
+
+ul {
+  list-style: none;
+}
+
+#footer-logo {
+  width: 70px;
+  height: 70px;
 }

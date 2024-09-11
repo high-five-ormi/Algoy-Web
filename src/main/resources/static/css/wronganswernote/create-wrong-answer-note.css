@@ -12,6 +12,12 @@ body {
   line-height: 1.6;
 }
 
+a {
+  text-decoration-line: none;
+  color: black;
+  font-weight: bold;
+}
+
 /* note-header 섹션 스타일 */
 .note-header {
   display: flex;
@@ -138,4 +144,22 @@ button[type="button"] {
 
 button[type="button"]:hover {
   background-color: #f0f0f0;
+}
+
+footer {
+  background-color: #e8e8e8;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  margin-top: 200px;
+  justify-content: space-around;
+}
+
+ul {
+  list-style: none;
+}
+
+#footer-logo {
+  width: 70px;
+  height: 70px;
 }
