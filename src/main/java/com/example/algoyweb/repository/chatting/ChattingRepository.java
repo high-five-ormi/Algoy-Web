@@ -4,6 +4,8 @@ import com.example.algoyweb.model.entity.chatting.Chatting;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  * @author JSW
@@ -13,5 +15,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ChattingRepository extends JpaRepository<Chatting, Long> {
 
   // 특정 채팅방의 채팅 메시지 목록을 최신순으로 페이징하여 조회합니다.
-  Page<Chatting> findByRoomIdOrderByCreatedAtDesc(String roomId, Pageable pageable);
+  @Query(
+      "SELECT c FROM Chatting c LEFT JOIN FETCH c.user WHERE c.roomId = :roomId ORDER BY c.createdAt DESC")
+  Page<Chatting> findByRoomIdOrderByCreatedAtDesc(
+      @Param("roomId") String roomId, Pageable pageable);
 }
