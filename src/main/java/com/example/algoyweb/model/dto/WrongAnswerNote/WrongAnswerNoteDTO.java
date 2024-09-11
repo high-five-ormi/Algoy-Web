@@ -24,5 +24,4 @@ public class WrongAnswerNoteDTO {
     private Boolean isSolved;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private List<String> imageUrls;
 }
