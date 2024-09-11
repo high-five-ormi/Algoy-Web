@@ -5,9 +5,13 @@ import com.example.algoyweb.service.WrongAnswerNote.WrongAnswerNoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/algoy/commit")
@@ -20,13 +24,16 @@ public class WrongAnswerNoteThymeleafController {
     @Value("${ai-backend.url}")
     private String backendUrl;
 
-    // 페이지네이션을 적용한 목록 조회
+    // 페이지네이션을 적용한 목록 조회 (현재 로그인한 사용자만)
     @GetMapping
-    public String getAllWrongAnswerNotes(@RequestParam(defaultValue = "0") int page,
+    public String getAllWrongAnswerNotes(
+        @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "8") int size,
+        @AuthenticationPrincipal UserDetails user,
         Model model) {
 
-        Page<WrongAnswerNoteDTO> notesPage = service.findAllWithPagination(page, size);
+        Page<WrongAnswerNoteDTO> notesPage = service.findAllWithPagination(page, size,
+            user.getUsername());
         int totalPages = notesPage.getTotalPages();
 
         // 페이지 그룹 계산
@@ -51,12 +58,16 @@ public class WrongAnswerNoteThymeleafController {
         return "wronganswernote/list-wrong-answer-notes";
     }
 
-    // ID로 조회하는 메소드
+    // ID로 조회하는 메소드 (현재 로그인한 사용자만)
     @GetMapping("/{id}")
-    public String getWrongAnswerNoteById(@PathVariable Long id, Model model) {
-        service.findById(id).ifPresent(note -> model.addAttribute("note", note));
+    public String getWrongAnswerNoteById(
+        @PathVariable Long id,
+        @AuthenticationPrincipal UserDetails user,
+        Model model) {
+        Optional<WrongAnswerNoteDTO> note = service.findById(id, user.getUsername());
+        note.ifPresent(n -> model.addAttribute("note", n));
         model.addAttribute("backendUrl", backendUrl);
-        return "wronganswernote/view-wrong-answer-note";
+        return note.isPresent() ? "wronganswernote/view-wrong-answer-note" : "error/404";
     }
 
     // 오답노트 생성 폼
@@ -67,25 +78,34 @@ public class WrongAnswerNoteThymeleafController {
         return "wronganswernote/create-wrong-answer-note";
     }
 
-    // 오답노트 생성
+    // 오답노트 생성 (현재 로그인한 사용자만)
     @PostMapping("/create")
-    public String createWrongAnswerNote(@ModelAttribute WrongAnswerNoteDTO dto) {
-        WrongAnswerNoteDTO savedNote = service.save(dto);
+    public String createWrongAnswerNote(
+        @ModelAttribute WrongAnswerNoteDTO dto,
+        @AuthenticationPrincipal UserDetails user) {
+        WrongAnswerNoteDTO savedNote = service.save(dto, user.getUsername());
         return "redirect:/algoy/commit/" + savedNote.getId();
     }
 
-    // 오답노트 수정 폼
+    // 오답노트 수정 폼 (현재 로그인한 사용자만)
     @GetMapping("/{id}/edit")
-    public String editWrongAnswerNoteForm(@PathVariable Long id, Model model) {
-        service.findById(id).ifPresent(note -> model.addAttribute("note", note));
+    public String editWrongAnswerNoteForm(
+        @PathVariable Long id,
+        @AuthenticationPrincipal UserDetails user,
+        Model model) {
+        Optional<WrongAnswerNoteDTO> note = service.findById(id, user.getUsername());
+        note.ifPresent(n -> model.addAttribute("note", n));
         model.addAttribute("backendUrl", backendUrl);
-        return "wronganswernote/edit-wrong-answer-note";
+        return note.isPresent() ? "wronganswernote/edit-wrong-answer-note" : "error/404";
     }
 
-    // 오답노트 수정
+    // 오답노트 수정 (현재 로그인한 사용자만)
     @PostMapping("/{id}/edit")
-    public String editWrongAnswerNote(@PathVariable Long id, @ModelAttribute WrongAnswerNoteDTO dto) {
-        service.update(id, dto);
+    public String editWrongAnswerNote(
+        @PathVariable Long id,
+        @ModelAttribute WrongAnswerNoteDTO dto,
+        @AuthenticationPrincipal UserDetails user) {
+        service.update(id, dto, user.getUsername());
         return "redirect:/algoy/commit/" + id;
     }
 }
