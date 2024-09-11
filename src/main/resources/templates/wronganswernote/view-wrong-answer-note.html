@@ -70,13 +70,6 @@
 
     <div class="content">
       <h3>내용</h3>
-      <!-- 이미지 섹션을 내용 텍스트 위로 이동 -->
-      <div class="note-image-container">
-        <div th:each="url : ${note.imageUrls}">
-          <img th:src="@{${url}}" alt="노트 이미지" class="note-image"/>
-        </div>
-      </div>
-      <!-- 텍스트 내용이 이미지 아래에 오도록 배치 -->
       <p th:utext="${note.content}">내용내용내용내용내용내용내용내용</p>
     </div>
 

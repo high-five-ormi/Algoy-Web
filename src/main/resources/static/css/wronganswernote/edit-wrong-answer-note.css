@@ -171,3 +171,9 @@ main {
 .flex-container div {
   flex: 1; /* 각 항목이 동일한 너비로 크기 조정 */
 }
+
+.form-buttons {
+  display: flex; /* 플렉스 박스 활성화 */
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  gap: 10px; /* 버튼 간 간격 */
+}
