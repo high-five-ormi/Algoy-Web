@@ -171,7 +171,7 @@ const chatFrag = {
     .then(data => {
       const chatMessages = document.getElementById('chat-frag-messages');
       chatMessages.innerHTML = '';
-      data.content.forEach(message => {
+      data.content.reverse().forEach(message => {
         this.displayMessage(message);
       });
     })
