@@ -108,7 +108,7 @@ public class CommentController {
     public ResponseEntity<Boolean> findUser(@AuthenticationPrincipal UserDetails userDetails,
                                             @RequestParam Long studyId) {
 
-        if(userDetails == null){
+        if(userDetails == null) {
             return ResponseEntity.status(HttpStatus.OK).body(false);
         } else {
             return ResponseEntity.status(HttpStatus.OK).body(commentService.findStudyAndUser(userDetails.getUsername(), studyId));

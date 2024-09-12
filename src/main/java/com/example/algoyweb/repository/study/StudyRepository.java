@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface StudyRepository extends JpaRepository<Study, Long> {
 
@@ -17,4 +19,6 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     @Query("select s from Study s where s.status = :status")
     Page<Study> findAllByStatus(Pageable pageable, Study.Status status);
+
+    Optional<Study> findByTitle(String testStudy);
 }
