@@ -29,7 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // 기존 내용 로드
-  const existingContent = document.querySelector('input[name="content"]').value;
+  const contentField = document.querySelector('input[name="content"]');
+  const existingContent = contentField.value;
+  console.log('Existing content:', existingContent);
+
   if (existingContent) {
     try {
       const delta = quill.clipboard.convert(existingContent);
@@ -40,10 +43,44 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 폼 제출 전에 Quill 에디터의 내용을 hidden 필드에 저장
+  console.log('Quill contents after initialization:', quill.root.innerHTML);
+
+  // Quill 에디터 내용 변경 시 hidden 필드 업데이트
+  quill.on('text-change', function() {
+    contentField.value = quill.root.innerHTML;
+    console.log('Quill content changed:', contentField.value);
+  });
+
+  // 폼 제출 처리
   document.querySelector('form').addEventListener('submit', (event) => {
-    const contentField = document.querySelector('input[name="content"]');
+    event.preventDefault();
+
+    // Quill 에디터의 내용을 hidden 필드에 저장
     contentField.value = quill.root.innerHTML;
     console.log('Form is being submitted. Content:', contentField.value);
+
+    // FormData를 사용하여 폼 데이터 수집
+    const formData = new FormData(event.target);
+
+    // AJAX를 사용하여 폼 제출
+    fetch(event.target.action, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Success:', data);
+      // 성공 시 리다이렉트 또는 다른 처리
+      // 예: window.location.href = '/success-page';
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      // 에러 처리
+    });
   });
 });
