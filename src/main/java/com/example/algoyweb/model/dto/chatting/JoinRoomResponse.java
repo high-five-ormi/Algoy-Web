@@ -16,9 +16,6 @@ public class JoinRoomResponse {
   // 참여한 채팅방의 이름
   private String roomName;
 
-  // 참여 성공 메시지
-  private String message;
-
   // 참여한 채팅방에 대한 정보
   private ChattingRoomDto roomDto;
 }

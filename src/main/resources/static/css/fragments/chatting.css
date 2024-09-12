@@ -175,8 +175,8 @@
 
 .chat-frag-hamburger {
   position: fixed;
-  top: 700px;
-  right: 30px;
+  top: 75vh;
+  right: 1vw;
   cursor: pointer;
   z-index: 1001;
   background-color: #1e88e5;

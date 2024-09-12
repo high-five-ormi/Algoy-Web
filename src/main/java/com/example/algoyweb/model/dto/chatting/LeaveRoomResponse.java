@@ -13,12 +13,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public class LeaveRoomResponse {
 
-  // 탈퇴한 채팅방의 이름
+  // 퇴장한 채팅방의 이름
   private String roomName;
 
-  // 탈퇴 성공 메시지
-  private String message;
-
-  // 탈퇴한 채팅방에 대한 정보
+  // 퇴장한 채팅방에 대한 정보
   private ChattingRoomDto roomDto;
+
+  // 채팅방이 삭제되었는지 여부
+  private boolean deleted;
 }

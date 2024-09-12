@@ -1,17 +1,46 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
     password:
 
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
-        globally_quoted_identifiers: true  # 테이블 및 컬럼 이름에 큰따옴표 적용
+        globally_quoted_identifiers: true
+        format_sql: true
+        use_sql_comments: true
+        hbm2ddl:
+          auto: create-drop
+        show_sql: true
+
   h2:
     console:
       enabled: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test
+            client-secret: test
+
+ai-backend:
+  url: http://example.com/test-url
+
+solvedac:
+  url: https://solved.ac/api/v3/user/top_100?handle=
+
+askallen:
+  url: http://localhost:8082/ai/allenapi
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
