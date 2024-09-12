@@ -63,6 +63,7 @@ public class SecurityConfig { // 보안 설정 담당 클래스
 				.requestMatchers("/img/**").permitAll()
 				.requestMatchers("/js/**").permitAll()
 				.requestMatchers("/algoy/chat-websocket/**").authenticated() // WebSocket 엔드포인트 보호
+				.requestMatchers("/algoy/study/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_NORMAL") // 밴 유저는 접근 불가
 				.anyRequest().authenticated()) // 이외의(위에서 정의되지 않은) 모든 경로(요청)는 인증된 사용자만 허용
 			.formLogin(form -> form
 				.loginPage("/algoy/login")
