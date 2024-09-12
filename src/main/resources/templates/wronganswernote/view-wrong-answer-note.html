@@ -44,8 +44,7 @@
   <section class="note-details">
     <h1 class="note-title" th:text="${note.title}">[제목]</h1>
     <div class="note-meta">
-      <span class="author" th:text="${note.userId}">닉네임</span>
-      <span class="date" th:text="${formattedDate}">2024.08.20 19:42</span>
+      <span><time th:text="${#temporals.format(note.createdAt, 'yyyy년 MM월 dd일 HH:mm')}"></time></span>
     </div>
 
     <div class="problem-info">
@@ -89,7 +88,6 @@
         <button class="edit-btn" th:data-note-id="${note.id}">수정</button>
         <button class="delete-btn" th:data-note-id="${note.id}">삭제</button>
       </div>
-    </div>
     </div>
   </section>
 

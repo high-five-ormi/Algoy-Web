@@ -41,7 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 폼 제출 전에 Quill 에디터의 내용을 hidden 필드에 저장
-  document.querySelector('form').addEventListener('submit', () => {
-    document.querySelector('input[name="content"]').value = quill.root.innerHTML;
+  document.querySelector('form').addEventListener('submit', (event) => {
+    const contentField = document.querySelector('input[name="content"]');
+    contentField.value = quill.root.innerHTML;
+    console.log('Form is being submitted. Content:', contentField.value);
   });
 });

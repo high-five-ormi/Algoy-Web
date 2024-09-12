@@ -5,6 +5,7 @@ import com.example.algoyweb.service.WrongAnswerNote.WrongAnswerNoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,7 @@ public class WrongAnswerNoteThymeleafController {
 
     // 페이지네이션을 적용한 목록 조회 (현재 로그인한 사용자만)
     @GetMapping
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
     public String getAllWrongAnswerNotes(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "8") int size,
@@ -60,6 +62,7 @@ public class WrongAnswerNoteThymeleafController {
 
     // ID로 조회하는 메소드 (현재 로그인한 사용자만)
     @GetMapping("/{id}")
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
     public String getWrongAnswerNoteById(
         @PathVariable Long id,
         @AuthenticationPrincipal UserDetails user,
@@ -72,6 +75,7 @@ public class WrongAnswerNoteThymeleafController {
 
     // 오답노트 생성 폼
     @GetMapping("/create")
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
     public String createWrongAnswerNoteForm(Model model) {
         model.addAttribute("note", new WrongAnswerNoteDTO());
         model.addAttribute("backendUrl", backendUrl);
@@ -80,6 +84,7 @@ public class WrongAnswerNoteThymeleafController {
 
     // 오답노트 생성 (현재 로그인한 사용자만)
     @PostMapping("/create")
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
     public String createWrongAnswerNote(
         @ModelAttribute WrongAnswerNoteDTO dto,
         @AuthenticationPrincipal UserDetails user) {
@@ -89,6 +94,7 @@ public class WrongAnswerNoteThymeleafController {
 
     // 오답노트 수정 폼 (현재 로그인한 사용자만)
     @GetMapping("/{id}/edit")
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
     public String editWrongAnswerNoteForm(
         @PathVariable Long id,
         @AuthenticationPrincipal UserDetails user,
@@ -101,6 +107,7 @@ public class WrongAnswerNoteThymeleafController {
 
     // 오답노트 수정 (현재 로그인한 사용자만)
     @PostMapping("/{id}/edit")
+    @PostAuthorize("hasAnyRole('ROLE_NORMAL', 'ROLE_ADMIN')")
     public String editWrongAnswerNote(
         @PathVariable Long id,
         @ModelAttribute WrongAnswerNoteDTO dto,
