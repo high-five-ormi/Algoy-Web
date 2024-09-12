@@ -61,6 +61,21 @@ public class ConvertUtils {
         .build();
   }
 
+  public static User convertDtoToUser(UserDto findUser) {
+    return User.builder()
+            .role(findUser.getRole())
+            .username(findUser.getUsername())
+            .email(findUser.getEmail())
+            .nickname(findUser.getNickname())
+            .userId(findUser.getUserId())
+            .solvedacUserName(findUser.getSolvedacUserName()) // solvedac UserName 추가
+            .isDeleted(findUser.getIsDeleted())
+            .createdAt(findUser.getCreatedAt())
+            .updatedAt(findUser.getUpdatedAt())
+            .deletedAt(findUser.getDeletedAt())
+            .build();
+  }
+
   public static StudyDto convertStudyToDto(Study study) {
     return StudyDto.builder()
         .language(study.getLanguage())

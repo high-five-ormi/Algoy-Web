@@ -14,6 +14,7 @@ import com.example.algoyweb.repository.study.ParticipantRepository;
 import com.example.algoyweb.repository.study.StudyRepository;
 import com.example.algoyweb.repository.user.UserRepository;
 import com.example.algoyweb.util.ConvertUtils;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -318,14 +319,17 @@ public class CommentService {
         }
 
         // 중복된 인원이면 예외 발생
-        if(participantRepository.findByUserIdAndStudyId(findComment.getUser().getUserId(), findStudy.getId()) != null) {
+        if(participantRepository.findByUserIdAndStudyId(findComment.getUser().getUserId(), findStudy.getId()).isPresent()) {
             throw new CustomException(CommentErrorCode.COMMENT_EXISTS_PARTICIPANT);
         }
 
         // 참가자 생성 및 연결
-        Participant participant = new Participant();
+        Participant participant = Participant.builder()
+                .userId(findComment.getUser().getUserId())
+                .build();
         participant.connectComment(findComment);
         participant.connectStudy(findStudy);
+        participantRepository.save(participant);
     }
 
     /**
@@ -336,8 +340,10 @@ public class CommentService {
      */
     public void deleteParticipant(Long commentId, Long studyId, String username) {
 
+        Comment findComment = commentRepository.findById(commentId).orElseThrow(() -> new CustomException(CommentErrorCode.COMMENT_NOT_FOUND));
+
         // 참가자 조회
-        Participant findParticipant = participantRepository.findByCommentAndStudy(commentId, studyId)
+        Participant findParticipant = participantRepository.findByUserIdAndStudyId(findComment.getUser().getUserId(), studyId)
                 .orElseThrow(() -> new CustomException(StudyErrorCode.PARTICIPANT_NOT_FOUND));
 
         // 사용자 조회
@@ -353,15 +359,17 @@ public class CommentService {
     }
 
 
+    @Transactional(readOnly = true)
     public boolean findParticipant(Long commentId, Long studyId) {
 
         // 스터디와 댓글을 조회
         Study findStudy = studyRepository.findById(studyId).orElseThrow(() -> new CustomException(StudyErrorCode.STUDY_NOT_FOUND));
         Comment findComment = commentRepository.findById(commentId).orElseThrow(() -> new CustomException(CommentErrorCode.COMMENT_NOT_FOUND));
 
-        return participantRepository.findByUserIdAndStudyId(findComment.getUser().getUserId(), findStudy.getId()) != null;
+        return participantRepository.existsByUserIdAndStudyId(findComment.getUser().getUserId(), findStudy.getId());
     }
 
+    @Transactional(readOnly = true)
     public boolean findStudyAndUser(String username, Long studyId) {
 
         // 스터디와 댓글을 조회

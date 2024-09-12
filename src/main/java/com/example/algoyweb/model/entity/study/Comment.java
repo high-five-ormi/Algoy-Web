@@ -46,7 +46,8 @@ public class Comment {
     private Comment parent;
 
     @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
-    private List<Comment> children;
+    @Builder.Default
+    private List<Comment> children = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
