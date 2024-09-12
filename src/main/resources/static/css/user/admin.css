@@ -1,4 +1,4 @@
-* {
+#main-content {
     margin: 0;
     text-align: center;
 }
@@ -29,7 +29,7 @@ tr td:not(:last-child) {
     overflow-wrap: break-word; /* 셀 너비 초과 시 자동 줄바꿈 */
 }
 
-a {
+a:not(header) {
     width: 200px;
     padding: 5px 10px;
     border-radius: 4px;
