@@ -14,8 +14,7 @@
 [10. ERD](#10-ERD)  
 [11. 시연 영상](#11-시연-영상)  
 [12. Trouble Shooting](#12-Trouble-Shooting)  
-[13. 프로젝트 회고](#13-프로젝트-회고)  
-[14. 기타](#14-기타)
+[13. 프로젝트 회고](#13-프로젝트-회고)
 
 ## 1. 프로젝트 소개
 
@@ -203,7 +202,7 @@
 |                               오답노트 상세보기                               |                               오답노트 수정                               |
 |  ![wrong answer note](assets/img/figma/wrong_answer_note_detail.png)  | ![wrong answer note](assets/img/figma/wrong_answer_note_update.png) |
 |                              오답노트: 코드 추가                              |                                마이페이지                                |
-| ![wrong answer note](assets/img/figma/wrong_answer_note_add_code.png) |              ![my page](assets/img/figma/my_page.png)               |
+| ![wrong answer note](assets/img/figma/wrong_answer_note_add_code.png) |  <img src="assets/img/figma/my_page.png" width="160" height="200">  |
 |                                회원정보 수정                                |                                회원 탈퇴                                |
 |             ![user edit](assets/img/figma/user_edit.png)              |          ![user delete](assets/img/figma/user_delete.png)           |
 |                                 계정 복구                                 |                               관리자 페이지                               |
@@ -315,7 +314,7 @@ NAME은 컨트롤러에서 만든 메서드명 작성
 
 ## 9. API 명세
 
-| 카테고리      | 요구사항명             | Method | url                                              | 비고          |
+| 카테고리      | 요구사항명             | Method | URL                                              | 비고          |
 |-----------|-------------------|--------|--------------------------------------------------|-------------|
 | HOME      | 홈 화면              | GET    | /algoy/home                                      | 홈 화면        |
 | QUIZ NOTE | 오답 노트 조회          | GET    | /algoy/commit                                    |             |
@@ -339,15 +338,14 @@ NAME은 컨트롤러에서 만든 메서드명 작성
 |           | 투두리스트 수정 폼        | GET    | /algoy/planner/edit-form                         |             |
 |           | 투두리스트 수정          | POST   | /algoy/planner/edit/{id}                         |             |
 |           | 투두리스트 삭제          | POST   | /algoy/planner/delete/{id}                       |             |
-| MY PAGE   | 마이 페이지            | GET    | /algoy/user                                      |             |
-|           | 회원 정보 수정 폼        | GET    | /algoy/user/edit                                 |             |
+| MY PAGE   | 회원 정보 수정 폼        | GET    | /algoy/user/edit                                 |             |
 |           | 회원 정보 수정          | POST   | /algoy/user/update                               |             |
 |           | 회원 탈퇴 폼           | GET    | /algoy/user/delete                               |             |
 |           | 회원 탈퇴             | POST   | /algoy/user/delete                               | 소프트 딜리트     |
 |           | 닉네임 표시            | GET    | /algoy/user/nickname                             |             |
-|           | 계정 복구             | GET    | /algoy/user/resotre                              |             |
+|           | 계정 복구 폼           | GET    | /algoy/user/restore                              |             |
+|           | 계정 복구             | POST   | /algoy/user/restore                              |             |
 | USER      | 로그인 폼             | GET    | /algoy/algoy/login                               |             |
-|           | 로그인               | POST   | /algoy/login                                     |             |
 |           | 로그아웃              | GET    | /algoy/logout                                    |             |
 |           | 회원 가입 폼           | GET    | /algoy/sign                                      |             |
 |           | 회원 가입             | POST   | /algoy/sign                                      |             |
@@ -357,14 +355,35 @@ NAME은 컨트롤러에서 만든 메서드명 작성
 |           | 비밀번호 찾기 요청        | POST   | /algoy/find-password                             |             |
 |           | 비밀번호 재설정 폼        | GET    | /algoy/set-password                              |             |
 |           | 비밀번호 재설정 요청       | POST   | /algoy/set-password                              |             |
+|           | 현재 인증된 사용자 정보     | GET    | /algoy/api/user/current                          |             |
 |           | 관리자 페이지           | GET    | /algoy/admin                                     |             |
 |           | 유저 권한 관리          | POST   | /algoy/admin/role-control                        | 관리자, 일반, 정지 |
-| CHATTING  | 채팅방 목록 가져오기       | GET    | /algoy/apo/chat/rooms                            |             |
-|           | 채팅 내역 가져오기        | GET    | /algoy/apo/chat/room/{roomId}/messages           |             |
-|           | 채팅방 생성            | POST   | /algoy/apo/chat/room                             |             |
-|           | 채팅방 참여            | POST   | /algoy/apo/chat/room/{roomId}/join               |             |
-|           | 채팅방 나가기           | POST   | /algoy/apo/chat/room/{roomId}/leave              |             |
-|           | 채팅방에 초대           | POST   | /algoy/apo/chat/room/{roomId}/invite-by-nickname |             |
+| STUDY     | 스터디 목록            | GET    | /algoy/study/gets                                |             |
+|           | 스터디 작성 폼          | GET    | /algoy/study/new-form                            |             |
+|           | 스터디 작성            | POST   | /algoy/study/new                                 |             |
+|           | 스터디 상세 보기         | GET    | /algoy/study/get/{id}                            |             |
+|           | 스터디 삭제            | POST   | /algoy/study/delete/{id}                         |             |
+|           | 스터디 수정 폼          | GET    | /algoy/study/edit-form                           |             |
+|           | 스터디 수정            | POST   | /algoy/study/update/{id}                         |             |
+|           | 스터디 인원            | GET    | /algoy/study/count                               |             |
+|           | 스터디 상태로 검색        | GET    | /algoy/study/search-status                       |             |
+|           | 스터디 메인            | GET    | /algoy/study/main                                |             |
+|           | 스터디 상세 보기 폼       | GET    | /algoy/study/detail                              |             |
+| COMMENT   | 댓글 가져오기           | GET    | /algoy/comment/gets                              |             |
+|           | 댓글                | POST   | /algoy/comment/non-reply                         |             |
+|           | 대댓글               | POST   | /algoy/comment/reply                             |             |
+|           | 댓글 수정하기           | POST   | /algoy/comment/update                            |             |
+|           | 댓글 삭제하기           | POST   | /algoy/comment/delete                            |             |
+|           | 스터디 참여            | POST   | /algoy/comment/join                              |             |
+|           | 스터디 탈퇴            | POST   | /algoy/comment/out                               |             |
+|           | 댓글 내용 검색          | GET    | /algoy/comment/find-part                         |             |
+|           | 댓글 작성자 검색         | GET    | /algoy/comment/find-user                         |             |
+| CHATTING  | 채팅방 목록 가져오기       | GET    | /algoy/api/chat/rooms                            |             |
+|           | 채팅 내역 가져오기        | GET    | /algoy/api/chat/room/{roomId}/messages           |             |
+|           | 채팅방 생성            | POST   | /algoy/api/chat/room                             |             |
+|           | 채팅방 참여            | POST   | /algoy/api/chat/room/{roomId}/join               |             |
+|           | 채팅방 나가기           | POST   | /algoy/api/chat/room/{roomId}/leave              |             |
+|           | 채팅방에 초대           | POST   | /algoy/api/chat/room/{roomId}/invite-by-nickname |             |
 | CHAT BOT  | solvedAC 기반 문제 추천 | GET    | /algoy/allen/solvedac                            |             |
 |           | 챗봇 페이지            | GET    | /algoy/chatbot-demo                              |             |
 
@@ -374,6 +393,7 @@ NAME은 컨트롤러에서 만든 메서드명 작성
 ![algoy erd](assets/img/erd.png)
 
 ## 11. 시연 영상
+
 ![시연 GIF](assets/gif/demo.gif)
 [//]: # (직접적인 영상 삽입이 안 되어 짧은 gif로 넣거나 아예 시연 영상을 리드미에서 빼야할 거 같습니다.)
 
@@ -570,6 +590,12 @@ NAME은 컨트롤러에서 만든 메서드명 작성
 ## 13. 프로젝트 회고
 
 ### 김주영
+자체 평가  
+9점입니다! 사전 기획했던 부분을 최대한 수행했다는 점에 큰 점수를 주고 싶어요. 개인적으로 코드 퀄리티를 잡고 싶었는데 이 부분이 아쉽습니다. 팀원들이 다들 잘하셔서 자연스럽게 목표가 실재하는 수준으로 높아진 것 같은데 항상 빠른 피드백과 소통 주셔서 감사했습니다! 처음으로 자바를 배우는 도전 속에서 뿌듯함을 많이 느꼈던 프로젝트였고 아직은 공부가 더 필요하다는 생각이 들었습니다.  
+
+후기  
+제 몫을 다하는 게 목표였는데 지나고 보니 아쉬운 점이 또 남게 되네요..! 부족한 점이 많았지만, 의견에 귀 기울여주셔서 감사하고, 항상 잘한다는 칭찬 아낌없이 해주신 팀원 분들 덕분에 끝까지 마무리 할 수 있었습니다!! 그리고 수시로 들려서 피드백, 응원해주신 영진 멘토님께도 감사드립니다ㅎㅎ
+마지막 프로젝트로 부트캠프가 끝났는데 계속해서 백엔드 공부, 취업까지 파이팅입니다!!!!! 꼭 같은 업종으로 취업해서 다시 만나요~ 더운 여름에 정말 고생 많으셨습니다!:+1::+1:
 
 ### 김창섭
 
@@ -578,10 +604,7 @@ NAME은 컨트롤러에서 만든 메서드명 작성
 ### 안유석
 
 ### 조아라
+개발환경에서 문제 없던 코드들이 배포환경에서 발생하는 경우가 많아 어려움이 있었지만, CI/CD를 구축하여 개발과 동시에 배포 환경에서도 이슈 트래킹을 할 수 있어서 뜻깊은 경험이었습니다. 또한, 각자 기능 개발 후 코드 통합하는 과정에서 충돌이 있었지만, 원활한 팀원들의 소통을 통해 코드 공유를 문제 없이 할 수 있었고 본 경험을 통해 소통의 중요성을 알 수 있었습니다.
+팀원 모두 각자 맡은 기능을 충실히 수행하여 비교적 짧은 개발시간에 많은 도메인을 개발할 수 있었습니다. 팀워크가 좋았고, 소통도 잘되어 프로젝트를 잘 마무리 할 수 있었습니다. 저는 기술적인 부분부터 팀워크에 대한 부분까지 많은 것을 얻어갈 수 있었던 프로젝트였습니다. 감사합니다!
 
 ### 지승우
-
-## 14. 기타
-[Code Convention](https://github.com/high-five-ormi/Algoy-Web/wiki/Code-Convention)  
-[Git Branch Convention](https://github.com/high-five-ormi/Algoy-Web/wiki/Git-Branch-Convention)  
-[Git Commit Convention](https://github.com/high-five-ormi/Algoy-Web/wiki/Git-Commit-Convention)
