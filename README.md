@@ -30,7 +30,7 @@
 
 테스트용 계정
 
-- ID: test00@gamil.com
+- ID: test00@gmail.com
 - PW: 123
 
 ## 2. 팀 편성
