@@ -5,7 +5,7 @@
 [1. 프로젝트 소개](#1-프로젝트-소개)  
 [2. 팀 편성](#2-팀-편성)  
 [3. 개발 기간](#3-개발-기간)  
-[4. 개발 환경](#4-개발-환경)  
+[4. 기술 스택](#4-기술-스택)  
 [5. 프로젝트 구조](#5-프로젝트-구조)  
 [6. 아키텍처](#6-아키텍처)  
 [7. UI 설계](#7-UI-설계)  
@@ -46,21 +46,27 @@
 프로젝트 일정: 08/21 (수) ~ 09/12 (목)  
 프로젝트 발표: 09/13 (금)
 
-## 4. 개발 환경
+## 4. 기술 스택
 
 [Front_end]  
 <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
 <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white">
 <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
+<img src="https://img.shields.io/badge/jquery-007396?style=for-the-badge&logo=jquery&logoColor=white">
 <img src="https://img.shields.io/badge/thymeleaf-0e641c?style=for-the-badge&logo=thymeleaf&logoColor=white">  
 [Back_end]  
 <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
+<img src="https://img.shields.io/badge/jdk17-FFCA28?style=for-the-badge&logo=JDK&logoColor=white">
+<img src="https://img.shields.io/badge/jpa-6db13b?style=for-the-badge&logo=jpa&logoColor=white">
+<img src="https://img.shields.io/badge/junit-61DAFB?style=for-the-badge&logo=junit&logoColor=white">
+<img src="https://img.shields.io/badge/oauth2-008796?style=for-the-badge&logo=oauth2&logoColor=white">
 <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
 <img src="https://img.shields.io/badge/spring boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
 <img src="https://img.shields.io/badge/spring security-6DB33F?style=for-the-badge&logo=spring security&logoColor=white">  
 [DB]  
 <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
-<img src="https://img.shields.io/badge/mongoDB-47A248?style=for-the-badge&logo=MongoDB&logoColor=white">  
+<img src="https://img.shields.io/badge/mongoDB-47A248?style=for-the-badge&logo=MongoDB&logoColor=white">
+<img src="https://img.shields.io/badge/h2-19476b?style=for-the-badge&logo=h2&logoColor=white">  
 [IDE]  
 <img src="https://img.shields.io/badge/intellij idea-black?style=for-the-badge&logo=intellij idea&logoColor=white">  
 [버전 관리]  
@@ -68,7 +74,8 @@
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">  
 [협업 도구]  
 <img src="https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white">
-<img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white">  
+<img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white">
+<img src="https://img.shields.io/badge/slack-36c5f0?style=for-the-badge&logo=slack&logoColor=white">  
 [개발 환경 및 도구]  
 <img src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white">
 <img src="https://img.shields.io/badge/docker-0091e2?style=for-the-badge&logo=docker&logoColor=white">  
@@ -76,6 +83,7 @@
 <img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=for-the-badge&logo=Amazon%20EC2&logoColor=white">
 <img src="https://img.shields.io/badge/Nginx-6DB33F?style=for-the-badge&logo=Nginx&logoColor=white">
 <img src="https://img.shields.io/badge/GitHub%20Actions-262525?style=for-the-badge&logo=GitHub%20Actions&logoColor=white">
+<img src="https://img.shields.io/badge/Amazon%20RDS-0091e2?style=for-the-badge&logo=Amazon%20RDS&logoColor=white">
 
 ## 5. 프로젝트 구조
 
