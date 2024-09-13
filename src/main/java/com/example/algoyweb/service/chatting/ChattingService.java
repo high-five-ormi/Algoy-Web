@@ -133,7 +133,6 @@ public class ChattingService {
       room.addParticipant(user.getUserId());
       room = chattingRoomRepository.save(room);
     }
-    sendSystemMessage(roomId, username + "님이 입장하셨습니다.");
     return ChattingConvertUtil.convertToDto(room);
   }
 
@@ -164,7 +163,6 @@ public class ChattingService {
       } else {
         // 마지막 참가자가 나가는 경우 방 삭제
         chattingRoomRepository.delete(room);
-        sendSystemMessage(roomId, username + "님이 퇴장하셨습니다.");
         return ChattingRoomDto.builder()
             .roomId(roomId)
             .deleted(true)
@@ -173,7 +171,11 @@ public class ChattingService {
     }
 
     room = chattingRoomRepository.save(room);
-    sendSystemMessage(roomId, username + "님이 퇴장하셨습니다.");
+
+    // 퇴장 메시지 저장 및 전송
+    String leaveMessage = user.getNickname() + "님이 퇴장하셨습니다.";
+    saveAndSendSystemMessage(room, leaveMessage);
+
     return ChattingConvertUtil.convertToDto(room);
   }
 
@@ -184,7 +186,7 @@ public class ChattingService {
    * @param inviterUsername 초대하는 사용자의 username
    * @param inviteeNickname 초대받는 사용자의 닉네임
    */
-  public void inviteUserByNickname(String roomId, String inviterUsername, String inviteeNickname) {
+  public ChattingRoomDto inviteUserByNickname(String roomId, String inviterUsername, String inviteeNickname) {
     User inviter = getUserByUsername(inviterUsername);
     ChattingRoom room = getChattingRoomByRoomId(roomId);
 
@@ -206,10 +208,13 @@ public class ChattingService {
     }
 
     room.addParticipant(invitee.getUserId());
-    chattingRoomRepository.save(room);
+    room = chattingRoomRepository.save(room);
 
-    // 초대 메시지 전송
-    sendSystemMessage(roomId, inviteeNickname + "님이 초대되었습니다.");
+    // 초대 메시지 저장 및 전송
+    String inviteMessage = inviteeNickname + "님이 초대되었습니다.";
+    saveAndSendSystemMessage(room, inviteMessage);
+
+    return ChattingConvertUtil.convertToDto(room);
   }
 
   /**
@@ -249,19 +254,22 @@ public class ChattingService {
   /**
    * 시스템 메시지를 전송합니다.
    *
-   * @param roomId 메시지를 보낼 방의 ID
-   * @param messageContent 메시지 내용
+   * @param room 메시지를 보낼 방의 ID
+   * @param message 메시지 내용
    */
-  private void sendSystemMessage(String roomId, String messageContent) {
-    ChattingDto systemMessage = ChattingDto.builder()
-        .userId(null)
-        .roomId(roomId)
-        .content(messageContent)
+  private void saveAndSendSystemMessage(ChattingRoom room, String message) {
+    Chatting systemMessage = Chatting.builder()
+        .roomId(room.getRoomId())
+        .content(message)
         .nickname("System")
+        .user(null)
         .createdAt(LocalDateTime.now())
         .build();
 
-    messagingTemplate.convertAndSend("/topic/room/" + roomId, systemMessage);
+    chattingRepository.save(systemMessage);
+
+    ChattingDto systemMessageDto = ChattingConvertUtil.convertToDto(systemMessage);
+    messagingTemplate.convertAndSend("/topic/room/" + room.getRoomId(), systemMessageDto);
   }
 
   /**

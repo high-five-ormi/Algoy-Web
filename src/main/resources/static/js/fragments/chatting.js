@@ -44,19 +44,37 @@ const chatFrag = {
    */
   loadRooms: function() {
     fetch('/algoy/api/chat/rooms')
-    .then(response => response.json())
-    .then(rooms => {
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // 서버 응답 구조에 따라 적절히 처리
+      const rooms = Array.isArray(data) ? data : data.content;
+
       const roomList = document.getElementById('chat-frag-room-list');
       roomList.innerHTML = '';
-      rooms.forEach(room => {
-        const roomElement = document.createElement('div');
-        roomElement.classList.add('chat-frag-room-item');
-        roomElement.textContent = room.name;
-        roomElement.onclick = () => this.joinRoom(room.roomId);
-        roomList.appendChild(roomElement);
-      });
+
+      if (Array.isArray(rooms)) {
+        rooms.forEach(room => {
+          const roomElement = document.createElement('div');
+          roomElement.classList.add('chat-frag-room-item');
+          roomElement.textContent = room.name;
+          roomElement.onclick = () => this.joinRoom(room.roomId);
+          roomList.appendChild(roomElement);
+        });
+      } else {
+        console.error('Unexpected data format:', data);
+      }
     })
-    .catch(error => console.error('Error loading rooms:', error));
+    .catch(error => {
+      console.error('Error loading rooms:', error);
+      // 사용자에게 오류 메시지 표시
+      const roomList = document.getElementById('chat-frag-room-list');
+      roomList.innerHTML = '<p>채팅방 목록을 불러오는 데 실패했습니다.</p>';
+    });
   },
 
   /**
@@ -141,7 +159,10 @@ const chatFrag = {
    */
   leaveRoom: function() {
     if (this.currentRoomId) {
-      fetch(`/algoy/api/chat/room/${this.currentRoomId}/leave`, {method: 'POST'})
+      fetch(`/algoy/api/chat/room/${this.currentRoomId}/leave`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'}
+      })
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to leave room');
@@ -171,7 +192,7 @@ const chatFrag = {
     .then(data => {
       const chatMessages = document.getElementById('chat-frag-messages');
       chatMessages.innerHTML = '';
-      data.content.forEach(message => {
+      data.content.reverse().forEach(message => {
         this.displayMessage(message);
       });
     })

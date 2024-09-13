@@ -1,6 +1,6 @@
 package com.example.algoyweb.model.entity.WrongAnswerNote;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.example.algoyweb.model.entity.user.User;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,7 +22,8 @@ public class WrongAnswerNote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     @Column(length = 50)
     private String title;
@@ -63,5 +64,10 @@ public class WrongAnswerNote {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public void connectUser(User user) {
+        this.user = user;
+        user.connectWrongAnswerNote(this);
     }
 }

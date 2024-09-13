@@ -4,6 +4,11 @@ body {
     text-decoration-line: none;
 }
 
+a{
+    text-decoration-line: none;
+    color: black;
+}
+
 /*로그인 헤더는 로고만 있어서 지우면 안됨*/
 #header-container {
     width: 100%;

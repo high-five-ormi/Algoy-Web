@@ -57,11 +57,9 @@ public class ChattingWebSocketController {
         chattingService.joinRoom(joinRequest.getRoomId(), joinRequest.getUsername());
 
     // 채팅방 정보를 포함한 JoinRoomResponse 객체 생성
-    JoinRoomResponse response =
-        new JoinRoomResponse(
-            roomDto.getName(), joinRequest.getUsername() + " joined the room", roomDto);
+    JoinRoomResponse response = new JoinRoomResponse(roomDto.getName(), roomDto);
 
-    // 해당 채팅방 (/topic/room/ + roomId) 에 구독하는 모든 클라이언트에게 참여 메시지 전송
+    // 해당 채팅방 (/topic/room/ + roomId) 에 구독하는 모든 클라이언트에게 참여 정보 전송
     messagingTemplate.convertAndSend("/topic/room/" + joinRequest.getRoomId(), response);
   }
 
@@ -76,11 +74,9 @@ public class ChattingWebSocketController {
         chattingService.leaveRoom(leaveRequest.getRoomId(), leaveRequest.getUsername());
 
     // 채팅방 정보를 포함한 LeaveRoomResponse 객체 생성
-    LeaveRoomResponse response =
-        new LeaveRoomResponse(
-            roomDto.getName(), leaveRequest.getUsername() + " left the room", roomDto);
+    LeaveRoomResponse response = new LeaveRoomResponse(roomDto.getName(), roomDto, roomDto.isDeleted());
 
-    // 해당 채팅방 (/topic/room/ + roomId) 에 구독하는 모든 클라이언트에게 나가기 메시지 전송
+    // 해당 채팅방 (/topic/room/ + roomId) 에 구독하는 모든 클라이언트에게 퇴장 정보 전송
     messagingTemplate.convertAndSend("/topic/room/" + leaveRequest.getRoomId(), response);
   }
 }

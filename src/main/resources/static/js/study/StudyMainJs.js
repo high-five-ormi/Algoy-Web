@@ -35,7 +35,7 @@ function loadStudyList(page, keyword = '') {
                         statusClass = 'ING';
                         break;
                     case 'DONE':
-                        statusText = '완료';
+                        statusText = '종료';
                         statusClass = 'DONE';
                         break;
                     case 'STOP':

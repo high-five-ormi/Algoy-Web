@@ -1,5 +1,6 @@
 package com.example.algoyweb.model.entity.user;
 
+import com.example.algoyweb.model.entity.WrongAnswerNote.WrongAnswerNote;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,17 +70,29 @@ public class User {
 	@Column(name = "ban_expiration")
 	private LocalDateTime banExpiration; // 정지 유효시간 (만료 시간)
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	@Builder.Default
+	private List<WrongAnswerNote> wrongAnswerNotes = new ArrayList<>();
+
 	@OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
-	private List<Planner> plannerList;
+	@Builder.Default
+	private List<Planner> plannerList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", orphanRemoval = true)
-	private List<Study> studyList;
+	@Builder.Default
+	private List<Study> studyList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", orphanRemoval = true)
-	private List<Comment> commentList;
+	@Builder.Default
+	private List<Comment> commentList = new ArrayList<>();
+	
 //SolvedACResponseEntity와의 OneToOne 관계를 추가
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private SolvedACResponseEntity solvedACResponse;
+
+	public Long getId() {
+		return userId;
+	}
 
 	public void connectPlanner(Planner planner) {
 		if (this.plannerList == null)
@@ -167,5 +180,10 @@ public class User {
 
 	public void updateBanReason(String banReason) {
 		this.banReason = banReason;
+	}
+
+	public void connectWrongAnswerNote(WrongAnswerNote wrongAnswerNote) {
+		this.wrongAnswerNotes.add(wrongAnswerNote);
+		wrongAnswerNote.setUser(this);
 	}
 }

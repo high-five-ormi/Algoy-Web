@@ -2,6 +2,16 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.bot-frag-component .bot-frag-header {
+  background-color: #1e88e5;
+}
+
+.bot-frag-component .bot-frag-header h1 {
+  color: white;
+  margin: 0;
+  font-size: 18px;
+}
+
 .bot-frag-sidebar {
   position: fixed;
   right: -500px;
@@ -130,8 +140,8 @@
 
 .bot-frag-hamburger-menu {
   position: fixed;
-  top: 800px;
-  right: 30px;
+  top: 85vh;
+  right: 1vw;
   cursor: pointer;
   z-index: 1001;
   background-color: #1e88e5;

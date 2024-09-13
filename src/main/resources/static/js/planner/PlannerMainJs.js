@@ -43,7 +43,7 @@ $(document).ready(function () {
             method: 'POST',
             success: function (data) {
                 alert('플랜 삭제 성공');
-                location.href = '/algoy/planner/calender';
+                location.href = '/algoy/planner/main';
             },
             error: function (error) {
                 alert('플래너 삭제 에러 : ' + error.statusText);

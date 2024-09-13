@@ -50,6 +50,8 @@ public class Chatting {
   @PrePersist
   public void prePersist() {
     this.createdAt = LocalDateTime.now();
-    this.nickname = user.getNickname();
+    if (this.user != null) {
+      this.nickname = user.getNickname();
+    }
   }
 }

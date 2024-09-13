@@ -39,11 +39,11 @@ public class ChattingConvertUtil {
    */
   public static ChattingDto convertToDto(Chatting chatting) {
     return ChattingDto.builder()
-        .userId(chatting.getUser().getUserId())
+        .userId(chatting.getUser() != null ? chatting.getUser().getUserId() : null)
         .roomId(chatting.getRoomId())
         .content(chatting.getContent())
         .nickname(chatting.getNickname())
-        .createdAt(chatting.getCreatedAt() != null ? chatting.getCreatedAt() : LocalDateTime.now())
+        .createdAt(chatting.getCreatedAt())
         .build();
   }
 
