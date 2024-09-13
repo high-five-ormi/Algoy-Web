@@ -357,17 +357,17 @@ NAME은 컨트롤러에서 만든 메서드명 작성
 |           | 현재 인증된 사용자 정보     | GET    | /algoy/api/user/current                          |             |
 |           | 관리자 페이지           | GET    | /algoy/admin                                     |             |
 |           | 유저 권한 관리          | POST   | /algoy/admin/role-control                        | 관리자, 일반, 정지 |
-| STUDY     | 스터디 목록            | GET    | /algoy/study/gets                                |             |
+| STUDY     | 스터디 메인            | GET    | /algoy/study/main                                |             |
+|           | 스터디 목록            | GET    | /algoy/study/gets                                |             |
+|           | 스터디 상세 보기         | GET    | /algoy/study/detail                              |             |
+|           | 스터디 게시물 가져오기      | GET    | /algoy/study/get/{id}                            |             |
 |           | 스터디 작성 폼          | GET    | /algoy/study/new-form                            |             |
 |           | 스터디 작성            | POST   | /algoy/study/new                                 |             |
-|           | 스터디 상세 보기         | GET    | /algoy/study/get/{id}                            |             |
 |           | 스터디 삭제            | POST   | /algoy/study/delete/{id}                         |             |
 |           | 스터디 수정 폼          | GET    | /algoy/study/edit-form                           |             |
 |           | 스터디 수정            | POST   | /algoy/study/update/{id}                         |             |
 |           | 스터디 인원            | GET    | /algoy/study/count                               |             |
 |           | 스터디 상태로 검색        | GET    | /algoy/study/search-status                       |             |
-|           | 스터디 메인            | GET    | /algoy/study/main                                |             |
-|           | 스터디 상세 보기 폼       | GET    | /algoy/study/detail                              |             |
 | COMMENT   | 댓글 가져오기           | GET    | /algoy/comment/gets                              |             |
 |           | 댓글                | POST   | /algoy/comment/non-reply                         |             |
 |           | 대댓글               | POST   | /algoy/comment/reply                             |             |
