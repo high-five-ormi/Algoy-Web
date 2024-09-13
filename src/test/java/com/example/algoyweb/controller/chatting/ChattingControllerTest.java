@@ -16,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -222,15 +223,21 @@ class ChattingControllerTest {
     InviteRequest inviteRequest = new InviteRequest();
     inviteRequest.setNickname("invitedUser");
 
-    doNothing().when(chattingService).inviteUserByNickname(roomId, "testUser", "invitedUser");
+    when(chattingService.inviteUserByNickname(roomId, "testUser", "invitedUser"))
+        .thenReturn(new ChattingRoomDto());
 
     // When
     ResponseEntity<?> response =
         chattingController.inviteToRoomByNickname(roomId, inviteRequest, authentication);
 
     // Then
-    assertEquals(200, response.getStatusCodeValue());
-    assertEquals("User invited successfully", ((java.util.Map) response.getBody()).get("message"));
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertTrue(response.getBody() instanceof Map, "Response body should be a Map");
+
+    Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+    assertNotNull(responseBody);
+    assertEquals("User invited successfully", responseBody.get("message"));
+
     verify(chattingService).inviteUserByNickname(roomId, "testUser", "invitedUser");
   }
 

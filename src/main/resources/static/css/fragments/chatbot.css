@@ -140,8 +140,8 @@
 
 .bot-frag-hamburger-menu {
   position: fixed;
-  top: 800px;
-  right: 30px;
+  top: 85vh;
+  right: 1vw;
   cursor: pointer;
   z-index: 1001;
   background-color: #1e88e5;

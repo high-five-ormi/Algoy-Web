@@ -2,7 +2,12 @@ body {
     margin: 0;
 }
 
-a {
+a:not(.back-button) {
+    text-decoration-line: none;
+    color: black;
+}
+
+.back-button {
     text-decoration: none;
     color: inherit;
     padding: 10px 20px;

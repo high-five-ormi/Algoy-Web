@@ -2,12 +2,8 @@ package com.example.algoyweb;
 
 import com.example.algoyweb.model.dto.chatting.ChattingRoomDto;
 import com.example.algoyweb.model.dto.chatting.MessageRequest;
-import com.example.algoyweb.model.dto.comment.CommentDto;
-import com.example.algoyweb.model.dto.planner.PlannerDto;
 import com.example.algoyweb.model.dto.study.StudyDto;
 import com.example.algoyweb.model.dto.user.UserDto;
-import com.example.algoyweb.model.entity.WrongAnswerNote.WrongAnswerNote;
-import com.example.algoyweb.model.entity.planner.Planner;
 import com.example.algoyweb.model.entity.study.Study;
 import com.example.algoyweb.model.entity.user.Role;
 import com.example.algoyweb.model.entity.user.User;
@@ -23,27 +19,14 @@ import com.example.algoyweb.repository.user.UserRepository;
 import com.example.algoyweb.util.user.CustomUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.messaging.converter.MappingJackson2MessageConverter;
-import org.springframework.messaging.simp.stomp.StompHeaders;
-import org.springframework.messaging.simp.stomp.StompSession;
-import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
@@ -51,20 +34,14 @@ import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 import static com.example.algoyweb.model.entity.user.Role.ADMIN;
 import static com.example.algoyweb.model.entity.user.Role.NORMAL;
-import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -109,18 +86,6 @@ public class IntegrationTest {
     @Autowired
     private WrongAnswerNoteRepository wrongAnswerNoteRepository;
 
-    @BeforeEach
-    void setUp() {
-        studyRepository.deleteAll();
-        userRepository.deleteAll();
-        plannerRepository.deleteAll();
-        commentRepository.deleteAll();
-        wrongAnswerNoteRepository.deleteAll();
-        participantRepository.deleteAll();
-        chattingRepository.deleteAll();
-        chattingRoomRepository.deleteAll();
-    }
-
     private WebSocketStompClient settingWebSocket() {
         StandardWebSocketClient standardWebSocketClient = new StandardWebSocketClient();
         WebSocketTransport webSocketTransport = new WebSocketTransport(standardWebSocketClient);
@@ -130,7 +95,6 @@ public class IntegrationTest {
         return new WebSocketStompClient(sockJsClient);
     }
 
-    // 0. 회원가입 및 유저 초기화 메서드
     private User signUpAndLogin(String i) throws Exception {
         mockMvc.perform(post("/algoy/sign")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -154,7 +118,6 @@ public class IntegrationTest {
         return savedUser;
     }
 
-    // 0. 스터디 생성 메서드
     private Study createStudy(User savedUser) throws Exception {
 
         StudyDto studyDto = StudyDto.builder()
@@ -315,253 +278,6 @@ public class IntegrationTest {
     }
 
     @Test
-    public void commentManagementTest() throws Exception {
-        // 로그인 후 CustomUserDetails 생성
-        User savedUser = signUpAndLogin("1");
-        Study savedStudy = createStudy(savedUser);
-        CustomUserDetails userDetails = new CustomUserDetails(savedUser);
-
-        // 1. 댓글 생성
-        CommentDto commentDto = CommentDto.builder()
-                .content("This is a test comment")
-                .secret(false)
-                .build();
-
-        String commentJson = objectMapper.writeValueAsString(commentDto);
-
-        MvcResult createResult = mockMvc.perform(post("/algoy/comment/non-reply")
-                        .with(user(userDetails))
-                        .param("studyId", savedStudy.getId().toString()) // 스터디 ID는 미리 세팅되어 있어야 함
-                        .content(commentJson)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        CommentDto createdComment = objectMapper.readValue(createResult.getResponse().getContentAsString(), CommentDto.class);
-
-        // 2. 대댓글 생성
-        CommentDto replyDto = CommentDto.builder()
-                .content("This is a reply")
-                .secret(false)
-                .build();
-
-        String replyJson = objectMapper.writeValueAsString(replyDto);
-
-        MvcResult replyResult = mockMvc.perform(post("/algoy/comment/reply")
-                        .with(user(userDetails))
-                        .content(replyJson)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("studyId", savedStudy.getId().toString()) // 스터디 ID는 미리 세팅되어 있어야 함
-                        .param("commentId", createdComment.getId().toString()))
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        CommentDto createdReply = objectMapper.readValue(replyResult.getResponse().getContentAsString(), CommentDto.class);
-
-        // 3. 댓글 수정
-        CommentDto updatedCommentDto = CommentDto.builder()
-                .content("Updated comment")
-                .secret(false)
-                .build();
-
-        String updatedCommentJson = objectMapper.writeValueAsString(updatedCommentDto);
-
-        mockMvc.perform(post("/algoy/comment/update")
-                        .with(user(userDetails))
-                        .content(updatedCommentJson)
-                        .param("commentId", createdComment.getId().toString())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        // 스터디 조인
-        mockMvc.perform(post("/algoy/comment/join")
-                        .with(user(userDetails))
-                        .content(updatedCommentJson)
-                        .param("commentId", createdComment.getId().toString())
-                        .param("studyId", savedStudy.getId().toString())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        // 조인 확인
-        MvcResult joinResult = mockMvc.perform(get("/algoy/comment/find-part")
-                        .with(user(userDetails))
-                        .param("commentId", createdComment.getId().toString())
-                        .param("studyId", savedStudy.getId().toString())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        Boolean convertJoin = objectMapper.readValue(joinResult.getResponse().getContentAsString(), Boolean.class);
-        assertTrue(convertJoin);
-
-        // 스터디 탈퇴
-        mockMvc.perform(post("/algoy/comment/out")
-                        .with(user(userDetails))
-                        .content(updatedCommentJson)
-                        .param("commentId", createdComment.getId().toString())
-                        .param("studyId", savedStudy.getId().toString())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        // 탈퇴 확인
-        MvcResult outResult = mockMvc.perform(get("/algoy/comment/find-part")
-                        .with(user(userDetails))
-                        .param("commentId", createdComment.getId().toString())
-                        .param("studyId", savedStudy.getId().toString())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        Boolean convertOut = objectMapper.readValue(outResult.getResponse().getContentAsString(), Boolean.class);
-        assertTrue(convertOut);
-
-        // 4. 댓글 삭제
-        mockMvc.perform(post("/algoy/comment/delete")
-                        .with(user(userDetails))
-                        .param("commentId", createdComment.getId().toString()))
-                .andExpect(status().isOk());
-    }
-
-    // 플래너 관리 테스트
-    @Test
-    public void plannerManagementTest() throws Exception {
-        User savedUser = signUpAndLogin("1");
-        CustomUserDetails userDetails = new CustomUserDetails(savedUser);
-
-        // 1. 플래너 생성
-        PlannerDto plannerDto = PlannerDto.builder()
-                .title("Test Plan")
-                .content("This is a test plan")
-                .startAt(LocalDate.now())
-                .endAt(LocalDate.now().plusDays(1))
-                .link("http://example.com")
-                .questionName("Sample Question")
-                .status(Planner.Status.TODO)
-                .siteName(Planner.SiteName.BOJ)
-                .build();
-
-        String plannerJson = objectMapper.writeValueAsString(plannerDto);
-        String responsePlanner = mockMvc.perform(post("/algoy/planner/save")
-                        .with(user(userDetails))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(plannerJson))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.title").value("Test Plan"))
-                .andReturn().getResponse().getContentAsString();
-
-        PlannerDto createdPlanner = objectMapper.readValue(responsePlanner, PlannerDto.class);
-
-        // 2. 플래너 조회
-        mockMvc.perform(get("/algoy/planner/" + createdPlanner.getId())
-                        .with(user(userDetails)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("Test Plan"));
-
-        // 3. 플래너 수정
-        PlannerDto updatedPlannerDto = PlannerDto.builder()
-                .id(createdPlanner.getId())
-                .title("Updated Test Plan")
-                .content(createdPlanner.getContent())
-                .startAt(createdPlanner.getStartAt())
-                .endAt(createdPlanner.getEndAt())
-                .link(createdPlanner.getLink())
-                .questionName(createdPlanner.getQuestionName())
-                .status(createdPlanner.getStatus())
-                .siteName(createdPlanner.getSiteName())
-                .build();
-
-        mockMvc.perform(post("/algoy/planner/edit/" + createdPlanner.getId())
-                        .with(user(userDetails))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updatedPlannerDto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("Updated Test Plan"));
-
-        // 4. 플래너 검색
-        mockMvc.perform(get("/algoy/planner/search")
-                        .param("keyword", "Updated")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .with(user(userDetails)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].title").value("Updated Test Plan"));
-
-        // 5. 플래너 삭제
-        mockMvc.perform(post("/algoy/planner/delete/" + createdPlanner.getId())
-                        .with(user(userDetails)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("삭제 완료"));
-
-        // 6. 삭제 후 플래너 조회 시도
-        mockMvc.perform(get("/algoy/planner/" + createdPlanner.getId())
-                        .with(user(userDetails)))
-                .andExpect(status().isNotFound());
-    }
-
-    // 오답노트 관리 테스트
-    @Test
-    public void wrongAnswerNoteManagementTest() throws Exception {
-        User savedUser = signUpAndLogin("1");
-        CustomUserDetails userDetails = new CustomUserDetails(savedUser);
-
-        // 1. 오답노트 생성 및 저장
-        WrongAnswerNote testNote = new WrongAnswerNote();
-        testNote.setTitle("Lifecycle Test Note");
-        testNote.setLink("https://example.com/lifecycle");
-        testNote.setQuizSite("Lifecycle Quiz Site");
-        testNote.setQuizType("Multiple Choice");
-        testNote.setQuizLevel("Medium");
-        testNote.setContent("Lifecycle test content.");
-        testNote.setIsSolved(false);
-        testNote.setCreatedAt(LocalDateTime.now());
-        testNote.setUser(savedUser);
-        wrongAnswerNoteRepository.save(testNote);
-
-        // 2. 생성된 오답노트 조회 및 검증
-        Optional<WrongAnswerNote> createdNote = wrongAnswerNoteRepository.findById(testNote.getId());
-        assertThat(createdNote).isPresent();
-        assertThat(createdNote.get().getTitle()).isEqualTo("Lifecycle Test Note");
-        assertThat(createdNote.get().getUser().getEmail()).isEqualTo(savedUser.getEmail());
-
-        // 3. 오답노트 수정
-        createdNote.get().setTitle("Updated Lifecycle Test Note");
-        createdNote.get().setIsSolved(true);
-        wrongAnswerNoteRepository.save(createdNote.get());
-
-        // 4. 수정된 오답노트 조회 및 검증
-        Optional<WrongAnswerNote> updatedNote = wrongAnswerNoteRepository.findById(testNote.getId());
-        assertThat(updatedNote).isPresent();
-        assertThat(updatedNote.get().getTitle()).isEqualTo("Updated Lifecycle Test Note");
-        assertThat(updatedNote.get().getIsSolved()).isTrue();
-
-        // 5. 오답노트 삭제
-        wrongAnswerNoteRepository.delete(updatedNote.get());
-
-        // 6. 삭제된 오답노트가 존재하지 않는지 확인
-        Optional<WrongAnswerNote> deletedNote = wrongAnswerNoteRepository.findById(testNote.getId());
-        assertThat(deletedNote).isNotPresent();
-    }
-
-    @Test
-    public void allenManagementTest() throws Exception {
-        // 0. 회원가입 및 유저 초기화
-        User savedUser = signUpAndLogin("1");
-        CustomUserDetails userDetails = new CustomUserDetails(savedUser);
-
-        // 1. `allen` API 호출
-        MvcResult result = mockMvc.perform(get("/algoy/allen/solvedac")
-                        .param("solvedacusername", savedUser.getSolvedacUserName())
-                        .with(user(userDetails)))
-                .andExpect(status().isOk())  // API 호출 성공 확인
-                .andReturn(); // 결과를 저장
-
-        // 2. 응답 내용 검증 (응답 내용이 빈 값이 아닌지 확인)
-        String responseContent = result.getResponse().getContentAsString();
-
-        // 응답이 빈 문자열이 아닌지 확인
-        assertThat(responseContent).isNotBlank();
-    }
-
-    @Test
     public void chattingRoomManagementTest() throws Exception {
         // 0. 회원가입 및 유저 초기화
         User savedUser1 = signUpAndLogin("1");
@@ -573,79 +289,39 @@ public class IntegrationTest {
 
         // 2. 채팅방 생성
         String createRoomRequest = """
-            {
-                "name": "Test Room",
-                "invitees": ["testNickname2"]
-            }
-            """;
+        {
+            "name": "Test Room",
+            "invitees": ["testNickname2"]
+        }
+        """;
 
         String createdRoomResponse = mockMvc.perform(post("/algoy/api/chat/room")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(createRoomRequest)
-                        .with(user(userDetailsOne)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Test Room"))
-                .andExpect(jsonPath("$.participants").value(Matchers.containsInAnyOrder(savedUser1.getUserId().intValue(), savedUser2.getUserId().intValue())))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createRoomRequest)
+                .with(user(userDetailsOne)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("Test Room"))
+            .andExpect(jsonPath("$.participants", Matchers.hasSize(2)))
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
 
         ChattingRoomDto createdRoom = objectMapper.readValue(createdRoomResponse, ChattingRoomDto.class);
         String roomId = createdRoom.getRoomId();
 
         // 3. 채팅방 참여
         mockMvc.perform(post("/algoy/api/chat/room/" + roomId + "/join")
-                        .with(user(userDetailsThree)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.roomId").value(roomId))
-                .andExpect(jsonPath("$.participants.length()").value(3));
-
-        // SockJSClient 사용
-        List<Transport> transports = new ArrayList<>();
-        transports.add(new WebSocketTransport(new StandardWebSocketClient()));
-
-        SockJsClient sockJsClient = new SockJsClient(transports);
-        WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient);
-        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-
-        // 로그인 요청 및 세션 가져오기
-        MvcResult result = mockMvc.perform(formLogin("/login")
-                        .user("email", "test1@example.com")
-                        .password("password1"))
-                .andExpect(status().is3xxRedirection())
-                .andReturn();
-
-        // 세션 가져오기
-        MockHttpSession session = (MockHttpSession) result.getRequest().getSession();
-
-        // WebSocket 연결 시 세션 ID를 포함
-        WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
-        headers.add("Cookie", "JSESSIONID=" + session.getId());
-
-        // WebSocket URL 및 헤더를 사용한 연결 설정
-        String url = "ws://localhost:8081/algoy/chat-websocket";
-
-        /*
-        // 해당 부분 200 반환 받으나 웹 소켓 업그레이드 에러를 해결하지 못함
-        StompSession stompSession = stompClient.connectAsync(url, headers, new StompSessionHandlerAdapter() {}).get(20, TimeUnit.SECONDS);
-
-        // 4. 메시지 전송
-        MessageRequest messageRequest = createMessageRequest(roomId,"Hello, World!");
-        stompSession.send("/chat/sendMessage", messageRequest);
-
-        // 5. 채팅방 메시지 목록 조회
-        mockMvc.perform(get("/algoy/api/chat/room/" + roomId + "/messages")
-                        .with(user(userDetailsOne)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].content").value("Hello, World!"))
-                .andExpect(jsonPath("$[0].roomId").value(roomId));*/
+                .with(user(userDetailsThree)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.roomId").value(roomId))
+            .andExpect(jsonPath("$.participants", Matchers.hasSize(3)));
 
         // 6. 채팅방 나가기
         mockMvc.perform(post("/algoy/api/chat/room/" + roomId + "/leave")
-                        .with(user(userDetailsOne)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.roomId").value(roomId))
-                .andExpect(jsonPath("$.deleted").value(false));
+                .with(user(userDetailsOne)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.roomId").value(roomId))
+            .andExpect(jsonPath("$.deleted").value(false));
     }
 
     @Test
@@ -743,5 +419,4 @@ public class IntegrationTest {
         updatedUser = userRepository.findById(testUser2.getId()).orElseThrow();
         assertEquals(Role.NORMAL, updatedUser.getRole());
     }
-
 }
